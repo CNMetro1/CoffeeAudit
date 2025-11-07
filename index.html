@@ -603,23 +603,27 @@
                     'Date of Visit': document.getElementById('date_of_visit').value || 'N/A',
                     'Barista Name/Position': document.getElementById('barista_name').value || 'N/A',
                     'Store/Number': document.getElementById('store_number').value || 'N/A',
-                    'Hot Drinks Made (Check)': document.getElementById('hot_drinks_made').value || 'N/A',
-                    'Ice Drinks Made (Check)': document.getElementById('ice_drinks_made').value || 'N/A',
-                    'Luxury Drinks Made (Check)': document.getElementById('luxury_drinks_prepared').value || 'N/A', // Added new text field
+                };
+                
+                // 2. Gather Drinks Prepared
+                const drinksPrepared = {
+                    'Hot Drinks Made': document.getElementById('hot_drinks_made').value || 'N/A',
+                    'Ice Drinks Made': document.getElementById('ice_drinks_made').value || 'N/A',
+                    'Luxury Drinks Made': document.getElementById('luxury_drinks_prepared').value || 'N/A', 
                 };
 
-                // 2. Map Section Titles and Comments (No changes needed here for luxury since we reused luxury1 group name)
+                // 3. Map Section Titles and Comments
                 const sectionMap = {
-                    'golden1': { title: '1. 5 Golden Rules', commentId: 'golden_rules_comments' },
-                    'golden2': { title: '1. 5 Golden Rules', commentId: 'golden_rules_comments' },
-                    'golden3': { title: '1. 5 Golden Rules', commentId: 'golden_rules_comments' },
-                    'golden4': { title: '1. 5 Golden Rules', commentId: 'golden_rules_comments' },
-                    'golden5': { title: '1. 5 Golden Rules', commentId: 'golden_rules_comments' },
-                    'golden6': { title: '1. 5 Golden Rules', commentId: 'golden_rules_comments' },
-                    'extract1': { title: '1. 5 Golden Rules', commentId: 'golden_rules_comments' },
-                    'extract2': { title: '1. 5 Golden Rules', commentId: 'golden_rules_comments' },
-                    'extract4': { title: '1. 5 Golden Rules', commentId: 'golden_rules_comments' },
-                    'clean': { title: '1. 5 Golden Rules', commentId: 'golden_rules_comments' },
+                    'golden1': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                    'golden2': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                    'golden3': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                    'golden4': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                    'golden5': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                    'golden6': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                    'extract1': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                    'extract2': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                    'extract4': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                    'clean': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
 
                     'milk1': { title: '2. Milk Preparation', commentId: 'milk_comments' },
                     'milk2': { title: '2. Milk Preparation', commentId: 'milk_comments' },
@@ -639,13 +643,13 @@
                     'ice3': { title: '5. Ice Drink', commentId: 'ice_comments' },
                     'ice4': { title: '5. Ice Drink', commentId: 'ice_comments' },
                     
-                    'luxury1': { title: '6. Luxury Drink', commentId: 'luxury_comments' }, // Now the "Thermometer in use" check
+                    'luxury1': { title: '6. Luxury Drink', commentId: 'luxury_comments' }, 
                     'luxury2': { title: '6. Luxury Drink', commentId: 'luxury_comments' },
                     'luxury3': { title: '6. Luxury Drink', commentId: 'luxury_comments' },
                     'luxury4': { title: '6. Luxury Drink', commentId: 'luxury_comments' },
                 };
 
-                // 3. Collect all question results grouped by section
+                // 4. Collect all question results grouped by section
                 const sectionsReport = {};
 
                 document.querySelectorAll('.rule-item').forEach(item => {
@@ -663,51 +667,61 @@
                         const maxPts = parseInt(radioGroupElement.dataset.points);
                         const checkedYes = item.querySelector(`input[name="${groupName}"][value="yes"]:checked`);
                         const scoredPts = checkedYes ? maxPts : 0;
+                        const result = checkedYes ? 'YES' : 'NO';
 
-                        sectionsReport[sectionTitle].questions.push(`  - [${checkedYes ? 'YES' : 'NO'}] ${label} (${scoredPts}/${maxPts} pts)`);
+                        sectionsReport[sectionTitle].questions.push(`  - [${result}] ${label} (${scoredPts}/${maxPts} pts)`);
                         sectionsReport[sectionTitle].pointsScored += scoredPts;
                         sectionsReport[sectionTitle].maxPoints += maxPts;
                     }
                 });
 
-                // 4. Construct the final report string
-                let reportContent = "--- BARISTA QUALITY CHECK REPORT ---\n\n";
+                // 5. Construct the final report string (Improved formatting)
+                let reportContent = "================================================\n";
+                reportContent += "     BARISTA QUALITY CHECK - AUDIT REPORT       \n";
+                reportContent += "================================================\n\n";
 
-                // A. Metadata
-                reportContent += ">> A. AUDIT INFORMATION\n";
-                for (const [key, value] of Object.entries(adminInfo)) {
-                    reportContent += `- ${key}: ${value}\n`;
-                }
-
-                reportContent += "\n>> B. FINAL RESULT\n";
+                // A. Summary
                 const totalScore = document.getElementById('current-score').textContent;
-                const maxScore = MAX_SCORE;
                 const status = document.getElementById('pass-fail-status').textContent.trim().replace('Status: ', '');
-                const overallFeedback = document.getElementById('overall_feedback').value.trim() || 'No overall feedback provided.';
-
-                reportContent += `- Total Score: ${totalScore} / ${maxScore}\n`;
-                reportContent += `- Status: ${status}\n\n`;
-
+                
+                reportContent += ">> A. AUDIT SUMMARY\n";
+                reportContent += `FINAL SCORE: ${totalScore} / ${MAX_SCORE}\n`;
+                reportContent += `STATUS: ${status}\n\n`;
+                
+                // B. Admin Info
+                reportContent += ">> B. ADMINISTRATIVE DETAILS\n";
+                for (const [key, value] of Object.entries(adminInfo)) {
+                    reportContent += `${key.padEnd(25)}: ${value}\n`;
+                }
+                reportContent += "\n";
+                for (const [key, value] of Object.entries(drinksPrepared)) {
+                    reportContent += `${key.padEnd(25)}: ${value}\n`;
+                }
+                reportContent += "\n------------------------------------------------\n";
 
                 // C. Detailed Breakdown
-                reportContent += ">> C. DETAILED SECTION BREAKDOWN\n";
                 for (const [sectionTitle, data] of Object.entries(sectionsReport)) {
-                    reportContent += `\n--- ${sectionTitle.toUpperCase()} (${data.pointsScored}/${data.maxPoints} pts) ---\n`;
+                    reportContent += `\n>> C. ${sectionTitle}\n`;
+                    reportContent += `SECTION SCORE: ${data.pointsScored} / ${data.maxPoints} pts\n`;
+                    reportContent += '------------------------------------------------\n';
                     reportContent += data.questions.join('\n');
                     
                     // Add comments specific to the section
                     const commentText = document.getElementById(data.commentId).value.trim();
                     if (commentText) {
-                        reportContent += `\nCOMMENTS: ${commentText}\n`;
+                        reportContent += `\n\nSECTION COMMENTS:\n${commentText}\n`;
                     }
+                    reportContent += "\n------------------------------------------------\n";
                 }
                 
                 // D. Overall Feedback
-                reportContent += "\n>> D. OVERALL FEEDBACK\n";
+                const overallFeedback = document.getElementById('overall_feedback').value.trim() || 'No detailed overall feedback provided.';
+                reportContent += "\n>> D. OVERALL FEEDBACK TO BARISTA / MOD\n";
                 reportContent += overallFeedback;
-                reportContent += "\n\n--- END OF REPORT ---";
+                reportContent += "\n\n================================================\n";
 
-                // 5. Copy to clipboard
+
+                // 6. Copy to clipboard
                 const tempTextarea = document.createElement('textarea');
                 tempTextarea.value = reportContent;
                 document.body.appendChild(tempTextarea);
@@ -722,7 +736,7 @@
                 
                 document.body.removeChild(tempTextarea);
 
-                // 6. Provide feedback
+                // 7. Provide feedback
                 copyButton.className = ''; // Clear existing classes
                 const originalText = copyButton.textContent;
                 
