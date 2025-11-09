@@ -127,12 +127,9 @@
                 Evaluate coffee preparation with Yes/No checks and add direct feedback.
             </p>
             
-            <!-- User ID and Saving Status -->
-            <div class="text-xs text-white/50 mb-2">
-                User ID: <span id="user-id-display" class="font-mono text-white/70">Loading...</span>
-            </div>
+            <!-- Local Storage Status -->
             <div id="save-status" class="text-sm font-semibold text-right transition duration-500">
-                <span class="text-gray-400">Loading...</span>
+                <span class="text-green-400">Ready.</span>
             </div>
 
             <div class="mt-6 space-y-3">
@@ -254,7 +251,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the coffee leveled properly?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden4" data-subrule="3. LEVEL AND WIPE">
+                    <div class="radio-group flex items-center" data-points="6" data-group="golden4">
                         <input type="radio" id="golden4_yes" name="golden4" value="yes" class="score-input">
                         <label for="golden4_yes">Yes</label>
                         <input type="radio" id="golden4_no" name="golden4" value="no" class="score-input">
@@ -264,7 +261,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the handle wiped after being leveled?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden5" data-subrule="3. LEVEL AND WIPE">
+                    <div class="radio-group flex items-center" data-points="6" data-group="golden5">
                         <input type="radio" id="golden5_yes" name="golden5" value="yes" class="score-input">
                         <label for="golden5_yes">Yes</label>
                         <input type="radio" id="golden5_no" name="golden5" value="no" class="score-input">
@@ -274,7 +271,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the Coffee tamped properly (1x for espresso, 2x for ristretto)?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden6" data-subrule="3. LEVEL AND WIPE">
+                    <div class="radio-group flex items-center" data-points="6" data-group="golden6">
                         <input type="radio" id="golden6_yes" name="golden6" value="yes" class="score-input">
                         <label for="golden6_yes">Yes</label>
                         <input type="radio" id="golden6_no" name="golden6" value="no" class="score-input">
@@ -287,7 +284,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was extraction started within 10 seconds of the handle being placed into the group head?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="extract1" data-subrule="4. EXTRACT AND TIME">
+                    <div class="radio-group flex items-center" data-points="6" data-group="extract1">
                         <input type="radio" id="extract1_yes" name="extract1" value="yes" class="score-input">
                         <label for="extract1_yes">Yes</label>
                         <input type="radio" id="extract1_no" name="extract1" value="no" class="score-input">
@@ -297,7 +294,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the timer in use?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="extract2" data-subrule="4. EXTRACT AND TIME">
+                    <div class="radio-group flex items-center" data-points="6" data-group="extract2">
                         <input type="radio" id="extract2_yes" name="extract2" value="yes" class="score-input">
                         <label for="extract2_yes">Yes</label>
                         <input type="radio" id="extract2_no" name="extract2" value="no" class="score-input">
@@ -307,7 +304,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Correct Rate of Pour (20-22s for espresso, 15s for ristretto)?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="extract4" data-subrule="4. EXTRACT AND TIME">
+                    <div class="radio-group flex items-center" data-points="6" data-group="extract4">
                         <input type="radio" id="extract4_yes" name="extract4" value="yes" class="score-input">
                         <label for="extract4_yes">Yes</label>
                         <input type="radio" id="extract4_no" name="extract4" value="no" class="score-input">
@@ -320,7 +317,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Is the coffee production area clean and tidy? (Around section and around coffee machine)</span>
                     <span class="rule-points">1 pt</span>
-                    <div class="radio-group flex items-center" data-points="1" data-group="clean" data-subrule="5. CLEAN AS YOU GO">
+                    <div class="radio-group flex items-center" data-points="1" data-group="clean">
                         <input type="radio" id="clean_yes" name="clean" value="yes" class="score-input">
                         <label for="clean_yes">Yes</label>
                         <input type="radio" id="clean_no" name="clean" value="no" class="score-input">
@@ -602,28 +599,14 @@
 
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // IMPORTANT: Use Canvas provided global variables for configuration and authentication
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    <script>
+        const AUDIT_STORAGE_KEY = 'baristaAuditData'; 
         
-        // Configuration
-        setLogLevel('Debug');
         const BASE_MAX_SCORE = 100;
         const ICE_DRINK_POINTS = 5;
         const LUXURY_DRINK_POINTS = 4;
-        const AUDIT_DOC_ID = 'current_audit_session'; 
 
         let dynamicMaxScore = BASE_MAX_SCORE;
-        let db;
-        let auth;
-        let userId = null;
-        let isAuthReady = false;
         
         const currentScoreDisplay = document.getElementById('current-score');
         const currentScoreMaxDisplay = document.getElementById('current-score-max');
@@ -633,7 +616,6 @@
         const copyButton = document.getElementById('copy-report-button');
         const resetButton = document.getElementById('reset-button');
         const saveStatusDisplay = document.getElementById('save-status');
-        const userIdDisplay = document.getElementById('user-id-display');
         const formInputs = document.querySelectorAll('input, textarea');
         const scoreInputs = document.querySelectorAll('.score-input');
         const toggleIce = document.getElementById('toggle_ice');
@@ -643,40 +625,7 @@
 
         const originalButtonClasses = 'px-4 py-2 bg-white text-black font-bold rounded-lg shadow-lg hover:shadow-xl transition duration-200 hover:bg-gray-100';
 
-        // --- FIREBASE INITIALIZATION AND AUTH ---
-        async function setupFirebase() {
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
-                }
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        userIdDisplay.textContent = userId;
-                        isAuthReady = true;
-                        startRealtimeSync();
-                    } else {
-                        userId = null;
-                        userIdDisplay.textContent = 'Anonymous (Unsaved)';
-                        isAuthReady = true; 
-                        saveStatusDisplay.innerHTML = '<span class="text-red-500">Authentication Failed. Cannot Save.</span>';
-                    }
-                });
-
-            } catch (error) {
-                console.error("Firebase Initialization or Auth Error:", error);
-                saveStatusDisplay.innerHTML = '<span class="text-red-500">Error setting up database.</span>';
-            }
-        }
-        
-        // --- UI/SCORE UPDATES ---
+        // --- CORE LOGIC ---
 
         function updateMaxScoreAndUI() {
             let newMax = BASE_MAX_SCORE;
@@ -734,7 +683,7 @@
                 currentScoreDisplay.textContent = totalScore;
                 finalScoreFooterDisplay.textContent = `${totalScore} / ${dynamicMaxScore}`; 
                 
-                // --- NEW STATUS LOGIC BASED ON PERCENTAGE (90% Passed, 80-89% So Close) ---
+                // --- STATUS LOGIC BASED ON PERCENTAGE ---
                 let percentage = dynamicMaxScore > 0 ? (totalScore / dynamicMaxScore) * 100 : 0;
                 
                 let statusText = "";
@@ -762,18 +711,11 @@
             // 1. Recalculate and update UI instantly
             calculateScore(true);
 
-            // 2. Save data to Firestore (throttled by Firebase listeners/batching)
-            saveAudit();
+            // 2. Save data to Local Storage
+            saveLocalData();
         }
 
-
-        // --- FIREBASE SYNC FUNCTIONS ---
-
-        function getAuditRef() {
-            if (!db || !userId) return null;
-            const auditsCollectionPath = `artifacts/${appId}/users/${userId}/barista_audits`;
-            return doc(db, auditsCollectionPath, AUDIT_DOC_ID);
-        }
+        // --- LOCAL STORAGE FUNCTIONS ---
 
         function collectFormData() {
             const data = {};
@@ -801,21 +743,13 @@
             return data;
         }
 
-        async function saveAudit() {
-            if (!isAuthReady || !userId) return;
-
-            const auditRef = getAuditRef();
-            if (!auditRef) return;
-
-            const data = collectFormData();
-            
+        function saveLocalData() {
             try {
-                saveStatusDisplay.innerHTML = '<span class="text-yellow-400">Saving...</span>';
-                await setDoc(auditRef, data);
-                saveStatusDisplay.innerHTML = '<span class="text-green-400">Saved!</span>';
-                
-            } catch (error) {
-                console.error("Error saving document: ", error);
+                const data = collectFormData();
+                localStorage.setItem(AUDIT_STORAGE_KEY, JSON.stringify(data));
+                saveStatusDisplay.innerHTML = '<span class="text-green-400">Saved Locally.</span>';
+            } catch (e) {
+                console.error("Local Storage Save Error:", e);
                 saveStatusDisplay.innerHTML = '<span class="text-red-400">Save Failed!</span>';
             }
         }
@@ -857,26 +791,24 @@
             calculateScore(true);
         }
 
-        function startRealtimeSync() {
-            const auditRef = getAuditRef();
-            if (!auditRef) return;
-            
-            onSnapshot(auditRef, (doc) => {
-                if (doc.exists()) {
-                    loadAudit(doc.data());
-                    saveStatusDisplay.innerHTML = '<span class="text-green-400">Loaded & Ready.</span>';
+        function loadLocalData() {
+            try {
+                const dataString = localStorage.getItem(AUDIT_STORAGE_KEY);
+                if (dataString) {
+                    const data = JSON.parse(dataString);
+                    loadAudit(data);
+                    saveStatusDisplay.innerHTML = '<span class="text-green-400">Loaded Locally.</span>';
                 } else {
                     saveStatusDisplay.innerHTML = '<span class="text-green-400">New Session. Ready.</span>';
-                    // Run initial UI setup for default checked state
-                    updateMaxScoreAndUI();
+                    updateMaxScoreAndUI(); // Initial UI setup for default state
                 }
-            }, (error) => {
-                console.error("Error listening to document: ", error);
-                saveStatusDisplay.innerHTML = '<span class="text-red-400">Sync Error!</span>';
-            });
+            } catch (e) {
+                console.error("Local Storage Load Error:", e);
+                saveStatusDisplay.innerHTML = '<span class="text-red-400">Load Failed!</span>';
+            }
         }
         
-        // --- NEW RESET FUNCTION ---
+        // --- RESET FUNCTION ---
         function resetForm() {
             // 1. Clear text inputs and textareas
             document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(input => {
@@ -892,8 +824,10 @@
             toggleIce.checked = true;
             toggleLuxury.checked = true;
 
-            // 4. Update UI to reflect 0 score and default max score, and save the cleared state
-            // Calling updateMaxScoreAndUI triggers calculateScore(true) which then calls saveAudit()
+            // 4. Clear local storage
+            localStorage.removeItem(AUDIT_STORAGE_KEY);
+            
+            // 5. Update UI and save the cleared state
             updateMaxScoreAndUI(); 
             
             // Optional: Provide visual feedback for reset button
@@ -1074,7 +1008,8 @@
         }
 
         // --- EVENT LISTENERS AND INITIALIZATION ---
-        document.addEventListener('DOMContentLoaded', () => {
+        
+        function setupForm() {
             // Attach save and score calculation to all relevant inputs
             formInputs.forEach(input => {
                 input.addEventListener('input', handleInput); 
@@ -1089,12 +1024,15 @@
             toggleIce.addEventListener('change', updateMaxScoreAndUI);
             toggleLuxury.addEventListener('change', updateMaxScoreAndUI);
             
+            // Footer/Action buttons
             copyButton.addEventListener('click', copyReportToClipboard);
             resetButton.addEventListener('click', resetForm);
-            
-            // Initial Firebase setup
-            setupFirebase();
-        });
+
+            // Load saved data when the page loads
+            loadLocalData();
+        }
+
+        document.addEventListener('DOMContentLoaded', setupForm);
     </script>
 
 </body>
