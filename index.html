@@ -127,9 +127,14 @@
                 Evaluate coffee preparation with Yes/No checks and add direct feedback.
             </p>
             
-            <!-- Local Storage Status -->
-            <div id="save-status" class="text-sm font-semibold text-right transition duration-500">
-                <span class="text-green-400">Ready.</span>
+            <!-- Local Storage Status AND NEW CLEAR BUTTON -->
+            <div class="flex justify-between items-center mb-4">
+                <div id="save-status" class="text-sm font-semibold transition duration-500">
+                    <span class="text-green-400">Ready.</span>
+                </div>
+                <button id="clear-top-button" class="text-xs px-2 py-1 bg-gray-700 hover:bg-red-600 rounded-md font-semibold transition duration-200">
+                    Clear All
+                </button>
             </div>
 
             <div class="mt-6 space-y-3">
@@ -615,6 +620,7 @@
         const passMarkDisplay = document.getElementById('pass-mark-display');
         const copyButton = document.getElementById('copy-report-button');
         const resetButton = document.getElementById('reset-button');
+        const clearTopButton = document.getElementById('clear-top-button'); // NEW
         const saveStatusDisplay = document.getElementById('save-status');
         const formInputs = document.querySelectorAll('input, textarea');
         const scoreInputs = document.querySelectorAll('.score-input');
@@ -831,13 +837,17 @@
             updateMaxScoreAndUI(); 
             
             // Optional: Provide visual feedback for reset button
-            const originalText = resetButton.textContent;
-            resetButton.textContent = 'Form Cleared! 👍';
-            resetButton.classList.replace('bg-red-600', 'bg-green-600');
-            setTimeout(() => {
-                resetButton.textContent = originalText;
-                resetButton.classList.replace('bg-green-600', 'bg-red-600');
-            }, 1500);
+            // This logic is complex for the top button, let's keep it simple and just rely on the form clearing.
+            // The logic below is mainly for the footer button for better UX feedback.
+            if (this.id === 'reset-button') {
+                const originalText = resetButton.textContent;
+                resetButton.textContent = 'Form Cleared! 👍';
+                resetButton.classList.replace('bg-red-600', 'bg-green-600');
+                setTimeout(() => {
+                    resetButton.textContent = originalText;
+                    resetButton.classList.replace('bg-green-600', 'bg-red-600');
+                }, 1500);
+            }
         }
 
         // --- REPORT COPY LOGIC ---
@@ -1024,9 +1034,10 @@
             toggleIce.addEventListener('change', updateMaxScoreAndUI);
             toggleLuxury.addEventListener('change', updateMaxScoreAndUI);
             
-            // Footer/Action buttons
+            // Action buttons
             copyButton.addEventListener('click', copyReportToClipboard);
             resetButton.addEventListener('click', resetForm);
+            clearTopButton.addEventListener('click', resetForm); // NEW BINDING
 
             // Load saved data when the page loads
             loadLocalData();
