@@ -86,6 +86,33 @@
             resize: vertical;
             min-height: 60px;
         }
+        /* Custom checkbox style for Tailwind/Inter look */
+        input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            height: 1.25rem;
+            width: 1.25rem;
+            border: 1px solid #666666;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: all 0.2s ease-in-out;
+        }
+        input[type="checkbox"]:checked {
+            background-color: #000000;
+            border-color: #000000;
+        }
+        input[type="checkbox"]:checked:after {
+            content: '✔';
+            position: absolute;
+            top: -1px;
+            left: 2px;
+            font-size: 1rem;
+            color: white;
+            line-height: 1;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8">
@@ -96,66 +123,98 @@
             <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
                 Barista Quality Check: Interactive Form
             </h1>
-            <p class="text-lg font-light opacity-90">
+            <p class="text-lg font-light opacity-90 mb-4">
                 Evaluate coffee preparation with Yes/No checks and add direct feedback.
             </p>
-
             
+            <!-- User ID and Saving Status -->
+            <div class="text-xs text-white/50 mb-2">
+                User ID: <span id="user-id-display" class="font-mono text-white/70">Loading...</span>
+            </div>
+            <div id="save-status" class="text-sm font-semibold text-right transition duration-500">
+                <span class="text-gray-400">Loading...</span>
+            </div>
 
-<div class="mt-6 space-y-3">
+            <div class="mt-6 space-y-3">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label for="audit_by" class="block text-sm font-light text-white/80 mb-1">Audit by:</label>
-                        <input type="text" id="audit_by" class="w-full p-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/70 focus:ring-white focus:border-white" placeholder="Auditor Name">
+                        <input type="text" id="audit_by" name="audit_by" class="w-full p-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/70 focus:ring-white focus:border-white" placeholder="Auditor Name">
                     </div>
                     <div>
                         <label for="date_of_visit" class="block text-sm font-light text-white/80 mb-1">Date of Visit:</label>
-                        <input type="date" id="date_of_visit" class="w-full p-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/70 focus:ring-white focus:border-white">
+                        <input type="date" id="date_of_visit" name="date_of_visit" class="w-full p-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/70 focus:ring-white focus:border-white">
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
                         <label for="barista_name" class="block text-sm font-light text-white/80 mb-1">Barista Name & Position:</label>
-                        <input type="text" id="barista_name" class="w-full p-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/70 focus:ring-white focus:border-white" placeholder="Name, Position">
+                        <input type="text" id="barista_name" name="barista_name" class="w-full p-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/70 focus:ring-white focus:border-white" placeholder="Name, Position">
                     </div>
                     <div>
                         <label for="store_number" class="block text-sm font-light text-white/80 mb-1">Store Name & Number:</label>
-                        <input type="text" id="store_number" class="w-full p-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/70 focus:ring-white focus:border-white" placeholder="Store Name, #">
+                        <input type="text" id="store_number" name="store_number" class="w-full p-2 rounded-md bg-white/10 border border-white/20 text-white placeholder-white/70 focus:ring-white focus:border-white" placeholder="Store Name, #">
                     </div>
                 </div>
             </div>
             
-            
-
-<div class="mt-6 p-3 rounded-lg bg-gray-900 flex justify-between items-center text-sm font-semibold">
-                <span>🎯 Pass Mark: 90 / 100 Points</span>
+            <div class="mt-6 p-3 rounded-lg bg-gray-900 flex justify-between items-center text-sm font-semibold">
+                <!-- Dynamically updated pass mark and max score -->
+                <span id="pass-mark-display">🎯 Max Score: 100 Points</span>
                 <span class="text-white flex items-center">
-                    Total Score: <span id="current-score" class="ml-2 text-xl font-bold">0</span> / 100
+                    Total Score: <span id="current-score" class="ml-2 text-xl font-bold">0</span> / <span id="current-score-max">100</span>
                 </span>
             </div>
         </header>
 
         <main class="p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            
+            <!-- CENTRALIZED DRINK SECTION (WITH TOGGLES) -->
+            <div class="lg:col-span-2 p-5 mb-4 rounded-xl border-l-4 border-black bg-white shadow-md">
+                <h2 class="text-xl font-bold mb-3 text-black">
+                    📋 Drinks Evaluated for Audit
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- 1. Hot Drinks -->
+                    <div>
+                        <label for="hot_drinks_made" class="block text-sm font-bold mb-1 text-black">Hot Drinks (Section 1-3): Choose 3</label>
+                        <textarea id="hot_drinks_made" name="hot_drinks_made" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[60px]" placeholder="e.g., Single Espresso, Small Latte, Large Cappuccino"></textarea>
+                    </div>
+                    <!-- 2. Iced Drinks -->
+                    <div>
+                        <label for="ice_drinks_made" class="block text-sm font-bold mb-1 text-black">Iced Drinks (Section 5): Choose 2</label>
+                        <input type="text" id="ice_drinks_made" name="ice_drinks_made" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="e.g., Small Iced Latte, Large Frappe">
+                    </div>
+                    <!-- 3. Luxury Drinks -->
+                    <div>
+                        <label for="luxury_drinks_prepared" class="block text-sm font-bold mb-1 text-black">Luxury Drinks (Section 6): Choose 1</label>
+                        <input type="text" id="luxury_drinks_prepared" name="luxury_drinks_prepared" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="e.g., Seasonal Hot Chocolate, Caramel Macchiato">
+                    </div>
+                </div>
 
-<div class="lg:col-span-2 p-5 mb-4 rounded-xl border-l-4 border-black bg-white shadow-md">
-                <label for="hot_drinks_made" class="block text-lg font-bold mb-2 text-black">
-                    Which hot drinks were made for the coffee check?
-                </label>
-                <textarea id="hot_drinks_made" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="e.g., Single Espresso, Small Latte, Large Cappuccino"></textarea>
+                <div class="mt-6 pt-4 border-t border-gray-300 flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0">
+                    <!-- Toggle for Ice Drinks -->
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="toggle_ice" name="isIceAuditEnabled" checked class="h-5 w-5 rounded text-black border-gray-300 focus:ring-black">
+                        <label for="toggle_ice" class="text-sm font-medium text-black cursor-pointer">Include Ice Drink Audit (5 pts)</label>
+                    </div>
+                    <!-- Toggle for Luxury Drinks -->
+                    <div class="flex items-center space-x-2">
+                        <input type="checkbox" id="toggle_luxury" name="isLuxuryAuditEnabled" checked class="h-5 w-5 rounded text-black border-gray-300 focus:ring-black">
+                        <label for="toggle_luxury" class="text-sm font-medium text-black cursor-pointer">Include Luxury Drink Audit (4 pts)</label>
+                    </div>
+                </div>
+
             </div>
             
             
-
-<div class="lg:col-span-1 p-5 rounded-xl border-t-4 border-black bg-white shadow-md">
+            <div class="lg:col-span-1 p-5 rounded-xl border-t-4 border-black bg-white shadow-md">
                 <h2 class="text-xl font-bold mb-3 text-black flex items-center">
                     🏆 1. 5 GOLDEN RULES <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">55 PTS</span>
                 </h2>
 
                 
-
-<div class="section-subheading">1. FLUSH</div>
+                <div class="section-subheading">1. FLUSH</div>
                 <div class="rule-item">
                     <span class="rule-label">Was button 3 used for flushing the group head at the start?</span>
                     <span class="rule-points">6 pts</span>
@@ -168,8 +227,7 @@
                 </div>
 
                 
-
-<div class="section-subheading">2. PURGE AND WIPE</div>
+                <div class="section-subheading">2. PURGE AND WIPE</div>
                 <div class="rule-item">
                     <span class="rule-label">Was the steam wand purged before and after steaming?</span>
                     <span class="rule-points">6 pts</span>
@@ -192,8 +250,7 @@
                 </div>
 
                 
-
-<div class="section-subheading">3. LEVEL AND WIPE</div>
+                <div class="section-subheading">3. LEVEL AND WIPE</div>
                 <div class="rule-item">
                     <span class="rule-label">Was the coffee leveled properly?</span>
                     <span class="rule-points">6 pts</span>
@@ -226,8 +283,7 @@
                 </div>
 
                 
-
-<div class="section-subheading">4. EXTRACT AND TIME</div>
+                <div class="section-subheading">4. EXTRACT AND TIME</div>
                 <div class="rule-item">
                     <span class="rule-label">Was extraction started within 10 seconds of the handle being placed into the group head?</span>
                     <span class="rule-points">6 pts</span>
@@ -260,8 +316,7 @@
                 </div>
 
                 
-
-<div class="section-subheading">5. CLEAN AS YOU GO</div>
+                <div class="section-subheading">5. CLEAN AS YOU GO</div>
                 <div class="rule-item">
                     <span class="rule-label">Is the coffee production area clean and tidy? (Around section and around coffee machine)</span>
                     <span class="rule-points">1 pt</span>
@@ -274,14 +329,12 @@
                 </div>
 
                 
-
-<label for="golden_rules_comments" class="block text-sm font-medium text-black mt-4 mb-1">Comments for 5 Golden Rules:</label>
-                <textarea id="golden_rules_comments" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Enter notes on preparation, extraction, timing, and cleanliness..."></textarea>
+                <label for="golden_rules_comments" class="block text-sm font-medium text-black mt-4 mb-1">Comments for 5 Golden Rules:</label>
+                <textarea id="golden_rules_comments" name="golden_rules_comments" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Enter notes on preparation, extraction, timing, and cleanliness..."></textarea>
             </div>
 
             
-
-<div class="lg:col-span-1 p-5 rounded-xl border-t-4 border-black bg-white shadow-md">
+            <div class="lg:col-span-1 p-5 rounded-xl border-t-4 border-black bg-white shadow-md">
                 <h2 class="text-xl font-bold mb-3 text-black flex items-center">
                     🥛 2. Milk Preparation <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">26 PTS</span>
                 </h2>
@@ -327,7 +380,7 @@
                         </div>
                     </div>
                     <div class="rule-item">
-                        <span class="rule-label">Foam levels correct (cappuccino: 2-3cm, latte: 1-1.5cm, flat white: 0.5cm).</span>
+                        <span class="rule-label">Foam levels correct (cappuccino: 2-2.5cm, latte: 1-1.5cm, flat white: 0.5cm).</span>
                         <span class="rule-points">4 pts</span>
                         <div class="radio-group flex items-center" data-points="4" data-group="milk4">
                             <input type="radio" id="milk4_yes" name="milk4" value="yes" class="score-input">
@@ -337,7 +390,7 @@
                         </div>
                     </div>
                     <div class="rule-item">
-                        <span class="rule-label">Presentation up to standard (no splits, no crema overflow).</span>
+                        <span class="rule-label">Presentation up to standard (no spills, no crema overflow).</span>
                         <span class="rule-points">6 pts</span>
                         <div class="radio-group flex items-center" data-points="6" data-group="milk5">
                             <input type="radio" id="milk5_yes" name="milk5" value="yes" class="score-input">
@@ -348,12 +401,11 @@
                     </div>
                 </div>
                 <label for="milk_comments" class="block text-sm font-medium text-black mt-4 mb-1">Comments for Milk Preparation:</label>
-                <textarea id="milk_comments" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black"></textarea>
+                <textarea id="milk_comments" name="milk_comments" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black"></textarea>
             </div>
 
             
-
-<div class="lg:col-span-1 p-5 rounded-xl border-t-4 border-black bg-white shadow-md">
+            <div class="lg:col-span-1 p-5 rounded-xl border-t-4 border-black bg-white shadow-md">
                 <h2 class="text-xl font-bold mb-3 text-black flex items-center">
                     🌍 3. Single Origin <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">8 PTS</span>
                 </h2>
@@ -390,16 +442,14 @@
                     </div>
                 </div>
                 <label for="single_comments" class="block text-sm font-medium text-black mt-4 mb-1">Comments for Single Origin:</label>
-                <textarea id="single_comments" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black"></textarea>
+                <textarea id="single_comments" name="single_comments" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black"></textarea>
             </div>
             
             
-
-<div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4 border-t border-gray-200">
+            <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4 border-t border-gray-200">
                 
                 
-
-<div class="p-4 rounded-lg bg-white border border-gray-200 shadow-sm">
+                <div class="p-4 rounded-lg bg-white border border-gray-200 shadow-sm">
                     <h3 class="font-bold mb-2 text-md text-black flex items-center">⚙️ 4. Coffee Machine <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">2 PTS</span></h3>
                     <div class="space-y-1">
                         <div class="rule-item !border-b-0">
@@ -424,19 +474,13 @@
                         </div>
                     </div>
                     <label for="machine_comments" class="block text-xs font-medium text-black mt-3 mb-1">Comments:</label>
-                    <textarea id="machine_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[40px]"></textarea>
+                    <textarea id="machine_comments" name="machine_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[40px]"></textarea>
                 </div>
 
                 
-
-<div class="p-4 rounded-lg bg-white border border-gray-200 shadow-sm">
+                <div id="section-ice-drink" class="p-4 rounded-lg bg-white border border-gray-200 shadow-sm">
                     <h3 class="font-bold mb-2 text-md text-black flex items-center">🧊 5. Ice Drink <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">5 PTS</span></h3>
                     
-                    
-
-<label for="ice_drinks_made" class="block text-sm font-bold text-black mt-2 mb-1">Which drinks were prepared?</label>
-                    <input type="text" id="ice_drinks_made" class="w-full p-1 text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black mb-3" placeholder="e.g., Small Iced Latte, Large Frappe">
-
                     <div class="space-y-1">
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Barista used the measuring cup.</span>
@@ -470,18 +514,13 @@
                         </div>
                     </div>
                     <label for="ice_comments" class="block text-xs font-medium text-black mt-3 mb-1">Comments:</label>
-                    <textarea id="ice_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[40px]"></textarea>
+                    <textarea id="ice_comments" name="ice_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[40px]"></textarea>
                 </div>
 
                 
-
-<div class="p-4 rounded-lg bg-white border border-gray-200 shadow-sm">
+                <div id="section-luxury-drink" class="p-4 rounded-lg bg-white border border-gray-200 shadow-sm">
                     <h3 class="font-bold mb-2 text-md text-black flex items-center">👑 6. Luxury Drink <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">4 PTS</span></h3>
                     <div class="space-y-1">
-                        <!-- New Text Input for Drink Name (0 points) -->
-                        <label for="luxury_drinks_prepared" class="block text-sm font-bold text-black mb-1">Which luxury drink(s) were prepared?</label>
-                        <input type="text" id="luxury_drinks_prepared" class="w-full p-1 text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black mb-3" placeholder="e.g., Seasonal Hot Chocolate, Caramel Macchiato">
-                        
                         <!-- New Checkbox: Was the thermometer in use? (1 pt) -->
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Was the thermometer in use?</span>
@@ -526,7 +565,7 @@
                         </div>
                     </div>
                     <label for="luxury_comments" class="block text-xs font-medium text-black mt-3 mb-1">Comments:</label>
-                    <textarea id="luxury_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[40px]"></textarea>
+                    <textarea id="luxury_comments" name="luxury_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[40px]"></textarea>
                 </div>
 
             </div>
@@ -540,243 +579,525 @@
                 This section is crucial for continuous improvement.
             </p>
             <label for="overall_feedback" class="sr-only">Overall Feedback</label>
-            <textarea id="overall_feedback" class="w-full p-3 border border-white/30 rounded-md bg-white/10 text-white placeholder-white/70 focus:ring-white focus:border-white min-h-[100px]" placeholder="Type your overall feedback and notes here..."></textarea>
+            <textarea id="overall_feedback" name="overall_feedback" class="w-full p-3 border border-white/30 rounded-md bg-white/10 text-white placeholder-white/70 focus:ring-white focus:border-white min-h-[100px]" placeholder="Type your overall feedback and notes here..."></textarea>
             
             <div class="mt-6 flex flex-col sm:flex-row justify-between items-center text-lg space-y-4 sm:space-y-0">
                 
-
-<div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-4">
                     <span class="font-semibold">Final Score:</span>
                     <span id="final-score-footer" class="text-3xl font-extrabold text-white">0 / 100</span>
                 </div>
                 
-                
-
-<button id="copy-report-button" class="px-4 py-2 bg-white text-black font-bold rounded-lg shadow-lg hover:shadow-xl transition duration-200 hover:bg-gray-100">
-                    Copy Full Report
-                </button>
+                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                    <button id="reset-button" class="px-4 py-2 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition duration-200 hover:bg-red-700">
+                        Start New Audit
+                    </button>
+                    <button id="copy-report-button" class="px-4 py-2 bg-white text-black font-bold rounded-lg shadow-lg hover:shadow-xl transition duration-200 hover:bg-gray-100">
+                        Copy Full Report
+                    </button>
+                </div>
             </div>
             <p id="pass-fail-status" class="text-center mt-3 text-lg font-bold"></p>
         </footer>
 
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const scoreInputs = document.querySelectorAll('.score-input');
-            const currentScoreDisplay = document.getElementById('current-score');
-            const finalScoreFooterDisplay = document.getElementById('final-score-footer');
-            const passFailStatus = document.getElementById('pass-fail-status');
-            const copyButton = document.getElementById('copy-report-button');
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-            // The maximum possible score is 100
-            const MAX_SCORE = 100;
-            const PASS_MARK = 90; // Threshold for passing
+        // IMPORTANT: Use Canvas provided global variables for configuration and authentication
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        
+        // Configuration
+        setLogLevel('Debug');
+        const BASE_MAX_SCORE = 100;
+        const ICE_DRINK_POINTS = 5;
+        const LUXURY_DRINK_POINTS = 4;
+        const AUDIT_DOC_ID = 'current_audit_session'; 
+
+        let dynamicMaxScore = BASE_MAX_SCORE;
+        let db;
+        let auth;
+        let userId = null;
+        let isAuthReady = false;
+        
+        const currentScoreDisplay = document.getElementById('current-score');
+        const currentScoreMaxDisplay = document.getElementById('current-score-max');
+        const finalScoreFooterDisplay = document.getElementById('final-score-footer');
+        const passFailStatus = document.getElementById('pass-fail-status');
+        const passMarkDisplay = document.getElementById('pass-mark-display');
+        const copyButton = document.getElementById('copy-report-button');
+        const resetButton = document.getElementById('reset-button');
+        const saveStatusDisplay = document.getElementById('save-status');
+        const userIdDisplay = document.getElementById('user-id-display');
+        const formInputs = document.querySelectorAll('input, textarea');
+        const scoreInputs = document.querySelectorAll('.score-input');
+        const toggleIce = document.getElementById('toggle_ice');
+        const toggleLuxury = document.getElementById('toggle_luxury');
+        const sectionIceDrink = document.getElementById('section-ice-drink');
+        const sectionLuxuryDrink = document.getElementById('section-luxury-drink');
+
+        const originalButtonClasses = 'px-4 py-2 bg-white text-black font-bold rounded-lg shadow-lg hover:shadow-xl transition duration-200 hover:bg-gray-100';
+
+        // --- FIREBASE INITIALIZATION AND AUTH ---
+        async function setupFirebase() {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        userIdDisplay.textContent = userId;
+                        isAuthReady = true;
+                        startRealtimeSync();
+                    } else {
+                        userId = null;
+                        userIdDisplay.textContent = 'Anonymous (Unsaved)';
+                        isAuthReady = true; 
+                        saveStatusDisplay.innerHTML = '<span class="text-red-500">Authentication Failed. Cannot Save.</span>';
+                    }
+                });
+
+            } catch (error) {
+                console.error("Firebase Initialization or Auth Error:", error);
+                saveStatusDisplay.innerHTML = '<span class="text-red-500">Error setting up database.</span>';
+            }
+        }
+        
+        // --- UI/SCORE UPDATES ---
+
+        function updateMaxScoreAndUI() {
+            let newMax = BASE_MAX_SCORE;
             
-            const originalButtonClasses = 'px-4 py-2 bg-white text-black font-bold rounded-lg shadow-lg hover:shadow-xl transition duration-200 hover:bg-gray-100';
+            const isIceEnabled = toggleIce.checked;
+            const isLuxuryEnabled = toggleLuxury.checked;
 
-            function calculateScore() {
-                let totalScore = 0;
-                scoreInputs.forEach(input => {
-                    if (input.checked && input.value === 'yes') {
-                        const points = parseInt(input.closest('.radio-group').dataset.points);
-                        totalScore += points;
-                    }
-                });
-                currentScoreDisplay.textContent = totalScore;
-                finalScoreFooterDisplay.textContent = `${totalScore} / ${MAX_SCORE}`; 
-                
-                // Status logic (using toned-down colors on dark footer)
-                if (totalScore >= PASS_MARK) {
-                    passFailStatus.textContent = "Status: PASSED! 🎉";
-                    passFailStatus.className = "text-center mt-3 text-lg font-bold text-green-400";
-                } else {
-                    passFailStatus.textContent = "Status: Needs Work 😔 (Below 90 points)";
-                    passFailStatus.className = "text-center mt-3 text-lg font-bold text-red-400";
-                }
+            // Update Max Score and Visibility
+            if (!isIceEnabled) {
+                newMax -= ICE_DRINK_POINTS;
+                if (sectionIceDrink) sectionIceDrink.classList.add('hidden');
+            } else {
+                if (sectionIceDrink) sectionIceDrink.classList.remove('hidden');
             }
 
-            function copyReportToClipboard() {
-                // 1. Gather Admin/General Info
-                const adminInfo = {
-                    'Auditor Name': document.getElementById('audit_by').value || 'N/A',
-                    'Date of Visit': document.getElementById('date_of_visit').value || 'N/A',
-                    'Barista Name/Position': document.getElementById('barista_name').value || 'N/A',
-                    'Store Name/Number': document.getElementById('store_number').value || 'N/A',
-                };
-                
-                // 2. Gather Drinks Prepared
-                const drinksPrepared = {
-                    'Hot Drinks Check': document.getElementById('hot_drinks_made').value || 'N/A',
-                    'Ice Drinks Check': document.getElementById('ice_drinks_made').value || 'N/A',
-                    'Luxury Drinks Check': document.getElementById('luxury_drinks_prepared').value || 'N/A', 
-                };
-
-                // 3. Map Section Titles and Comments
-                const sectionMap = {
-                    'golden1': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                    'golden2': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                    'golden3': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                    'golden4': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                    'golden5': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                    'golden6': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                    'extract1': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                    'extract2': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                    'extract4': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                    'clean': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-
-                    'milk1': { title: '2. Milk Preparation', commentId: 'milk_comments' },
-                    'milk2': { title: '2. Milk Preparation', commentId: 'milk_comments' },
-                    'milk_steamed_extracted': { title: '2. Milk Preparation', commentId: 'milk_comments' },
-                    'milk3': { title: '2. Milk Preparation', commentId: 'milk_comments' },
-                    'milk4': { title: '2. Milk Preparation', commentId: 'milk_comments' },
-                    'milk5': { title: '2. Milk Preparation', commentId: 'milk_comments' },
-
-                    'single1': { title: '3. Single Origin', commentId: 'single_comments' },
-                    'single2': { title: '3. Single Origin', commentId: 'single_comments' },
-                    'single3': { title: '3. Single Origin', commentId: 'single_comments' },
-                    
-                    'machine1': { title: '4. Coffee Machine', commentId: 'machine_comments' },
-                    'machine2': { title: '4. Coffee Machine', commentId: 'machine_comments' },
-                    
-                    'ice2': { title: '5. Ice Drink', commentId: 'ice_comments' },
-                    'ice3': { title: '5. Ice Drink', commentId: 'ice_comments' },
-                    'ice4': { title: '5. Ice Drink', commentId: 'ice_comments' },
-                    
-                    'luxury1': { title: '6. Luxury Drink', commentId: 'luxury_comments' }, 
-                    'luxury2': { title: '6. Luxury Drink', commentId: 'luxury_comments' },
-                    'luxury3': { title: '6. Luxury Drink', commentId: 'luxury_comments' },
-                    'luxury4': { title: '6. Luxury Drink', commentId: 'luxury_comments' },
-                };
-
-                // 4. Collect all question results grouped by section
-                const sectionsReport = {};
-
-                document.querySelectorAll('.rule-item').forEach(item => {
-                    const radioGroupElement = item.querySelector('.radio-group');
-                    if (radioGroupElement) {
-                        const groupName = radioGroupElement.dataset.group;
-                        const sectionData = sectionMap[groupName];
-
-                        if (!sectionsReport[sectionData.title]) {
-                            sectionsReport[sectionData.title] = { 
-                                questions: [], 
-                                pointsScored: 0, 
-                                maxPoints: 0, 
-                                commentId: sectionData.commentId
-                            };
-                        }
-
-                        const currentSection = sectionsReport[sectionData.title];
-                        
-                        const label = item.querySelector('.rule-label').textContent.trim();
-                        const maxPts = parseInt(radioGroupElement.dataset.points);
-                        const checkedYes = item.querySelector(`input[name="${groupName}"][value="yes"]:checked`);
-                        const scoredPts = checkedYes ? maxPts : 0;
-                        const result = checkedYes ? 'YES' : 'NO';
-
-                        // Simple line format
-                        const ruleEntry = `[${result}] (${scoredPts}/${maxPts} pts) - ${label}`;
-                        
-                        currentSection.questions.push(ruleEntry);
-                        currentSection.pointsScored += scoredPts;
-                        currentSection.maxPoints += maxPts;
-                    }
-                });
-
-                // 5. Construct the final report string (Standardized to \n\n\n for 2 blank lines between major blocks)
-                let reportContent = "\n"; 
-                reportContent += "          BARISTA QUALITY AUDIT REPORT        \n";
-                reportContent += "\n\n\n"; // 2 blank lines separation
-
-                // A. Summary
-                const totalScore = document.getElementById('current-score').textContent;
-                const status = document.getElementById('pass-fail-status').textContent.trim().replace('Status: ', '');
-                
-                reportContent += "AUDIT SUMMARY\n";
-                reportContent += `TOTAL SCORE: ${totalScore} / ${MAX_SCORE}\n`;
-                reportContent += `FINAL STATUS: ${status}\n`;
-                reportContent += "\n\n\n"; // 2 blank lines separation
-                
-                // B. Admin Info
-                reportContent += "ADMINISTRATIVE DETAILS\n";
-                for (const [key, value] of Object.entries(adminInfo)) {
-                    reportContent += `${key}: ${value}\n`;
-                }
-                
-                reportContent += "\nDRINKS EVALUATED\n"; // 1 blank line between admin fields and drinks
-                for (const [key, value] of Object.entries(drinksPrepared)) {
-                    reportContent += `${key}: ${value}\n`;
-                }
-                reportContent += "\n\n\n"; // 2 blank lines separation
-
-                // C. Detailed Breakdown
-                for (const [sectionTitle, data] of Object.entries(sectionsReport)) {
-                    // Section Title with scoring
-                    reportContent += `${sectionTitle} (${data.pointsScored}/${data.maxPoints} pts)\n`;
-                    
-                    // Add all questions for the section
-                    reportContent += data.questions.join('\n');
-                    
-                    // Add comments specific to the section
-                    const commentText = document.getElementById(data.commentId).value.trim();
-                    if (commentText) {
-                        reportContent += `\n\nSection Comments:\n${commentText}`; // 1 blank line before comments block
-                    }
-                    reportContent += "\n\n\n"; // 2 blank lines separation
-                }
-                
-                // D. Overall Feedback
-                const overallFeedback = document.getElementById('overall_feedback').value.trim() || 'No detailed overall feedback provided.';
-                reportContent += "OVERALL FEEDBACK\n";
-                reportContent += overallFeedback;
-                reportContent += "\n"; // End of report
-
-
-                // 6. Copy to clipboard
-                const tempTextarea = document.createElement('textarea');
-                tempTextarea.value = reportContent;
-                document.body.appendChild(tempTextarea);
-                tempTextarea.select();
-                
-                let copySuccess = false;
-                try {
-                    copySuccess = document.execCommand('copy');
-                } catch (err) {
-                    console.error('Copy command failed:', err);
-                }
-                
-                document.body.removeChild(tempTextarea);
-
-                // 7. Provide feedback
-                copyButton.className = ''; // Clear existing classes
-                const originalText = copyButton.textContent;
-                
-                if (copySuccess) {
-                    copyButton.textContent = 'Copied! ✅';
-                    copyButton.classList.add('px-4', 'py-2', 'bg-green-500', 'text-white', 'font-bold', 'rounded-lg', 'shadow-lg', 'transition', 'duration-200');
-                } else {
-                    copyButton.textContent = 'Copy Failed ❌';
-                    copyButton.classList.add('px-4', 'py-2', 'bg-red-500', 'text-white', 'font-bold', 'rounded-lg', 'shadow-lg', 'transition', 'duration-200');
-                }
-
-                setTimeout(() => {
-                    copyButton.textContent = originalText;
-                    copyButton.className = originalButtonClasses;
-                }, 2000);
+            if (!isLuxuryEnabled) {
+                newMax -= LUXURY_DRINK_POINTS;
+                if (sectionLuxuryDrink) sectionLuxuryDrink.classList.add('hidden');
+            } else {
+                if (sectionLuxuryDrink) sectionLuxuryDrink.classList.remove('hidden');
             }
 
-            // Event Listeners
+            dynamicMaxScore = newMax;
+            
+            // Update header and footer displays with the new MAX_SCORE
+            passMarkDisplay.textContent = `🎯 Max Score: ${dynamicMaxScore} Points`;
+            currentScoreMaxDisplay.textContent = dynamicMaxScore;
+            
+            calculateScore(true); // Recalculate score against the new max
+        }
+
+        function calculateScore(updateDisplay = true) {
+            let totalScore = 0;
+
+            // Find scored points only from visible sections
             scoreInputs.forEach(input => {
-                input.addEventListener('change', calculateScore);
-            });
-            copyButton.addEventListener('click', copyReportToClipboard);
+                const groupName = input.name;
+                const points = parseInt(input.closest('.radio-group').dataset.points);
+                
+                // Check if the input belongs to an invisible section
+                let isHidden = false;
+                if (!toggleIce.checked && (groupName === 'ice2' || groupName === 'ice3' || groupName === 'ice4')) {
+                    isHidden = true;
+                }
+                if (!toggleLuxury.checked && (groupName === 'luxury1' || groupName === 'luxury2' || groupName === 'luxury3' || groupName === 'luxury4')) {
+                    isHidden = true;
+                }
 
-            // Initial calculation
-            calculateScore();
+                if (input.checked && input.value === 'yes' && !isHidden) {
+                    totalScore += points;
+                }
+            });
+            
+            if (updateDisplay) {
+                currentScoreDisplay.textContent = totalScore;
+                finalScoreFooterDisplay.textContent = `${totalScore} / ${dynamicMaxScore}`; 
+                
+                // --- NEW STATUS LOGIC BASED ON PERCENTAGE (90% Passed, 80-89% So Close) ---
+                let percentage = dynamicMaxScore > 0 ? (totalScore / dynamicMaxScore) * 100 : 0;
+                
+                let statusText = "";
+                let statusClass = "text-center mt-3 text-lg font-bold";
+                
+                if (percentage >= 90) {
+                    statusText = `Status: PASSED! 🎉 (${percentage.toFixed(1)}%)`;
+                    statusClass += " text-green-400";
+                } else if (percentage >= 80) {
+                    statusText = `Status: SO CLOSE! 💪 (${percentage.toFixed(1)}%)`;
+                    statusClass += " text-yellow-300";
+                } else {
+                    statusText = `Status: Needs Work 😔 (${percentage.toFixed(1)}%)`;
+                    statusClass += " text-red-400";
+                }
+
+                passFailStatus.textContent = statusText;
+                passFailStatus.className = statusClass;
+            }
+            return totalScore;
+        }
+
+        // --- UNIFIED EVENT HANDLER for instant score update and saving ---
+        function handleInput() {
+            // 1. Recalculate and update UI instantly
+            calculateScore(true);
+
+            // 2. Save data to Firestore (throttled by Firebase listeners/batching)
+            saveAudit();
+        }
+
+
+        // --- FIREBASE SYNC FUNCTIONS ---
+
+        function getAuditRef() {
+            if (!db || !userId) return null;
+            const auditsCollectionPath = `artifacts/${appId}/users/${userId}/barista_audits`;
+            return doc(db, auditsCollectionPath, AUDIT_DOC_ID);
+        }
+
+        function collectFormData() {
+            const data = {};
+
+            // 1. Collect all named inputs (including header, text areas, and TOGGLES)
+            document.querySelectorAll('[name]').forEach(input => {
+                if (input.type === 'checkbox') {
+                    data[input.name] = input.checked; // Save boolean for toggles
+                } else {
+                    data[input.name] = input.value;
+                }
+            });
+            
+            // 2. Collect radio button group values
+            document.querySelectorAll('.radio-group').forEach(group => {
+                const groupName = group.dataset.group;
+                const checkedInput = document.querySelector(`input[name="${groupName}"]:checked`);
+                data[groupName] = checkedInput ? checkedInput.value : '';
+            });
+
+            // 3. Store calculated score and dynamic max score
+            data.calculatedScore = calculateScore(false);
+            data.dynamicMaxScore = dynamicMaxScore;
+
+            return data;
+        }
+
+        async function saveAudit() {
+            if (!isAuthReady || !userId) return;
+
+            const auditRef = getAuditRef();
+            if (!auditRef) return;
+
+            const data = collectFormData();
+            
+            try {
+                saveStatusDisplay.innerHTML = '<span class="text-yellow-400">Saving...</span>';
+                await setDoc(auditRef, data);
+                saveStatusDisplay.innerHTML = '<span class="text-green-400">Saved!</span>';
+                
+            } catch (error) {
+                console.error("Error saving document: ", error);
+                saveStatusDisplay.innerHTML = '<span class="text-red-400">Save Failed!</span>';
+            }
+        }
+
+        function loadAudit(data) {
+            if (!data) return;
+
+            // 1. Populate text and date inputs
+            document.querySelectorAll('[name]').forEach(input => {
+                if (input.type !== 'checkbox' && data[input.name] !== undefined) {
+                    input.value = data[input.name];
+                }
+            });
+            
+            // 2. Populate toggles (checkboxes)
+            if (data.isIceAuditEnabled !== undefined) {
+                toggleIce.checked = data.isIceAuditEnabled; 
+            }
+            if (data.isLuxuryAuditEnabled !== undefined) {
+                toggleLuxury.checked = data.isLuxuryAuditEnabled;
+            }
+            
+            // 3. Update visibility and dynamic max score first
+            updateMaxScoreAndUI();
+
+            // 4. Populate radio buttons (which relies on the correct max score calculation)
+            document.querySelectorAll('.radio-group').forEach(group => {
+                const groupName = group.dataset.group;
+                const savedValue = data[groupName];
+                if (savedValue) {
+                    const input = document.querySelector(`input[name="${groupName}"][value="${savedValue}"]`);
+                    if (input) {
+                        input.checked = true;
+                    }
+                }
+            });
+            
+            // 5. Final recalculate score
+            calculateScore(true);
+        }
+
+        function startRealtimeSync() {
+            const auditRef = getAuditRef();
+            if (!auditRef) return;
+            
+            onSnapshot(auditRef, (doc) => {
+                if (doc.exists()) {
+                    loadAudit(doc.data());
+                    saveStatusDisplay.innerHTML = '<span class="text-green-400">Loaded & Ready.</span>';
+                } else {
+                    saveStatusDisplay.innerHTML = '<span class="text-green-400">New Session. Ready.</span>';
+                    // Run initial UI setup for default checked state
+                    updateMaxScoreAndUI();
+                }
+            }, (error) => {
+                console.error("Error listening to document: ", error);
+                saveStatusDisplay.innerHTML = '<span class="text-red-400">Sync Error!</span>';
+            });
+        }
+        
+        // --- NEW RESET FUNCTION ---
+        function resetForm() {
+            // 1. Clear text inputs and textareas
+            document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(input => {
+                input.value = '';
+            });
+
+            // 2. Clear radio button selections
+            document.querySelectorAll('.score-input').forEach(input => {
+                input.checked = false;
+            });
+
+            // 3. Reset toggles to default (enabled)
+            toggleIce.checked = true;
+            toggleLuxury.checked = true;
+
+            // 4. Update UI to reflect 0 score and default max score, and save the cleared state
+            // Calling updateMaxScoreAndUI triggers calculateScore(true) which then calls saveAudit()
+            updateMaxScoreAndUI(); 
+            
+            // Optional: Provide visual feedback for reset button
+            const originalText = resetButton.textContent;
+            resetButton.textContent = 'Form Cleared! 👍';
+            resetButton.classList.replace('bg-red-600', 'bg-green-600');
+            setTimeout(() => {
+                resetButton.textContent = originalText;
+                resetButton.classList.replace('bg-green-600', 'bg-red-600');
+            }, 1500);
+        }
+
+        // --- REPORT COPY LOGIC ---
+        function copyReportToClipboard() {
+            // 1. Gather Admin/General Info
+            const adminInfo = {
+                'Auditor Name': document.getElementById('audit_by').value || 'N/A',
+                'Date of Visit': document.getElementById('date_of_visit').value || 'N/A',
+                'Barista Name/Position': document.getElementById('barista_name').value || 'N/A',
+                'Store Name/Number': document.getElementById('store_number').value || 'N/A',
+            };
+            
+            // 2. Gather Drinks Prepared
+            const drinksPrepared = {
+                'Hot Drinks Check (Choose 3)': document.getElementById('hot_drinks_made').value || 'N/A',
+                'Ice Drinks Check (Choose 2)': toggleIce.checked ? (document.getElementById('ice_drinks_made').value || 'N/A') : 'SECTION DISABLED',
+                'Luxury Drinks Check (Choose 1)': toggleLuxury.checked ? (document.getElementById('luxury_drinks_prepared').value || 'N/A') : 'SECTION DISABLED', 
+            };
+
+            // 3. Map Section Titles and Comments
+            const sectionMap = {
+                'golden1': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' }, 'golden2': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                'golden3': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' }, 'golden4': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                'golden5': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' }, 'golden6': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                'extract1': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' }, 'extract2': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+                'extract4': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' }, 'clean': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+
+                'milk1': { title: '2. Milk Preparation', commentId: 'milk_comments' }, 'milk2': { title: '2. Milk Preparation', commentId: 'milk_comments' },
+                'milk_steamed_extracted': { title: '2. Milk Preparation', commentId: 'milk_comments' }, 'milk3': { title: '2. Milk Preparation', commentId: 'milk_comments' },
+                'milk4': { title: '2. Milk Preparation', commentId: 'milk_comments' }, 'milk5': { title: '2. Milk Preparation', commentId: 'milk_comments' },
+
+                'single1': { title: '3. Single Origin', commentId: 'single_comments' }, 'single2': { title: '3. Single Origin', commentId: 'single_comments' },
+                'single3': { title: '3. Single Origin', commentId: 'single_comments' },
+                
+                'machine1': { title: '4. Coffee Machine', commentId: 'machine_comments' }, 'machine2': { title: '4. Coffee Machine', commentId: 'machine_comments' },
+                
+                'ice2': { title: '5. Ice Drink', commentId: 'ice_comments', enabled: toggleIce.checked }, 'ice3': { title: '5. Ice Drink', commentId: 'ice_comments', enabled: toggleIce.checked },
+                'ice4': { title: '5. Ice Drink', commentId: 'ice_comments', enabled: toggleIce.checked },
+                
+                'luxury1': { title: '6. Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked }, 
+                'luxury2': { title: '6. Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked },
+                'luxury3': { title: '6. Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked }, 
+                'luxury4': { title: '6. Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked },
+            };
+
+            // 4. Collect all question results grouped by section
+            const sectionsReport = {};
+
+            document.querySelectorAll('.rule-item').forEach(item => {
+                const radioGroupElement = item.querySelector('.radio-group');
+                if (radioGroupElement) {
+                    const groupName = radioGroupElement.dataset.group;
+                    const sectionData = sectionMap[groupName];
+
+                    // Skip if section is disabled
+                    if (sectionData && sectionData.enabled === false) return;
+
+                    if (!sectionsReport[sectionData.title]) {
+                        sectionsReport[sectionData.title] = { 
+                            questions: [], 
+                            pointsScored: 0, 
+                            maxPoints: 0, 
+                            commentId: sectionData.commentId
+                        };
+                    }
+
+                    const currentSection = sectionsReport[sectionData.title];
+                    
+                    const label = item.querySelector('.rule-label').textContent.trim();
+                    const maxPts = parseInt(radioGroupElement.dataset.points);
+                    const checkedYes = item.querySelector(`input[name="${groupName}"][value="yes"]:checked`);
+                    const scoredPts = checkedYes ? maxPts : 0;
+                    const result = checkedYes ? 'YES' : 'NO';
+
+                    // Simple line format
+                    const ruleEntry = `[${result}] (${scoredPts}/${maxPts} pts) - ${label}`;
+                    
+                    currentSection.questions.push(ruleEntry);
+                    currentSection.pointsScored += scoredPts;
+                    currentSection.maxPoints += maxPts;
+                }
+            });
+
+            // 5. Construct the final report string
+            let reportContent = "\n"; 
+            reportContent += "          BARISTA QUALITY AUDIT REPORT        \n";
+            reportContent += "\n\n\n"; 
+
+            // A. Summary
+            const totalScore = document.getElementById('current-score').textContent;
+            const status = document.getElementById('pass-fail-status').textContent.trim().replace('Status: ', '');
+            
+            reportContent += "AUDIT SUMMARY\n";
+            reportContent += `TOTAL SCORE: ${totalScore} / ${dynamicMaxScore}\n`;
+            reportContent += `FINAL STATUS: ${status}\n`;
+            reportContent += "\n\n\n"; 
+            
+            // B. Admin Info
+            reportContent += "ADMINISTRATIVE DETAILS\n";
+            for (const [key, value] of Object.entries(adminInfo)) {
+                reportContent += `${key}: ${value}\n`;
+            }
+            
+            reportContent += "\nDRINKS EVALUATED\n"; 
+            for (const [key, value] of Object.entries(drinksPrepared)) {
+                reportContent += `${key}: ${value}\n`;
+            }
+            reportContent += "\n\n\n"; 
+
+            // C. Detailed Breakdown
+            for (const [sectionTitle, data] of Object.entries(sectionsReport)) {
+                // Skip disabled sections in the breakdown too
+                if (sectionTitle === '5. Ice Drink' && !toggleIce.checked) continue;
+                if (sectionTitle === '6. Luxury Drink' && !toggleLuxury.checked) continue;
+
+                // Section Title with scoring
+                reportContent += `${sectionTitle} (${data.pointsScored}/${data.maxPoints} pts)\n`;
+                
+                // Add all questions for the section
+                reportContent += data.questions.join('\n');
+                
+                // Add comments specific to the section
+                const commentText = document.getElementById(data.commentId).value.trim();
+                if (commentText) {
+                    reportContent += `\n\nSection Comments:\n${commentText}`; 
+                }
+                reportContent += "\n\n\n"; 
+            }
+            
+            // D. Overall Feedback
+            const overallFeedback = document.getElementById('overall_feedback').value.trim() || 'No detailed overall feedback provided.';
+            reportContent += "OVERALL FEEDBACK\n";
+            reportContent += overallFeedback;
+            reportContent += "\n"; 
+
+
+            // 6. Copy to clipboard
+            const tempTextarea = document.createElement('textarea');
+            tempTextarea.value = reportContent;
+            document.body.appendChild(tempTextarea);
+            tempTextarea.select();
+            
+            let copySuccess = false;
+            try {
+                copySuccess = document.execCommand('copy');
+            } catch (err) {
+                console.error('Copy command failed:', err);
+            }
+            
+            document.body.removeChild(tempTextarea);
+
+            // 7. Provide feedback
+            copyButton.className = ''; 
+            const originalText = copyButton.textContent;
+            
+            if (copySuccess) {
+                copyButton.textContent = 'Copied! ✅';
+                copyButton.classList.add('px-4', 'py-2', 'bg-green-500', 'text-white', 'font-bold', 'rounded-lg', 'shadow-lg', 'transition', 'duration-200');
+            } else {
+                copyButton.textContent = 'Copy Failed ❌';
+                copyButton.classList.add('px-4', 'py-2', 'bg-red-500', 'text-white', 'font-bold', 'rounded-lg', 'shadow-lg', 'transition', 'duration-200');
+            }
+
+            setTimeout(() => {
+                copyButton.textContent = originalText;
+                copyButton.className = originalButtonClasses;
+            }, 2000);
+        }
+
+        // --- EVENT LISTENERS AND INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Attach save and score calculation to all relevant inputs
+            formInputs.forEach(input => {
+                input.addEventListener('input', handleInput); 
+            });
+            
+            // Radio buttons only need the 'change' event for reliable detection
+            scoreInputs.forEach(input => {
+                input.addEventListener('change', handleInput);
+            });
+
+            // Toggles need a special handler to update max score/UI first
+            toggleIce.addEventListener('change', updateMaxScoreAndUI);
+            toggleLuxury.addEventListener('change', updateMaxScoreAndUI);
+            
+            copyButton.addEventListener('click', copyReportToClipboard);
+            resetButton.addEventListener('click', resetForm);
+            
+            // Initial Firebase setup
+            setupFirebase();
         });
     </script>
 
 </body>
 </html>
+
 
