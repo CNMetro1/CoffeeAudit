@@ -36,6 +36,7 @@
             text-align: right;
             margin-right: 1rem;
         }
+        /* Custom Radio Group Styling */
         .radio-group input[type="radio"] {
             margin-left: 0.5rem;
             cursor: pointer;
@@ -113,6 +114,15 @@
             color: white;
             line-height: 1;
         }
+        /* Style for the Blender button group layout */
+        .blender-radio-group {
+            display: grid;
+            grid-template-columns: auto auto; /* Two columns for Yes/No */
+            gap: 0.5rem;
+        }
+        .blender-radio-group .na-option {
+            grid-column: 1 / 2; /* N/A spans the first column, under Yes */
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8">
@@ -177,17 +187,17 @@
                     📋 Drinks Evaluated for Audit
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- 1. Hot Drinks -->
+                    <!-- 1. Hot Drinks (3 drinks required) -->
                     <div>
                         <label for="hot_drinks_made" class="block text-sm font-bold mb-1 text-black">Hot Drinks (Section 1-3): Choose 3</label>
                         <textarea id="hot_drinks_made" name="hot_drinks_made" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[60px]" placeholder="e.g., Single Espresso, Small Latte, Large Cappuccino"></textarea>
                     </div>
-                    <!-- 2. Iced Drinks -->
+                    <!-- 2. Iced Drinks (2 drinks required) -->
                     <div>
                         <label for="ice_drinks_made" class="block text-sm font-bold mb-1 text-black">Iced Drinks (Section 5): Choose 2</label>
                         <input type="text" id="ice_drinks_made" name="ice_drinks_made" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="e.g., Small Iced Latte, Large Frappe">
                     </div>
-                    <!-- 3. Luxury Drinks -->
+                    <!-- 3. Luxury Drinks (1 drink required) -->
                     <div>
                         <label for="luxury_drinks_prepared" class="block text-sm font-bold mb-1 text-black">Luxury Drinks (Section 6): Choose 1</label>
                         <input type="text" id="luxury_drinks_prepared" name="luxury_drinks_prepared" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="e.g., Seasonal Hot Chocolate, Caramel Macchiato">
@@ -507,11 +517,21 @@
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Right button pressed on blender.</span>
                             <span class="rule-points">1 pt</span>
-                            <div class="radio-group flex items-center" data-points="1" data-group="ice4">
-                                <input type="radio" id="ice4_yes" name="ice4" value="yes" class="score-input">
-                                <label for="ice4_yes">Yes</label>
-                                <input type="radio" id="ice4_no" name="ice4" value="no" class="score-input">
-                                <label for="ice4_no">No</label>
+                            <div class="radio-group blender-radio-group" data-points="1" data-group="ice4">
+                                <!-- Yes/No side-by-side -->
+                                <div class="flex items-center">
+                                    <input type="radio" id="ice4_yes" name="ice4" value="yes" class="score-input">
+                                    <label for="ice4_yes">Yes</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input type="radio" id="ice4_no" name="ice4" value="no" class="score-input">
+                                    <label for="ice4_no">No</label>
+                                </div>
+                                <!-- N/A underneath Yes -->
+                                <div class="flex items-center na-option">
+                                    <input type="radio" id="ice4_na" name="ice4" value="na" class="score-input">
+                                    <label for="ice4_na">N/A</label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -620,7 +640,7 @@
         const passMarkDisplay = document.getElementById('pass-mark-display');
         const copyButton = document.getElementById('copy-report-button');
         const resetButton = document.getElementById('reset-button');
-        const clearTopButton = document.getElementById('clear-top-button'); // NEW
+        const clearTopButton = document.getElementById('clear-top-button');
         const saveStatusDisplay = document.getElementById('save-status');
         const formInputs = document.querySelectorAll('input, textarea');
         const scoreInputs = document.querySelectorAll('.score-input');
@@ -679,8 +699,11 @@
                 if (!toggleLuxury.checked && (groupName === 'luxury1' || groupName === 'luxury2' || groupName === 'luxury3' || groupName === 'luxury4')) {
                     isHidden = true;
                 }
+                
+                // Scoring logic: Grant points for 'yes' AND 'na' (Not Applicable)
+                const isScored = (input.checked && (input.value === 'yes' || input.value === 'na'));
 
-                if (input.checked && input.value === 'yes' && !isHidden) {
+                if (isScored && !isHidden) {
                     totalScore += points;
                 }
             });
@@ -837,8 +860,6 @@
             updateMaxScoreAndUI(); 
             
             // Optional: Provide visual feedback for reset button
-            // This logic is complex for the top button, let's keep it simple and just rely on the form clearing.
-            // The logic below is mainly for the footer button for better UX feedback.
             if (this.id === 'reset-button') {
                 const originalText = resetButton.textContent;
                 resetButton.textContent = 'Form Cleared! 👍';
@@ -847,6 +868,9 @@
                     resetButton.textContent = originalText;
                     resetButton.classList.replace('bg-green-600', 'bg-red-600');
                 }, 1500);
+            }
+            if (this.id === 'clear-top-button') {
+                saveStatusDisplay.innerHTML = '<span class="text-green-400">Cleared. Saved.</span>';
             }
         }
 
@@ -918,9 +942,20 @@
                     
                     const label = item.querySelector('.rule-label').textContent.trim();
                     const maxPts = parseInt(radioGroupElement.dataset.points);
-                    const checkedYes = item.querySelector(`input[name="${groupName}"][value="yes"]:checked`);
-                    const scoredPts = checkedYes ? maxPts : 0;
-                    const result = checkedYes ? 'YES' : 'NO';
+                    
+                    let result = 'NO';
+                    let scoredPts = 0;
+                    const checkedInput = item.querySelector(`input[name="${groupName}"]:checked`);
+                    
+                    if (checkedInput) {
+                        if (checkedInput.value === 'yes' || checkedInput.value === 'na') {
+                            scoredPts = maxPts;
+                            result = checkedInput.value.toUpperCase(); // YES or NA
+                        } else {
+                            // value is 'no'
+                            result = 'NO';
+                        }
+                    }
 
                     // Simple line format
                     const ruleEntry = `[${result}] (${scoredPts}/${maxPts} pts) - ${label}`;
@@ -1037,7 +1072,7 @@
             // Action buttons
             copyButton.addEventListener('click', copyReportToClipboard);
             resetButton.addEventListener('click', resetForm);
-            clearTopButton.addEventListener('click', resetForm); // NEW BINDING
+            clearTopButton.addEventListener('click', resetForm);
 
             // Load saved data when the page loads
             loadLocalData();
