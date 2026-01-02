@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Barista Coffee Audit</title>
+    <title>Coffee Standards & Quality Audit</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -145,11 +145,11 @@
     <div id="share-card" class="flex flex-col">
         <div class="bg-black text-white w-full p-6 rounded-xl mb-6 flex justify-between items-center">
             <div>
-                <h2 class="text-2xl font-black tracking-tight">QUALITY AUDIT</h2>
+                <h2 class="text-2xl font-black tracking-tight">COFFEE QUALITY AUDIT</h2>
                 <p id="card-date" class="text-xs opacity-80 mt-1 uppercase font-bold tracking-widest"></p>
             </div>
             <div id="card-status-box" class="px-6 py-2 rounded-full text-white font-black text-lg">
-                PASSED
+                0%
             </div>
         </div>
 
@@ -183,8 +183,11 @@
         </div>
 
         <div class="mt-10 flex justify-between items-end border-t border-gray-100 pt-4">
-            <p class="text-[10px] text-gray-400 font-bold uppercase">Maestro Coffee Quality Protocol</p>
-            <p class="text-[10px] text-gray-300">#BaristaAudit2024</p>
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold uppercase">Coffee Standards & Quality Audit</p>
+                <p class="text-[8px] text-gray-400 mt-1">Audit completed by Maestro or Management Team</p>
+            </div>
+            <p class="text-[10px] text-gray-300">#MaestroAudits☕️</p>
         </div>
     </div>
 
@@ -192,7 +195,7 @@
         
         <header class="bg-black text-white p-6 sm:p-8 rounded-t-xl">
             <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
-                Barista Coffee Audit
+                Coffee Standards & Quality Audit
             </h1>
             <p class="text-lg font-light opacity-90 mb-4">
                 Evaluate coffee preparation with Yes/No checks and add direct feedback.
@@ -1018,15 +1021,13 @@
             const store = document.getElementById('store_number').value || 'Unknown Store';
             
             let percentage = dynamicMaxScore > 0 ? (parseInt(score) / dynamicMaxScore) * 100 : 0;
-            let statusText = "NEEDS WORK";
-            let statusColor = "#f87171";
-
+            
+            // Set colors based on performance
+            let statusColor = "#f87171"; // Red
             if (percentage >= 90) {
-                statusText = "PASSED";
-                statusColor = "#4ade80";
+                statusColor = "#4ade80"; // Green
             } else if (percentage >= 80) {
-                statusText = "SO CLOSE";
-                statusColor = "#facc15";
+                statusColor = "#facc15"; // Yellow
             }
 
             document.getElementById('card-barista').textContent = name;
@@ -1036,7 +1037,7 @@
             document.getElementById('card-store').textContent = `STORE: ${store}`;
             
             const statusBox = document.getElementById('card-status-box');
-            statusBox.textContent = statusText;
+            statusBox.textContent = `${percentage.toFixed(0)}%`;
             statusBox.style.backgroundColor = statusColor;
 
             const sectionTitles = ['Golden Rules', 'Milk Preparation', 'Single Origin', 'Coffee Machine', 'Ice Drink', 'Luxury Drink'];
@@ -1114,7 +1115,7 @@
                 { title: 'Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked }
             ];
 
-            let report = `BARISTA QUALITY AUDIT REPORT\n\n`;
+            let report = `COFFEE STANDARDS & QUALITY AUDIT REPORT\n\n`;
             report += `Barista: ${barista}\nStore: ${store}\nAudit Date: ${dateStr}\nAuditor: ${auditor}\n\n`;
             report += `Final Status: ${statusRaw}\nTotal Score: ${totalScore} / ${dynamicMaxScore}\n\n`;
             report += `Drinks Evaluated:\nHot: ${hotDrinks}\nIce: ${icedDrinks}\nLuxury: ${luxuryDrinks}\n\n`;
