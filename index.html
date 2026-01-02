@@ -788,12 +788,12 @@
 
             // 1. Populate text and date inputs
             document.querySelectorAll('[name]').forEach(input => {
-                if (input.type !== 'checkbox' && data[input.name] !== undefined) {
+                if (input.type !== 'checkbox' && input.type !== 'radio' && data[input.name] !== undefined) {
                     input.value = data[input.name];
                 }
             });
             
-            // 2. Populate toggles (checkboxes)
+            // 2. Populate toggles (checkboxes) - CRITICAL: Update state before radio restoration
             if (data.isIceAuditEnabled !== undefined) {
                 toggleIce.checked = data.isIceAuditEnabled; 
             }
@@ -802,9 +802,10 @@
             }
             
             // 3. Update visibility and dynamic max score first
+            // This ensures logic knows which sections contribute points
             updateMaxScoreAndUI();
 
-            // 4. Populate radio buttons (which relies on the correct max score calculation)
+            // 4. Populate radio buttons
             document.querySelectorAll('.radio-group').forEach(group => {
                 const groupName = group.dataset.group;
                 const savedValue = data[groupName];
@@ -1066,8 +1067,14 @@
             });
 
             // Toggles need a special handler to update max score/UI first
-            toggleIce.addEventListener('change', updateMaxScoreAndUI);
-            toggleLuxury.addEventListener('change', updateMaxScoreAndUI);
+            toggleIce.addEventListener('change', (e) => {
+                updateMaxScoreAndUI();
+                saveLocalData();
+            });
+            toggleLuxury.addEventListener('change', (e) => {
+                updateMaxScoreAndUI();
+                saveLocalData();
+            });
             
             // Action buttons
             copyButton.addEventListener('click', copyReportToClipboard);
@@ -1083,5 +1090,4 @@
 
 </body>
 </html>
-
 
