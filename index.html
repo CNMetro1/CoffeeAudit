@@ -963,179 +963,134 @@
 
         // --- REPORT COPY LOGIC ---
         function copyReportToClipboard() {
-            // 1. Gather Admin/General Info
-            const adminInfo = {
-                'Auditor Name': document.getElementById('audit_by').value || 'N/A',
-                'Date of Visit': document.getElementById('date_of_visit').value || 'N/A',
-                'Barista Name/Position': document.getElementById('barista_name').value || 'N/A',
-                'Store Name/Number': document.getElementById('store_number').value || 'N/A',
+            // 1. Gather Admin Info
+            const auditor = document.getElementById('audit_by').value || 'N/A';
+            const dateStr = document.getElementById('date_of_visit').value || 'N/A';
+            const barista = document.getElementById('barista_name').value || 'N/A';
+            const store = document.getElementById('store_number').value || 'N/A';
+
+            // 2. Gather Drinks
+            const hotDrinks = document.getElementById('hot_drinks_made').value || 'N/A';
+            const icedDrinks = toggleIce.checked ? (document.getElementById('ice_drinks_made').value || 'N/A') : '[DISABLED]';
+            const luxuryDrinks = toggleLuxury.checked ? (document.getElementById('luxury_drinks_prepared').value || 'N/A') : '[DISABLED]';
+
+            // 3. Summary
+            const totalScore = document.getElementById('current-score').textContent;
+            const statusRaw = document.getElementById('pass-fail-status').textContent.trim().replace('Status: ', '');
+
+            // 4. Map Section Titles and Definitions
+            const sectionGroups = [
+                { title: 'Golden Rules', commentId: 'golden_rules_comments', enabled: true },
+                { title: 'Milk Preparation', commentId: 'milk_comments', enabled: true },
+                { title: 'Single Origin', commentId: 'single_comments', enabled: true },
+                { title: 'Coffee Machine', commentId: 'machine_comments', enabled: true },
+                { title: 'Ice Drink', commentId: 'ice_comments', enabled: toggleIce.checked },
+                { title: 'Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked }
+            ];
+
+            const groupToSectionTitle = {
+                'golden1': 'Golden Rules', 'golden2': 'Golden Rules', 'golden3': 'Golden Rules',
+                'golden4': 'Golden Rules', 'golden5': 'Golden Rules', 'golden6': 'Golden Rules',
+                'extract1': 'Golden Rules', 'extract2': 'Golden Rules', 'extract4': 'Golden Rules', 'clean': 'Golden Rules',
+                'milk1': 'Milk Preparation', 'milk2': 'Milk Preparation', 'milk_steamed_extracted': 'Milk Preparation',
+                'milk3': 'Milk Preparation', 'milk4': 'Milk Preparation', 'milk5': 'Milk Preparation',
+                'single1': 'Single Origin', 'single2': 'Single Origin', 'single3': 'Single Origin',
+                'machine1': 'Coffee Machine', 'machine2': 'Coffee Machine',
+                'ice2': 'Ice Drink', 'ice3': 'Ice Drink', 'ice4': 'Ice Drink',
+                'luxury1': 'Luxury Drink', 'luxury2': 'Luxury Drink', 'luxury3': 'Luxury Drink', 'luxury4': 'Luxury Drink'
             };
+
+            // Start Building String
+            let report = `BARISTA QUALITY AUDIT REPORT\n\n`;
             
-            // 2. Gather Drinks Prepared
-            const drinksPrepared = {
-                'Hot Drinks Check (Choose 3)': document.getElementById('hot_drinks_made').value || 'N/A',
-                'Ice Drinks Check (Choose 2)': toggleIce.checked ? (document.getElementById('ice_drinks_made').value || 'N/A') : 'SECTION DISABLED',
-                'Luxury Drinks Check (Choose 1)': toggleLuxury.checked ? (document.getElementById('luxury_drinks_prepared').value || 'N/A') : 'SECTION DISABLED', 
-            };
+            report += `Barista: ${barista}\n`;
+            report += `Store: ${store}\n`;
+            report += `Audit Date: ${dateStr}\n`;
+            report += `Auditor: ${auditor}\n\n`;
 
-            // 3. Map Section Titles and Comments
-            const sectionMap = {
-                'golden1': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' }, 'golden2': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                'golden3': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' }, 'golden4': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                'golden5': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' }, 'golden6': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                'extract1': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' }, 'extract2': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
-                'extract4': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' }, 'clean': { title: '1. 5 GOLDEN RULES', commentId: 'golden_rules_comments' },
+            report += `Final Status: ${statusRaw}\n`;
+            report += `Total Score: ${totalScore} / ${dynamicMaxScore}\n\n`;
 
-                'milk1': { title: '2. Milk Preparation', commentId: 'milk_comments' }, 'milk2': { title: '2. Milk Preparation', commentId: 'milk_comments' },
-                'milk_steamed_extracted': { title: '2. Milk Preparation', commentId: 'milk_comments' }, 'milk3': { title: '2. Milk Preparation', commentId: 'milk_comments' },
-                'milk4': { title: '2. Milk Preparation', commentId: 'milk_comments' }, 'milk5': { title: '2. Milk Preparation', commentId: 'milk_comments' },
+            report += `Drinks Evaluated:\n`;
+            report += `Hot: ${hotDrinks}\n`;
+            report += `Ice: ${icedDrinks}\n`;
+            report += `Luxury: ${luxuryDrinks}\n\n`;
 
-                'single1': { title: '3. Single Origin', commentId: 'single_comments' }, 'single2': { title: '3. Single Origin', commentId: 'single_comments' },
-                'single3': { title: '3. Single Origin', commentId: 'single_comments' },
-                
-                'machine1': { title: '4. Coffee Machine', commentId: 'machine_comments' }, 'machine2': { title: '4. Coffee Machine', commentId: 'machine_comments' },
-                
-                'ice2': { title: '5. Ice Drink', commentId: 'ice_comments', enabled: toggleIce.checked }, 'ice3': { title: '5. Ice Drink', commentId: 'ice_comments', enabled: toggleIce.checked },
-                'ice4': { title: '5. Ice Drink', commentId: 'ice_comments', enabled: toggleIce.checked },
-                
-                'luxury1': { title: '6. Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked }, 
-                'luxury2': { title: '6. Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked },
-                'luxury3': { title: '6. Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked }, 
-                'luxury4': { title: '6. Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked },
-            };
-
-            // 4. Collect all question results grouped by section
-            const sectionsReport = {};
-
-            document.querySelectorAll('.rule-item').forEach(item => {
-                const radioGroupElement = item.querySelector('.radio-group');
-                if (radioGroupElement) {
-                    const groupName = radioGroupElement.dataset.group;
-                    const sectionData = sectionMap[groupName];
-
-                    // Skip if section is disabled
-                    if (sectionData && sectionData.enabled === false) return;
-
-                    if (!sectionsReport[sectionData.title]) {
-                        sectionsReport[sectionData.title] = { 
-                            questions: [], 
-                            pointsScored: 0, 
-                            maxPoints: 0, 
-                            commentId: sectionData.commentId
-                        };
-                    }
-
-                    const currentSection = sectionsReport[sectionData.title];
-                    
-                    const label = item.querySelector('.rule-label').textContent.trim();
-                    const maxPts = parseInt(radioGroupElement.dataset.points);
-                    
-                    let result = 'NO';
-                    let scoredPts = 0;
-                    const checkedInput = item.querySelector(`input[name="${groupName}"]:checked`);
-                    
-                    if (checkedInput) {
-                        if (checkedInput.value === 'yes' || checkedInput.value === 'na') {
-                            scoredPts = maxPts;
-                            result = checkedInput.value.toUpperCase(); // YES or NA
-                        } else {
-                            // value is 'no'
-                            result = 'NO';
+            // Helper to get total points per section
+            function getSectionScore(title) {
+                let current = 0;
+                let max = 0;
+                document.querySelectorAll('.rule-item').forEach(item => {
+                    const rg = item.querySelector('.radio-group');
+                    if (rg && groupToSectionTitle[rg.dataset.group] === title) {
+                        const pts = parseInt(rg.dataset.points);
+                        max += pts;
+                        const checkedInput = rg.querySelector('input:checked');
+                        if (checkedInput && (checkedInput.value === 'yes' || checkedInput.value === 'na')) {
+                            current += pts;
                         }
                     }
+                });
+                return `${current}/${max}`;
+            }
 
-                    // Simple line format
-                    const ruleEntry = `[${result}] (${scoredPts}/${maxPts} pts) - ${label}`;
-                    
-                    currentSection.questions.push(ruleEntry);
-                    currentSection.pointsScored += scoredPts;
-                    currentSection.maxPoints += maxPts;
-                }
+            // Iterative Audit Detail
+            sectionGroups.forEach(sec => {
+                if (!sec.enabled) return;
+
+                const sectionPointsStr = getSectionScore(sec.title);
+                report += `Section: ${sec.title} (${sectionPointsStr})\n\n`;
+
+                let qIndex = 1;
+                document.querySelectorAll('.rule-item').forEach(item => {
+                    const rg = item.querySelector('.radio-group');
+                    if (rg && groupToSectionTitle[rg.dataset.group] === sec.title) {
+                        const label = item.querySelector('.rule-label').textContent.trim();
+                        const pts = rg.dataset.points;
+                        const checkedInput = rg.querySelector('input:checked');
+                        
+                        let choice = " - ";
+                        let earned = 0;
+
+                        if (checkedInput) {
+                            choice = checkedInput.value.toUpperCase();
+                            earned = (choice === 'YES' || choice === 'NA') ? pts : 0;
+                        }
+                        
+                        report += `${qIndex}. ${label}\n`;
+                        report += `[${choice === ' - ' ? 'N/A' : choice === 'NA' ? 'N/A' : choice === 'YES' ? 'Y' : 'N'}] (${earned}/${pts} Points Awarded)\n\n`;
+                        qIndex++;
+                    }
+                });
+
+                const cmt = document.getElementById(sec.commentId).value.trim();
+                if (cmt) report += `Section Comments: ${cmt}\n\n`;
             });
 
-            // 5. Construct the final report string
-            let reportContent = "\n"; 
-            reportContent += "          BARISTA QUALITY AUDIT REPORT        \n";
-            reportContent += "\n\n\n"; 
+            // Final Summary
+            const overall = document.getElementById('overall_feedback').value.trim();
+            report += `Overall Feedback & Coaching:\n`;
+            report += overall || "No additional feedback provided.";
+            report += `\n\nEND OF AUDIT REPORT`;
 
-            // A. Summary
-            const totalScore = document.getElementById('current-score').textContent;
-            const status = document.getElementById('pass-fail-status').textContent.trim().replace('Status: ', '');
-            
-            reportContent += "AUDIT SUMMARY\n";
-            reportContent += `TOTAL SCORE: ${totalScore} / ${dynamicMaxScore}\n`;
-            reportContent += `FINAL STATUS: ${status}\n`;
-            reportContent += "\n\n\n"; 
-            
-            // B. Admin Info
-            reportContent += "ADMINISTRATIVE DETAILS\n";
-            for (const [key, value] of Object.entries(adminInfo)) {
-                reportContent += `${key}: ${value}\n`;
-            }
-            
-            reportContent += "\nDRINKS EVALUATED\n"; 
-            for (const [key, value] of Object.entries(drinksPrepared)) {
-                reportContent += `${key}: ${value}\n`;
-            }
-            reportContent += "\n\n\n"; 
+            // Copy Action
+            const el = document.createElement('textarea');
+            el.value = report;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
 
-            // C. Detailed Breakdown
-            for (const [sectionTitle, data] of Object.entries(sectionsReport)) {
-                // Skip disabled sections in the breakdown too
-                if (sectionTitle === '5. Ice Drink' && !toggleIce.checked) continue;
-                if (sectionTitle === '6. Luxury Drink' && !toggleLuxury.checked) continue;
-
-                // Section Title with scoring
-                reportContent += `${sectionTitle} (${data.pointsScored}/${data.maxPoints} pts)\n`;
-                
-                // Add all questions for the section
-                reportContent += data.questions.join('\n');
-                
-                // Add comments specific to the section
-                const commentText = document.getElementById(data.commentId).value.trim();
-                if (commentText) {
-                    reportContent += `\n\nSection Comments:\n${commentText}`; 
-                }
-                reportContent += "\n\n\n"; 
-            }
-            
-            // D. Overall Feedback
-            const overallFeedback = document.getElementById('overall_feedback').value.trim() || 'No detailed overall feedback provided.';
-            reportContent += "OVERALL FEEDBACK\n";
-            reportContent += overallFeedback;
-            reportContent += "\n"; 
-
-
-            // 6. Copy to clipboard
-            const tempTextarea = document.createElement('textarea');
-            tempTextarea.value = reportContent;
-            document.body.appendChild(tempTextarea);
-            tempTextarea.select();
-            
-            let copySuccess = false;
-            try {
-                copySuccess = document.execCommand('copy');
-            } catch (err) {
-                console.error('Copy command failed:', err);
-            }
-            
-            document.body.removeChild(tempTextarea);
-
-            // 7. Provide feedback
-            copyButton.className = ''; 
+            // Feedback on button
             const originalText = copyButton.textContent;
-            
-            if (copySuccess) {
-                copyButton.textContent = 'Copied! ✅';
-                copyButton.classList.add('px-4', 'py-2', 'bg-green-500', 'text-white', 'font-bold', 'rounded-lg', 'shadow-lg', 'transition', 'duration-200');
-            } else {
-                copyButton.textContent = 'Copy Failed ❌';
-                copyButton.classList.add('px-4', 'py-2', 'bg-red-500', 'text-white', 'font-bold', 'rounded-lg', 'shadow-lg', 'transition', 'duration-200');
-            }
-
+            copyButton.textContent = 'Report Copied! ✅';
+            copyButton.classList.replace('bg-white', 'bg-green-100');
             setTimeout(() => {
                 copyButton.textContent = originalText;
-                copyButton.className = originalButtonClasses;
+                copyButton.classList.replace('bg-green-100', 'bg-white');
             }, 2000);
         }
 
