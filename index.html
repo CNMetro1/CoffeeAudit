@@ -137,6 +137,13 @@
             color: black;
             text-align: left;
         }
+        #card-status-box {
+            padding-top: 16px;
+            padding-bottom: 16px;
+        }
+        #card-status-tag {
+            margin-top: 8px; /* Increased spacing between % and label */
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8">
@@ -148,9 +155,9 @@
                 <h2 class="text-2xl font-black tracking-tight leading-none">COFFEE QUALITY AUDIT</h2>
                 <p id="card-date" class="text-xs opacity-80 mt-2 uppercase font-bold tracking-widest"></p>
             </div>
-            <div id="card-status-box" class="px-5 py-2.5 rounded-xl text-white font-black text-center min-w-[140px] flex flex-col justify-center items-center">
+            <div id="card-status-box" class="px-5 rounded-xl text-white font-black text-center min-w-[140px] flex flex-col justify-center items-center">
                 <div id="card-status-percent" class="text-3xl leading-none font-black">0%</div>
-                <div id="card-status-tag" class="text-[9px] uppercase tracking-[0.15em] mt-1 leading-none opacity-90">N/A</div>
+                <div id="card-status-tag" class="text-[9px] uppercase tracking-[0.15em] leading-none opacity-90">N/A</div>
             </div>
         </div>
 
