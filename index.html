@@ -446,7 +446,7 @@
                     </div>
                 </div>
                 <label for="milk_comments" class="block text-sm font-medium text-black mt-4 mb-1">Comments for Milk Preparation:</label>
-                <textarea id="milk_comments" name="milk_comments" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black"></textarea>
+                <textarea id="milk_comments" name="milk_comments" class="w-full p-2 border border-gray-300 rounded-md bg-white text-black focus:ring-black focus:border-black"></textarea>
             </div>
 
             
@@ -487,7 +487,7 @@
                     </div>
                 </div>
                 <label for="single_comments" class="block text-sm font-medium text-black mt-4 mb-1">Comments for Single Origin:</label>
-                <textarea id="single_comments" name="single_comments" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black"></textarea>
+                <textarea id="single_comments" name="single_comments" class="w-full p-2 border border-gray-300 rounded-md bg-white text-black focus:ring-black focus:border-black"></textarea>
             </div>
             
             
@@ -519,7 +519,7 @@
                         </div>
                     </div>
                     <label for="machine_comments" class="block text-xs font-medium text-black mt-3 mb-1">Comments:</label>
-                    <textarea id="machine_comments" name="machine_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[40px]"></textarea>
+                    <textarea id="machine_comments" name="machine_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md bg-white text-black focus:ring-black focus:border-black min-h-[40px]"></textarea>
                 </div>
 
                 
@@ -569,7 +569,7 @@
                         </div>
                     </div>
                     <label for="ice_comments" class="block text-xs font-medium text-black mt-3 mb-1">Comments:</label>
-                    <textarea id="ice_comments" name="ice_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[40px]"></textarea>
+                    <textarea id="ice_comments" name="ice_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md bg-white text-black focus:ring-black focus:border-black min-h-[40px]"></textarea>
                 </div>
 
                 
@@ -620,7 +620,7 @@
                         </div>
                     </div>
                     <label for="luxury_comments" class="block text-xs font-medium text-black mt-3 mb-1">Comments:</label>
-                    <textarea id="luxury_comments" name="luxury_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[40px]"></textarea>
+                    <textarea id="luxury_comments" name="luxury_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md bg-white text-black focus:ring-black focus:border-black min-h-[40px]"></textarea>
                 </div>
 
             </div>
@@ -839,7 +839,6 @@
             }
             
             // 3. Update visibility and dynamic max score first
-            // This ensures logic knows which sections contribute points
             updateMaxScoreAndUI();
 
             // 4. Populate radio buttons
@@ -971,8 +970,8 @@
 
             // 2. Gather Drinks
             const hotDrinks = document.getElementById('hot_drinks_made').value || 'N/A';
-            const icedDrinks = toggleIce.checked ? (document.getElementById('ice_drinks_made').value || 'N/A') : '[DISABLED]';
-            const luxuryDrinks = toggleLuxury.checked ? (document.getElementById('luxury_drinks_prepared').value || 'N/A') : '[DISABLED]';
+            const icedDrinks = toggleIce.checked ? (document.getElementById('ice_drinks_made').value || 'N/A') : '[Not Tested]';
+            const luxuryDrinks = toggleLuxury.checked ? (document.getElementById('luxury_drinks_prepared').value || 'N/A') : '[Not Tested]';
 
             // 3. Summary
             const totalScore = document.getElementById('current-score').textContent;
@@ -1038,8 +1037,11 @@
             sectionGroups.forEach(sec => {
                 if (!sec.enabled) return;
 
+                // Simple line divider between sections
+                report += `-------------------\n`;
+
                 const sectionPointsStr = getSectionScore(sec.title);
-                report += `Section: ${sec.title} (${sectionPointsStr})\n\n`;
+                report += `${sec.title} (${sectionPointsStr})\n\n`;
 
                 let qIndex = 1;
                 document.querySelectorAll('.rule-item').forEach(item => {
@@ -1049,7 +1051,7 @@
                         const pts = rg.dataset.points;
                         const checkedInput = rg.querySelector('input:checked');
                         
-                        let choice = " - ";
+                        let choice = "-";
                         let earned = 0;
 
                         if (checkedInput) {
@@ -1057,19 +1059,20 @@
                             earned = (choice === 'YES' || choice === 'NA') ? pts : 0;
                         }
                         
-                        report += `${qIndex}. ${label}\n`;
-                        report += `[${choice === ' - ' ? 'N/A' : choice === 'NA' ? 'N/A' : choice === 'YES' ? 'Y' : 'N'}] (${earned}/${pts} Points Awarded)\n\n`;
+                        const mark = (choice === 'YES' || choice === 'NA') ? "Y" : (choice === 'NO' ? "N" : "N/A");
+                        report += `${qIndex}. ${label}\n[${mark}] (${earned} points awarded)\n\n`;
                         qIndex++;
                     }
                 });
 
                 const cmt = document.getElementById(sec.commentId).value.trim();
-                if (cmt) report += `Section Comments: ${cmt}\n\n`;
+                if (cmt) report += `Notes: ${cmt}\n\n`;
             });
 
             // Final Summary
+            report += `-------------------\n`;
             const overall = document.getElementById('overall_feedback').value.trim();
-            report += `Overall Feedback & Coaching:\n`;
+            report += `Overall Feedback:\n`;
             report += overall || "No additional feedback provided.";
             report += `\n\nEND OF AUDIT REPORT`;
 
