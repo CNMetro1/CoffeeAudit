@@ -141,9 +141,6 @@
             padding-top: 16px;
             padding-bottom: 16px;
         }
-        #card-status-tag {
-            margin-top: 8px; /* Increased spacing between % and label */
-        }
     </style>
 </head>
 <body class="p-4 sm:p-8">
@@ -156,8 +153,10 @@
                 <p id="card-date" class="text-xs opacity-80 mt-2 uppercase font-bold tracking-widest"></p>
             </div>
             <div id="card-status-box" class="px-5 rounded-xl text-white font-black text-center min-w-[140px] flex flex-col justify-center items-center">
+                <!-- Percentage at Top -->
                 <div id="card-status-percent" class="text-3xl leading-none font-black">0%</div>
-                <div id="card-status-tag" class="text-[9px] uppercase tracking-[0.15em] leading-none opacity-90">N/A</div>
+                <!-- Category at Bottom -->
+                <div id="card-status-tag" class="text-[10px] uppercase tracking-[0.15em] leading-none opacity-90 mt-2">N/A</div>
             </div>
         </div>
 
@@ -209,7 +208,6 @@
                 Evaluate coffee preparation with Yes/No checks and add direct feedback.
             </p>
             
-            <!-- Local Storage Status AND NEW CLEAR BUTTON -->
             <div class="flex justify-between items-center mb-4">
                 <div id="save-status" class="text-sm font-semibold transition duration-500">
                     <span class="text-green-400">Ready.</span>
@@ -243,7 +241,6 @@
             </div>
             
             <div class="mt-6 p-3 rounded-lg bg-gray-900 flex justify-between items-center text-sm font-semibold">
-                <!-- Dynamically updated pass mark and max score -->
                 <span id="pass-mark-display">🎯 Max Score: 100 Points</span>
                 <span class="text-white flex items-center">
                     Total Score: <span id="current-score" class="ml-2 text-xl font-bold">0</span> / <span id="current-score-max">100</span>
@@ -253,23 +250,19 @@
 
         <main class="p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-            <!-- CENTRALIZED DRINK SECTION (WITH TOGGLES) -->
             <div class="lg:col-span-2 p-5 mb-4 rounded-xl border-l-4 border-black bg-white shadow-md">
                 <h2 class="text-xl font-bold mb-3 text-black">
                     📋 Drinks Evaluated for Audit
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <!-- 1. Hot Drinks (3 drinks required) -->
                     <div>
                         <label for="hot_drinks_made" class="block text-sm font-bold mb-1 text-black">Hot Drinks (Section 1-3): Choose 3</label>
                         <textarea id="hot_drinks_made" name="hot_drinks_made" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black min-h-[60px]" placeholder="e.g., Single Espresso, Small Latte, Large Cappuccino"></textarea>
                     </div>
-                    <!-- 2. Iced Drinks (2 drinks required) -->
                     <div>
                         <label for="ice_drinks_made" class="block text-sm font-bold mb-1 text-black">Iced Drinks (Section 5): Choose 2</label>
                         <input type="text" id="ice_drinks_made" name="ice_drinks_made" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="e.g., Small Iced Latte, Large Frappe">
                     </div>
-                    <!-- 3. Luxury Drinks (1 drink required) -->
                     <div>
                         <label for="luxury_drinks_prepared" class="block text-sm font-bold mb-1 text-black">Luxury Drinks (Section 6): Choose 1</label>
                         <input type="text" id="luxury_drinks_prepared" name="luxury_drinks_prepared" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="e.g., Seasonal Hot Chocolate, Caramel Macchiato">
@@ -277,27 +270,22 @@
                 </div>
 
                 <div class="mt-6 pt-4 border-t border-gray-300 flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0">
-                    <!-- Toggle for Ice Drinks -->
                     <div class="flex items-center space-x-2">
                         <input type="checkbox" id="toggle_ice" name="isIceAuditEnabled" checked class="h-5 w-5 rounded text-black border-gray-300 focus:ring-black">
                         <label for="toggle_ice" class="text-sm font-medium text-black cursor-pointer">Include Ice Drink Audit (5 pts)</label>
                     </div>
-                    <!-- Toggle for Luxury Drinks -->
                     <div class="flex items-center space-x-2">
                         <input type="checkbox" id="toggle_luxury" name="isLuxuryAuditEnabled" checked class="h-5 w-5 rounded text-black border-gray-300 focus:ring-black">
                         <label for="toggle_luxury" class="text-sm font-medium text-black cursor-pointer">Include Luxury Drink Audit (4 pts)</label>
                     </div>
                 </div>
-
             </div>
-            
             
             <div class="lg:col-span-1 p-5 rounded-xl border-t-4 border-black bg-white shadow-md">
                 <h2 class="text-xl font-bold mb-3 text-black flex items-center">
                     🏆 1. 5 GOLDEN RULES <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">55 PTS</span>
                 </h2>
 
-                
                 <div class="section-subheading">1. FLUSH</div>
                 <div class="rule-item">
                     <span class="rule-label">Was button 3 used for flushing the group head at the start?</span>
@@ -310,7 +298,6 @@
                     </div>
                 </div>
 
-                
                 <div class="section-subheading">2. PURGE AND WIPE</div>
                 <div class="rule-item">
                     <span class="rule-label">Was the steam wand purged before and after steaming?</span>
@@ -333,7 +320,6 @@
                     </div>
                 </div>
 
-                
                 <div class="section-subheading">3. LEVEL AND WIPE</div>
                 <div class="rule-item">
                     <span class="rule-label">Was the coffee leveled properly?</span>
@@ -366,7 +352,6 @@
                     </div>
                 </div>
 
-                
                 <div class="section-subheading">4. EXTRACT AND TIME</div>
                 <div class="rule-item">
                     <span class="rule-label">Was extraction started within 10 seconds of the handle being placed into the group head?</span>
@@ -399,7 +384,6 @@
                     </div>
                 </div>
 
-                
                 <div class="section-subheading">5. CLEAN AS YOU GO</div>
                 <div class="rule-item">
                     <span class="rule-label">Is the coffee production area clean and tidy? (Around section and around coffee machine)</span>
@@ -412,12 +396,10 @@
                     </div>
                 </div>
 
-                
                 <label for="golden_rules_comments" class="block text-sm font-medium text-black mt-4 mb-1">Comments for 5 Golden Rules:</label>
                 <textarea id="golden_rules_comments" name="golden_rules_comments" class="w-full p-2 border border-gray-300 rounded-md focus:ring-black focus:border-black" placeholder="Enter notes on preparation, extraction, timing, and cleanliness..."></textarea>
             </div>
 
-            
             <div class="lg:col-span-1 p-5 rounded-xl border-t-4 border-black bg-white shadow-md">
                 <h2 class="text-xl font-bold mb-3 text-black flex items-center">
                     🥛 2. Milk Preparation <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">26 PTS</span>
@@ -488,7 +470,6 @@
                 <textarea id="milk_comments" name="milk_comments" class="w-full p-2 border border-gray-300 rounded-md bg-white text-black focus:ring-black focus:border-black"></textarea>
             </div>
 
-            
             <div class="lg:col-span-1 p-5 rounded-xl border-t-4 border-black bg-white shadow-md">
                 <h2 class="text-xl font-bold mb-3 text-black flex items-center">
                     🌍 3. Single Origin <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">8 PTS</span>
@@ -529,9 +510,7 @@
                 <textarea id="single_comments" name="single_comments" class="w-full p-2 border border-gray-300 rounded-md bg-white text-black focus:ring-black focus:border-black"></textarea>
             </div>
             
-            
             <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-6 pt-4 border-t border-gray-200">
-                
                 
                 <div class="p-4 rounded-lg bg-white border border-gray-200 shadow-sm">
                     <h3 class="font-bold mb-2 text-md text-black flex items-center">⚙️ 4. Coffee Machine <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">2 PTS</span></h3>
@@ -561,7 +540,6 @@
                     <textarea id="machine_comments" name="machine_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md bg-white text-black focus:ring-black focus:border-black min-h-[40px]"></textarea>
                 </div>
 
-                
                 <div id="section-ice-drink" class="p-4 rounded-lg bg-white border border-gray-200 shadow-sm">
                     <h3 class="font-bold mb-2 text-md text-black flex items-center">🧊 5. Ice Drink <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">5 PTS</span></h3>
                     
@@ -590,7 +568,6 @@
                             <span class="rule-label">Right button pressed on blender.</span>
                             <span class="rule-points">1 pt</span>
                             <div class="radio-group blender-radio-group" data-points="1" data-group="ice4">
-                                <!-- Yes/No side-by-side -->
                                 <div class="flex items-center">
                                     <input type="radio" id="ice4_yes" name="ice4" value="yes" class="score-input">
                                     <label for="ice4_yes">Yes</label>
@@ -599,7 +576,6 @@
                                     <input type="radio" id="ice4_no" name="ice4" value="no" class="score-input">
                                     <label for="ice4_no">No</label>
                                 </div>
-                                <!-- N/A underneath Yes -->
                                 <div class="flex items-center na-option">
                                     <input type="radio" id="ice4_na" name="ice4" value="na" class="score-input">
                                     <label for="ice4_na">N/A</label>
@@ -611,11 +587,9 @@
                     <textarea id="ice_comments" name="ice_comments" class="w-full p-1 text-sm border border-gray-300 rounded-md bg-white text-black focus:ring-black focus:border-black min-h-[40px]"></textarea>
                 </div>
 
-                
                 <div id="section-luxury-drink" class="p-4 rounded-lg bg-white border border-gray-200 shadow-sm">
                     <h3 class="font-bold mb-2 text-md text-black flex items-center">👑 6. Luxury Drink <span class="ml-2 px-2 py-0.5 text-xs font-semibold rounded-full bg-black text-white">4 PTS</span></h3>
                     <div class="space-y-1">
-                        <!-- New Checkbox: Was the thermometer in use? (1 pt) -->
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Was the thermometer in use?</span>
                             <span class="rule-points">1 pt</span>
@@ -664,7 +638,6 @@
 
             </div>
 
-            <!-- NEW SECTION: AREAS TO IMPROVE -->
             <div class="lg:col-span-2 p-5 rounded-xl border-l-4 border-red-500 bg-white shadow-md">
                 <h2 class="text-xl font-bold mb-3 text-black">
                     🎯 Areas to Improve
@@ -736,10 +709,6 @@
         const sectionIceDrink = document.getElementById('section-ice-drink');
         const sectionLuxuryDrink = document.getElementById('section-luxury-drink');
 
-        const originalButtonClasses = 'px-4 py-2 bg-white text-black font-bold rounded-lg shadow-lg hover:shadow-xl transition duration-200 hover:bg-gray-100';
-
-        // --- CORE LOGIC ---
-
         const groupToSectionTitle = {
             'golden1': 'Golden Rules', 'golden2': 'Golden Rules', 'golden3': 'Golden Rules',
             'golden4': 'Golden Rules', 'golden5': 'Golden Rules', 'golden6': 'Golden Rules',
@@ -752,7 +721,6 @@
             'luxury1': 'Luxury Drink', 'luxury2': 'Luxury Drink', 'luxury3': 'Luxury Drink', 'luxury4': 'Luxury Drink'
         };
 
-        // Conversational Mapping for Advice
         const coachingAdviceMap = {
             'golden1': 'Make sure you use button 3 to flush the group head before every shot to clear any old coffee grounds & balance the water temperature.',
             'golden2': 'Remember to purge the steam wand before steaming to clear condensation, and immediately after to keep it clean.',
@@ -792,66 +760,44 @@
 
         function updateMaxScoreAndUI() {
             let newMax = BASE_MAX_SCORE;
-            
-            const isIceEnabled = toggleIce.checked;
-            const isLuxuryEnabled = toggleLuxury.checked;
-
-            // Update Max Score and Visibility
-            if (!isIceEnabled) {
+            if (!toggleIce.checked) {
                 newMax -= ICE_DRINK_POINTS;
                 if (sectionIceDrink) sectionIceDrink.classList.add('hidden');
-            } else {
-                if (sectionIceDrink) sectionIceDrink.classList.remove('hidden');
+            } else if (sectionIceDrink) {
+                sectionIceDrink.classList.remove('hidden');
             }
-
-            if (!isLuxuryEnabled) {
+            if (!toggleLuxury.checked) {
                 newMax -= LUXURY_DRINK_POINTS;
                 if (sectionLuxuryDrink) sectionLuxuryDrink.classList.add('hidden');
-            } else {
-                if (sectionLuxuryDrink) sectionLuxuryDrink.classList.remove('hidden');
+            } else if (sectionLuxuryDrink) {
+                sectionLuxuryDrink.classList.remove('hidden');
             }
-
             dynamicMaxScore = newMax;
-            
-            // Update header and footer displays with the new MAX_SCORE
             passMarkDisplay.textContent = `🎯 Max Score: ${dynamicMaxScore} Points`;
             currentScoreMaxDisplay.textContent = dynamicMaxScore;
-            
-            calculateScore(true); // Recalculate score against the new max
+            calculateScore(true);
         }
 
         function calculateScore(updateDisplay = true) {
             let totalScore = 0;
             const coachingPointsBySection = {};
-
-            // 1. Determine which groups are currently disabled based on toggles
             const disabledGroups = [];
             if (!toggleIce.checked) disabledGroups.push('ice2', 'ice3', 'ice4');
             if (!toggleLuxury.checked) disabledGroups.push('luxury1', 'luxury2', 'luxury3', 'luxury4');
 
-            // 2. Iterate through all radio groups to calculate score and find "No" answers
             const uniqueGroups = new Set(Array.from(scoreInputs).map(i => i.name));
-            
             uniqueGroups.forEach(groupName => {
                 if (disabledGroups.includes(groupName)) return;
-
                 const checkedInput = document.querySelector(`input[name="${groupName}"]:checked`);
                 const groupContainer = document.querySelector(`.radio-group[data-points][data-group="${groupName}"]`);
                 const points = parseInt(groupContainer.dataset.points);
-
                 if (checkedInput) {
-                    // Score Points
                     if (checkedInput.value === 'yes' || checkedInput.value === 'na') {
                         totalScore += points;
-                    } 
-                    // Identify Coaching Points
-                    else if (checkedInput.value === 'no') {
+                    } else if (checkedInput.value === 'no') {
                         const sectionTitle = groupToSectionTitle[groupName] || 'General';
-                        if (!coachingPointsBySection[sectionTitle]) {
-                            coachingPointsBySection[sectionTitle] = [];
-                        }
-                        const advice = coachingAdviceMap[groupName] || "Focus on improving this step of the process.";
-                        coachingPointsBySection[sectionTitle].push(advice);
+                        if (!coachingPointsBySection[sectionTitle]) coachingPointsBySection[sectionTitle] = [];
+                        coachingPointsBySection[sectionTitle].push(coachingAdviceMap[groupName] || "Focus on improving this step.");
                     }
                 }
             });
@@ -859,41 +805,21 @@
             if (updateDisplay) {
                 currentScoreDisplay.textContent = totalScore;
                 finalScoreFooterDisplay.textContent = `${totalScore} / ${dynamicMaxScore}`; 
-                
-                // --- STATUS LOGIC BASED ON PERCENTAGE ---
                 let percentage = dynamicMaxScore > 0 ? (totalScore / dynamicMaxScore) * 100 : 0;
                 let roundedPercent = Math.round(percentage);
                 let statusInfo = getStatusInfo(roundedPercent);
-                
-                let statusText = `Status: ${statusInfo.tag} (${roundedPercent}%)`;
+                passFailStatus.textContent = `Status: ${statusInfo.tag} (${roundedPercent}%)`;
                 let statusClass = "text-center mt-3 text-lg font-bold";
-                
-                // Set color class based on tag
                 if (statusInfo.tag === "PASSED") statusClass += " text-green-400";
                 else if (statusInfo.tag === "SO CLOSE") statusClass += " text-yellow-300";
                 else statusClass += " text-red-400";
-
-                passFailStatus.textContent = statusText;
                 passFailStatus.className = statusClass;
 
-                // Update Coaching Points List (Actionable items grouped by section)
                 const sectionKeys = Object.keys(coachingPointsBySection);
                 if (sectionKeys.length > 0) {
                     let htmlContent = "";
                     sectionKeys.forEach(section => {
-                        htmlContent += `
-                            <div>
-                                <h3 class="font-bold text-black border-b border-gray-100 mb-2 uppercase text-[10px] tracking-widest">${section}</h3>
-                                <div class="space-y-1 pl-1">
-                                    ${coachingPointsBySection[section].map(f => `
-                                        <div class="flex items-start group">
-                                            <span class="mr-2 text-red-500 font-bold">•</span> 
-                                            <span class="text-gray-700 italic">"${f}"</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            </div>
-                        `;
+                        htmlContent += `<div><h3 class="font-bold text-black border-b border-gray-100 mb-2 uppercase text-[10px] tracking-widest">${section}</h3><div class="space-y-1 pl-1">${coachingPointsBySection[section].map(f => `<div class="flex items-start group"><span class="mr-2 text-red-500 font-bold">•</span><span class="text-gray-700 italic">"${f}"</span></div>`).join('')}</div></div>`;
                     });
                     coachingPointsList.innerHTML = htmlContent;
                 } else {
@@ -903,34 +829,24 @@
             return totalScore;
         }
 
-        // --- UNIFIED EVENT HANDLER for instant score update and saving ---
         function handleInput() {
             calculateScore(true);
             saveLocalData();
         }
 
-        // --- LOCAL STORAGE FUNCTIONS ---
-
         function collectFormData() {
             const data = {};
-
             document.querySelectorAll('[name]').forEach(input => {
-                if (input.type === 'checkbox') {
-                    data[input.name] = input.checked;
-                } else {
-                    data[input.name] = input.value;
-                }
+                if (input.type === 'checkbox') data[input.name] = input.checked;
+                else data[input.name] = input.value;
             });
-            
             document.querySelectorAll('.radio-group').forEach(group => {
                 const groupName = group.dataset.group;
                 const checkedInput = document.querySelector(`input[name="${groupName}"]:checked`);
                 data[groupName] = checkedInput ? checkedInput.value : '';
             });
-
             data.calculatedScore = calculateScore(false);
             data.dynamicMaxScore = dynamicMaxScore;
-
             return data;
         }
 
@@ -940,40 +856,28 @@
                 localStorage.setItem(AUDIT_STORAGE_KEY, JSON.stringify(data));
                 saveStatusDisplay.innerHTML = '<span class="text-green-400">Saved Locally.</span>';
             } catch (e) {
-                console.error("Local Storage Save Error:", e);
                 saveStatusDisplay.innerHTML = '<span class="text-red-400">Save Failed!</span>';
             }
         }
 
         function loadAudit(data) {
             if (!data) return;
-
             document.querySelectorAll('[name]').forEach(input => {
                 if (input.type !== 'checkbox' && input.type !== 'radio' && data[input.name] !== undefined) {
                     input.value = data[input.name];
                 }
             });
-            
-            if (data.isIceAuditEnabled !== undefined) {
-                toggleIce.checked = data.isIceAuditEnabled; 
-            }
-            if (data.isLuxuryAuditEnabled !== undefined) {
-                toggleLuxury.checked = data.isLuxuryAuditEnabled;
-            }
-            
+            if (data.isIceAuditEnabled !== undefined) toggleIce.checked = data.isIceAuditEnabled; 
+            if (data.isLuxuryAuditEnabled !== undefined) toggleLuxury.checked = data.isLuxuryAuditEnabled;
             updateMaxScoreAndUI();
-
             document.querySelectorAll('.radio-group').forEach(group => {
                 const groupName = group.dataset.group;
                 const savedValue = data[groupName];
                 if (savedValue) {
                     const input = document.querySelector(`input[name="${groupName}"][value="${savedValue}"]`);
-                    if (input) {
-                        input.checked = true;
-                    }
+                    if (input) input.checked = true;
                 }
             });
-            
             calculateScore(true);
         }
 
@@ -981,46 +885,31 @@
             try {
                 const dataString = localStorage.getItem(AUDIT_STORAGE_KEY);
                 if (dataString) {
-                    const data = JSON.parse(dataString);
-                    loadAudit(data);
+                    loadAudit(JSON.parse(dataString));
                     saveStatusDisplay.innerHTML = '<span class="text-green-400">Loaded Locally.</span>';
                 } else {
                     saveStatusDisplay.innerHTML = '<span class="text-green-400">New Session. Ready.</span>';
                     updateMaxScoreAndUI(); 
                 }
             } catch (e) {
-                console.error("Local Storage Load Error:", e);
                 saveStatusDisplay.innerHTML = '<span class="text-red-400">Load Failed!</span>';
             }
         }
         
         function resetForm() {
-            document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(input => {
-                input.value = '';
-            });
-
-            document.querySelectorAll('.score-input').forEach(input => {
-                input.checked = false;
-            });
-
+            document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(input => input.value = '');
+            document.querySelectorAll('.score-input').forEach(input => input.checked = false);
             toggleIce.checked = true;
             toggleLuxury.checked = true;
-
             localStorage.removeItem(AUDIT_STORAGE_KEY);
             updateMaxScoreAndUI(); 
-            
             if (this.id === 'reset-button') {
                 const originalText = resetButton.textContent;
                 resetButton.textContent = 'Form Cleared!';
                 resetButton.classList.replace('bg-red-600', 'bg-green-600');
-                setTimeout(() => {
-                    resetButton.textContent = originalText;
-                    resetButton.classList.replace('bg-green-600', 'bg-red-600');
-                }, 1500);
+                setTimeout(() => { resetButton.textContent = originalText; resetButton.classList.replace('bg-green-600', 'bg-red-600'); }, 1500);
             }
-            if (this.id === 'clear-top-button') {
-                saveStatusDisplay.innerHTML = '<span class="text-green-400">Cleared. Saved.</span>';
-            }
+            if (this.id === 'clear-top-button') saveStatusDisplay.innerHTML = '<span class="text-green-400">Cleared. Saved.</span>';
         }
 
         function generateShareableGraphic() {
@@ -1029,7 +918,6 @@
             const date = document.getElementById('date_of_visit').value || 'TBD';
             const score = document.getElementById('current-score').textContent;
             const store = document.getElementById('store_number').value || 'Unknown Store';
-            
             let percentage = dynamicMaxScore > 0 ? (parseInt(score) / dynamicMaxScore) * 100 : 0;
             let roundedPercent = Math.round(percentage);
             let statusInfo = getStatusInfo(roundedPercent);
@@ -1045,14 +933,11 @@
             document.getElementById('card-status-tag').textContent = statusInfo.tag;
             statusBox.style.backgroundColor = statusInfo.color;
 
-            const sectionTitles = ['Golden Rules', 'Milk Preparation', 'Single Origin', 'Coffee Machine', 'Ice Drink', 'Luxury Drink'];
             const sectionContainer = document.getElementById('card-section-breakdown');
             sectionContainer.innerHTML = '';
-            
-            sectionTitles.forEach(title => {
+            ['Golden Rules', 'Milk Preparation', 'Single Origin', 'Coffee Machine', 'Ice Drink', 'Luxury Drink'].forEach(title => {
                 if (title === 'Ice Drink' && !toggleIce.checked) return;
                 if (title === 'Luxury Drink' && !toggleLuxury.checked) return;
-
                 let sCurrent = 0, sMax = 0;
                 document.querySelectorAll('.rule-item').forEach(item => {
                     const rg = item.querySelector('.radio-group');
@@ -1070,10 +955,7 @@
             });
 
             const impContainer = document.getElementById('card-improvements');
-            const fails = Array.from(document.querySelectorAll('.score-input:checked'))
-                .filter(i => i.value === 'no')
-                .map(i => coachingAdviceMap[i.name]);
-            
+            const fails = Array.from(document.querySelectorAll('.score-input:checked')).filter(i => i.value === 'no').map(i => coachingAdviceMap[i.name]);
             if (fails.length > 0) {
                 impContainer.innerHTML = fails.slice(0, 3).map(f => `• ${f}`).join('<br>');
                 if (fails.length > 3) impContainer.innerHTML += `<br>• ...and ${fails.length - 3} other points`;
@@ -1084,18 +966,13 @@
             const originalText = downloadGraphicButton.textContent;
             downloadGraphicButton.textContent = 'Generating...';
             downloadGraphicButton.disabled = true;
-
             html2canvas(document.getElementById('share-card'), { scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `Audit_Card_${name.replace(/\s+/g, '_')}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-                
                 downloadGraphicButton.textContent = 'Image Ready!';
-                setTimeout(() => {
-                    downloadGraphicButton.textContent = originalText;
-                    downloadGraphicButton.disabled = false;
-                }, 2000);
+                setTimeout(() => { downloadGraphicButton.textContent = originalText; downloadGraphicButton.disabled = false; }, 2000);
             });
         }
 
@@ -1108,12 +985,10 @@
             const icedDrinks = toggleIce.checked ? (document.getElementById('ice_drinks_made').value || 'N/A') : '[Not Tested]';
             const luxuryDrinks = toggleLuxury.checked ? (document.getElementById('luxury_drinks_prepared').value || 'N/A') : '[Not Tested]';
             const totalScore = document.getElementById('current-score').textContent;
-            
             const rawPercent = dynamicMaxScore > 0 ? (parseInt(totalScore) / dynamicMaxScore) * 100 : 0;
             const roundedPercent = Math.round(rawPercent);
             const statusInfo = getStatusInfo(roundedPercent);
             const statusFinal = `${statusInfo.tag} (${roundedPercent}%)`;
-
             const sectionGroups = [
                 { title: 'Golden Rules', commentId: 'golden_rules_comments', enabled: true },
                 { title: 'Milk Preparation', commentId: 'milk_comments', enabled: true },
@@ -1123,47 +998,36 @@
                 { title: 'Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked }
             ];
 
-            let report = `COFFEE STANDARDS & QUALITY AUDIT REPORT\n\n`;
-            report += `Barista: ${barista}\nStore: ${store}\nAudit Date: ${dateStr}\nAuditor: ${auditor}\n\n`;
-            report += `Final Status: ${statusFinal}\nTotal Score: ${totalScore} / ${dynamicMaxScore}\n\n`;
-            report += `Drinks Evaluated:\nHot: ${hotDrinks}\nIce: ${icedDrinks}\nLuxury: ${luxuryDrinks}\n\n`;
-
-            function getSectionScore(title) {
-                let current = 0, max = 0;
-                document.querySelectorAll('.rule-item').forEach(item => {
-                    const rg = item.querySelector('.radio-group');
-                    if (rg && groupToSectionTitle[rg.dataset.group] === title) {
-                        const pts = parseInt(rg.dataset.points);
-                        max += pts;
-                        const checkedInput = rg.querySelector('input:checked');
-                        if (checkedInput && (checkedInput.value === 'yes' || checkedInput.value === 'na')) current += pts;
-                    }
-                });
-                return `${current}/${max}`;
-            }
-
+            let report = `COFFEE STANDARDS & QUALITY AUDIT REPORT\n\nBarista: ${barista}\nStore: ${store}\nAudit Date: ${dateStr}\nAuditor: ${auditor}\n\nFinal Status: ${statusFinal}\nTotal Score: ${totalScore} / ${dynamicMaxScore}\n\nDrinks Evaluated:\nHot: ${hotDrinks}\nIce: ${icedDrinks}\nLuxury: ${luxuryDrinks}\n\n`;
             const organizedAdvice = {};
 
             sectionGroups.forEach(sec => {
                 if (!sec.enabled) return;
-                report += `-------------------\n${sec.title} (${getSectionScore(sec.title)})\n\n`;
+                let current = 0, max = 0;
+                document.querySelectorAll('.rule-item').forEach(item => {
+                    const rg = item.querySelector('.radio-group');
+                    if (rg && groupToSectionTitle[rg.dataset.group] === sec.title) {
+                        const pts = parseInt(rg.dataset.points);
+                        max += pts;
+                        const checked = rg.querySelector('input:checked');
+                        if (checked && (checked.value === 'yes' || checked.value === 'na')) current += pts;
+                    }
+                });
+                report += `-------------------\n${sec.title} (${current}/${max})\n\n`;
                 let qIndex = 1;
                 document.querySelectorAll('.rule-item').forEach(item => {
                     const rg = item.querySelector('.radio-group');
                     if (rg && groupToSectionTitle[rg.dataset.group] === sec.title) {
                         const label = item.querySelector('.rule-label').textContent.trim();
                         const pts = rg.dataset.points;
-                        const checkedInput = rg.querySelector('input:checked');
-                        let choice = checkedInput ? checkedInput.value.toUpperCase() : "-";
+                        const checked = rg.querySelector('input:checked');
+                        let choice = checked ? checked.value.toUpperCase() : "-";
                         let earned = (choice === 'YES' || choice === 'NA') ? pts : 0;
-                        
                         report += `${qIndex}. ${label}\n[${choice}] (${earned} pts)\n\n`;
-                        
                         if (choice === 'NO') {
                             if (!organizedAdvice[sec.title]) organizedAdvice[sec.title] = [];
                             organizedAdvice[sec.title].push(coachingAdviceMap[rg.dataset.group]);
                         }
-
                         qIndex++;
                     }
                 });
@@ -1172,19 +1036,15 @@
             });
 
             report += `-------------------\nAREAS TO IMPROVE:\n\n`;
-            
             const adviceSections = Object.keys(organizedAdvice);
             if (adviceSections.length > 0) {
                 adviceSections.forEach(section => {
                     report += `[ ${section.toUpperCase()} ]\n`;
-                    organizedAdvice[section].forEach(advice => {
-                        report += `• ${advice}\n\n`;
-                    });
+                    organizedAdvice[section].forEach(advice => { report += `• ${advice}\n\n`; });
                 });
             } else {
                 report += `No specific areas for improvement identified.\n\n`;
             }
-
             report += `-------------------\nOverall Feedback:\n${document.getElementById('overall_feedback').value.trim() || "No additional feedback provided."}\n\nEND OF AUDIT REPORT`;
 
             const el = document.createElement('textarea');
@@ -1194,14 +1054,10 @@
             document.body.appendChild(el); el.select();
             document.execCommand('copy');
             document.body.removeChild(el);
-
             const originalText = copyButton.textContent;
             copyButton.textContent = 'Report Copied!';
             copyButton.classList.replace('bg-white', 'bg-green-100');
-            setTimeout(() => {
-                copyButton.textContent = originalText;
-                copyButton.classList.replace('bg-green-100', 'bg-white');
-            }, 2000);
+            setTimeout(() => { copyButton.textContent = originalText; copyButton.classList.replace('bg-green-100', 'bg-white'); }, 2000);
         }
 
         function setupForm() {
