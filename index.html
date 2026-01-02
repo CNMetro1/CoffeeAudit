@@ -148,8 +148,9 @@
                 <h2 class="text-2xl font-black tracking-tight">COFFEE QUALITY AUDIT</h2>
                 <p id="card-date" class="text-xs opacity-80 mt-1 uppercase font-bold tracking-widest"></p>
             </div>
-            <div id="card-status-box" class="px-6 py-2 rounded-full text-white font-black text-lg">
-                0%
+            <div id="card-status-box" class="px-4 py-2 rounded-lg text-white font-black text-center min-w-[140px]">
+                <div id="card-status-percent" class="text-2xl leading-none">0%</div>
+                <div id="card-status-tag" class="text-[10px] uppercase tracking-tighter mt-1">N/A</div>
             </div>
         </div>
 
@@ -776,6 +777,12 @@
             'luxury4': 'Keep the foam levels precise on luxury drinks to maintain consistent serving standards.'
         };
 
+        function getStatusInfo(percentage) {
+            if (percentage >= 90) return { tag: "PASSED", color: "#4ade80" }; // Green
+            if (percentage >= 80) return { tag: "SO CLOSE", color: "#facc15" }; // Yellow
+            return { tag: "NEEDS WORK", color: "#f87171" }; // Red
+        }
+
         function updateMaxScoreAndUI() {
             let newMax = BASE_MAX_SCORE;
             
@@ -848,20 +855,16 @@
                 
                 // --- STATUS LOGIC BASED ON PERCENTAGE ---
                 let percentage = dynamicMaxScore > 0 ? (totalScore / dynamicMaxScore) * 100 : 0;
+                let roundedPercent = Math.round(percentage);
+                let statusInfo = getStatusInfo(roundedPercent);
                 
-                let statusText = "";
+                let statusText = `Status: ${statusInfo.tag} (${roundedPercent}%)`;
                 let statusClass = "text-center mt-3 text-lg font-bold";
                 
-                if (percentage >= 90) {
-                    statusText = `Status: PASSED! (${percentage.toFixed(1)}%)`;
-                    statusClass += " text-green-400";
-                } else if (percentage >= 80) {
-                    statusText = `Status: SO CLOSE! (${percentage.toFixed(1)}%)`;
-                    statusClass += " text-yellow-300";
-                } else {
-                    statusText = `Status: Needs Work (${percentage.toFixed(1)}%)`;
-                    statusClass += " text-red-400";
-                }
+                // Set color class based on tag
+                if (statusInfo.tag === "PASSED") statusClass += " text-green-400";
+                else if (statusInfo.tag === "SO CLOSE") statusClass += " text-yellow-300";
+                else statusClass += " text-red-400";
 
                 passFailStatus.textContent = statusText;
                 passFailStatus.className = statusClass;
@@ -1021,14 +1024,8 @@
             const store = document.getElementById('store_number').value || 'Unknown Store';
             
             let percentage = dynamicMaxScore > 0 ? (parseInt(score) / dynamicMaxScore) * 100 : 0;
-            
-            // Set colors based on performance
-            let statusColor = "#f87171"; // Red
-            if (percentage >= 90) {
-                statusColor = "#4ade80"; // Green
-            } else if (percentage >= 80) {
-                statusColor = "#facc15"; // Yellow
-            }
+            let roundedPercent = Math.round(percentage);
+            let statusInfo = getStatusInfo(roundedPercent);
 
             document.getElementById('card-barista').textContent = name;
             document.getElementById('card-auditor').textContent = auditor;
@@ -1037,8 +1034,9 @@
             document.getElementById('card-store').textContent = `STORE: ${store}`;
             
             const statusBox = document.getElementById('card-status-box');
-            statusBox.textContent = `${percentage.toFixed(0)}%`;
-            statusBox.style.backgroundColor = statusColor;
+            document.getElementById('card-status-percent').textContent = `${roundedPercent}%`;
+            document.getElementById('card-status-tag').textContent = statusInfo.tag;
+            statusBox.style.backgroundColor = statusInfo.color;
 
             const sectionTitles = ['Golden Rules', 'Milk Preparation', 'Single Origin', 'Coffee Machine', 'Ice Drink', 'Luxury Drink'];
             const sectionContainer = document.getElementById('card-section-breakdown');
@@ -1065,7 +1063,6 @@
             });
 
             const impContainer = document.getElementById('card-improvements');
-            // Get conversational fails for the card too
             const fails = Array.from(document.querySelectorAll('.score-input:checked'))
                 .filter(i => i.value === 'no')
                 .map(i => coachingAdviceMap[i.name]);
@@ -1104,7 +1101,11 @@
             const icedDrinks = toggleIce.checked ? (document.getElementById('ice_drinks_made').value || 'N/A') : '[Not Tested]';
             const luxuryDrinks = toggleLuxury.checked ? (document.getElementById('luxury_drinks_prepared').value || 'N/A') : '[Not Tested]';
             const totalScore = document.getElementById('current-score').textContent;
-            const statusRaw = document.getElementById('pass-fail-status').textContent.trim().replace('Status: ', '');
+            
+            const rawPercent = dynamicMaxScore > 0 ? (parseInt(totalScore) / dynamicMaxScore) * 100 : 0;
+            const roundedPercent = Math.round(rawPercent);
+            const statusInfo = getStatusInfo(roundedPercent);
+            const statusFinal = `${statusInfo.tag} (${roundedPercent}%)`;
 
             const sectionGroups = [
                 { title: 'Golden Rules', commentId: 'golden_rules_comments', enabled: true },
@@ -1117,7 +1118,7 @@
 
             let report = `COFFEE STANDARDS & QUALITY AUDIT REPORT\n\n`;
             report += `Barista: ${barista}\nStore: ${store}\nAudit Date: ${dateStr}\nAuditor: ${auditor}\n\n`;
-            report += `Final Status: ${statusRaw}\nTotal Score: ${totalScore} / ${dynamicMaxScore}\n\n`;
+            report += `Final Status: ${statusFinal}\nTotal Score: ${totalScore} / ${dynamicMaxScore}\n\n`;
             report += `Drinks Evaluated:\nHot: ${hotDrinks}\nIce: ${icedDrinks}\nLuxury: ${luxuryDrinks}\n\n`;
 
             function getSectionScore(title) {
@@ -1134,7 +1135,6 @@
                 return `${current}/${max}`;
             }
 
-            // Object to hold coaching points by section for organized advice at bottom
             const organizedAdvice = {};
 
             sectionGroups.forEach(sec => {
@@ -1152,7 +1152,6 @@
                         
                         report += `${qIndex}. ${label}\n[${choice}] (${earned} pts)\n\n`;
                         
-                        // Collect NO responses for organized coaching advice section
                         if (choice === 'NO') {
                             if (!organizedAdvice[sec.title]) organizedAdvice[sec.title] = [];
                             organizedAdvice[sec.title].push(coachingAdviceMap[rg.dataset.group]);
@@ -1172,7 +1171,7 @@
                 adviceSections.forEach(section => {
                     report += `[ ${section.toUpperCase()} ]\n`;
                     organizedAdvice[section].forEach(advice => {
-                        report += `• ${advice}\n\n`; // Double line break as requested
+                        report += `• ${advice}\n\n`;
                     });
                 });
             } else {
