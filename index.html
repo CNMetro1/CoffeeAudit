@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Barista Quality Checklist (Pure Black & White)</title>
+    <title>Barista Coffee Audit</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
@@ -155,7 +155,7 @@
 
         <div class="grid grid-cols-2 gap-8 mb-6">
             <div>
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Candidate</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Staff Member</p>
                 <h1 id="card-barista" class="text-2xl font-black">Barista Name</h1>
                 <p id="card-store" class="text-sm text-gray-600 font-bold mt-1"></p>
             </div>
@@ -192,7 +192,7 @@
         
         <header class="bg-black text-white p-6 sm:p-8 rounded-t-xl">
             <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2">
-                Barista Quality Check: Interactive Form
+                Barista Coffee Audit
             </h1>
             <p class="text-lg font-light opacity-90 mb-4">
                 Evaluate coffee preparation with Yes/No checks and add direct feedback.
@@ -504,7 +504,7 @@
                         </div>
                     </div>
                     <div class="rule-item">
-                        <span class="rule-label">Correct grams of coffee for Single Origin (17-18g).</span>
+                        <span class="rule-label">Correct grams of coffee for Single Origin / Seasonal (17-18g SO / 16-16.5g Seasonal).</span>
                         <span class="rule-points">1 pt</span>
                         <div class="radio-group flex items-center" data-points="1" data-group="single3">
                             <input type="radio" id="single3_yes" name="single3" value="yes" class="score-input">
@@ -741,6 +741,38 @@
             'luxury1': 'Luxury Drink', 'luxury2': 'Luxury Drink', 'luxury3': 'Luxury Drink', 'luxury4': 'Luxury Drink'
         };
 
+        // Conversational Mapping for Advice
+        const coachingAdviceMap = {
+            'golden1': 'Make sure you use button 3 to flush the group head before every shot to clear any old coffee grounds & balance the water temperature.',
+            'golden2': 'Remember to purge the steam wand before steaming to clear condensation, and immediately after to keep it clean.',
+            'golden3': 'Always wipe the steam wand with a clean cloth immediately after preparing milk to prevent milk buildup.',
+            'golden4': 'Focus on leveling the coffee grounds evenly in the portafilter before tamping to ensure a balanced extraction.',
+            'golden5': 'Give the handle a quick wipe after leveling to keep the group head clean and the seal tight.',
+            'golden6': 'Check your tamping technique; remember it is 1 firm tamp for espresso and 2 for ristretto.',
+            'extract1': 'Try to start the extraction within 10 seconds of inserting the handle so the coffee doesn\'t "cook" in the heat.',
+            'extract2': 'Keep using the timer for every shot to ensure we maintain high consistency in our flavor profile.',
+            'extract4': 'Your extraction timing is a bit off—aim for 20-22 seconds for espresso to get the best flavor.',
+            'clean': 'Try to tidy up your station as you work; a clean workspace helps you stay organized during busy periods.',
+            'milk1': 'Review the 4 steps of milk steaming; Steam wand position, Injecting the correct amount of air, creating the Vortex, banging and swirling the milk. Each of these is key for that silky texture.',
+            'milk2': 'Please use the milk thermometer for every jug to ensure we are hitting the perfect temperature every time.',
+            'milk_steamed_extracted': 'Try to time your milk steaming so it happens while the coffee is extracting—this keeps the drink fresh.',
+            'milk3': 'Remember the pouring technique: use the spout for lattes and the side of the jug for cappuccinos.',
+            'milk4': 'Watch your foam levels; we are looking for 2-2.5cm for cappuccino style milk, about 1cm for latte style and 0.5-1cm for Flat Whites & Cortados.',
+            'milk5': 'Focus on your presentation; make sure there are no spills on the cup and the crema looks clean.',
+            'single1': 'Make sure you are actively offering Single Origin to customers—it\'s a great way to elevate their experience.',
+            'single2': 'Take some time to learn the specific flavor notes between Classic and Single Origin so you can explain them clearly.',
+            'single3': 'Double-check your dose for Single Origin / Seasonal; it needs to be 17-18g for SO & 16-16.5g in Seasonal (Winter Blend etc) for the best result.',
+            'machine1': 'Keep an eye on the pump pressure; it should stay consistently between 9-10 Bar.',
+            'machine2': 'Monitor the steam pressure regularly to ensure it stays in the optimal 0.9-1.1 Bar range.',
+            'ice2': 'Always use the measuring cup for iced drinks to ensure the ratios are consistent for every customer.',
+            'ice3': 'Check that you are using the correct lid and straw combination for each specific iced drink type.',
+            'ice4': 'Make sure you are selecting the correct program on the blender for the specific drink you are making.',
+            'luxury1': 'Even for luxury drinks, the thermometer is essential to ensure we don\'t overheat the specialty ingredients.',
+            'luxury2': 'Apply the standard 4 steps of milk steaming to luxury drinks as well for consistent quality.',
+            'luxury3': 'Work on your workflow so the milk is ready just as the coffee finishes extracting for luxury recipes.',
+            'luxury4': 'Keep the foam levels precise on luxury drinks to maintain consistent serving standards.'
+        };
+
         function updateMaxScoreAndUI() {
             let newMax = BASE_MAX_SCORE;
             
@@ -773,33 +805,34 @@
 
         function calculateScore(updateDisplay = true) {
             let totalScore = 0;
-            const fails = [];
+            const coachingPoints = [];
 
-            // Find scored points only from visible sections
-            scoreInputs.forEach(input => {
-                const groupName = input.name;
-                const points = parseInt(input.closest('.radio-group').dataset.points);
-                const label = input.closest('.rule-item') ? input.closest('.rule-item').querySelector('.rule-label').textContent : "";
-                
-                // Check if the input belongs to an invisible section
-                let isHidden = false;
-                if (!toggleIce.checked && (groupName === 'ice2' || groupName === 'ice3' || groupName === 'ice4')) {
-                    isHidden = true;
-                }
-                if (!toggleLuxury.checked && (groupName === 'luxury1' || groupName === 'luxury2' || groupName === 'luxury3' || groupName === 'luxury4')) {
-                    isHidden = true;
-                }
-                
-                // Scoring logic: Grant points for 'yes' AND 'na' (Not Applicable)
-                const isScored = (input.checked && (input.value === 'yes' || input.value === 'na'));
+            // 1. Determine which groups are currently disabled based on toggles
+            const disabledGroups = [];
+            if (!toggleIce.checked) disabledGroups.push('ice2', 'ice3', 'ice4');
+            if (!toggleLuxury.checked) disabledGroups.push('luxury1', 'luxury2', 'luxury3', 'luxury4');
 
-                if (isScored && !isHidden) {
-                    totalScore += points;
-                }
+            // 2. Iterate through all radio groups to calculate score and find "No" answers
+            const uniqueGroups = new Set(Array.from(scoreInputs).map(i => i.name));
+            
+            uniqueGroups.forEach(groupName => {
+                if (disabledGroups.includes(groupName)) return;
 
-                // Collect failures for coaching section
-                if (input.checked && input.value === 'no' && !isHidden && label) {
-                    fails.push(label);
+                const checkedInput = document.querySelector(`input[name="${groupName}"]:checked`);
+                const groupContainer = document.querySelector(`.radio-group[data-points][data-group="${groupName}"]`);
+                const points = parseInt(groupContainer.dataset.points);
+
+                if (checkedInput) {
+                    // Score Points
+                    if (checkedInput.value === 'yes' || checkedInput.value === 'na') {
+                        totalScore += points;
+                    } 
+                    // Identify Coaching Points
+                    else if (checkedInput.value === 'no') {
+                        // Use conversational advice if available, else fallback to technical label
+                        const advice = coachingAdviceMap[groupName] || "Focus on improving this step of the process.";
+                        coachingPoints.push(advice);
+                    }
                 }
             });
             
@@ -827,9 +860,14 @@
                 passFailStatus.textContent = statusText;
                 passFailStatus.className = statusClass;
 
-                // Update Coaching Points List
-                if (fails.length > 0) {
-                    coachingPointsList.innerHTML = fails.map(f => `<div class="flex items-start mb-1"><span class="mr-2 text-red-500">•</span> <span>${f}</span></div>`).join('');
+                // Update Coaching Points List (Actionable items)
+                if (coachingPoints.length > 0) {
+                    coachingPointsList.innerHTML = coachingPoints.map(f => `
+                        <div class="flex items-start mb-2 group">
+                            <span class="mr-2 text-red-500 font-bold">•</span> 
+                            <span class="text-gray-700 italic">"${f}"</span>
+                        </div>
+                    `).join('');
                 } else {
                     coachingPointsList.innerHTML = `<p class="italic text-gray-500">No issues identified yet. Keep up the good work!</p>`;
                 }
@@ -839,10 +877,7 @@
 
         // --- UNIFIED EVENT HANDLER for instant score update and saving ---
         function handleInput() {
-            // 1. Recalculate and update UI instantly
             calculateScore(true);
-
-            // 2. Save data to Local Storage
             saveLocalData();
         }
 
@@ -851,23 +886,20 @@
         function collectFormData() {
             const data = {};
 
-            // 1. Collect all named inputs (including header, text areas, and TOGGLES)
             document.querySelectorAll('[name]').forEach(input => {
                 if (input.type === 'checkbox') {
-                    data[input.name] = input.checked; // Save boolean for toggles
+                    data[input.name] = input.checked;
                 } else {
                     data[input.name] = input.value;
                 }
             });
             
-            // 2. Collect radio button group values
             document.querySelectorAll('.radio-group').forEach(group => {
                 const groupName = group.dataset.group;
                 const checkedInput = document.querySelector(`input[name="${groupName}"]:checked`);
                 data[groupName] = checkedInput ? checkedInput.value : '';
             });
 
-            // 3. Store calculated score and dynamic max score
             data.calculatedScore = calculateScore(false);
             data.dynamicMaxScore = dynamicMaxScore;
 
@@ -888,14 +920,12 @@
         function loadAudit(data) {
             if (!data) return;
 
-            // 1. Populate text and date inputs
             document.querySelectorAll('[name]').forEach(input => {
                 if (input.type !== 'checkbox' && input.type !== 'radio' && data[input.name] !== undefined) {
                     input.value = data[input.name];
                 }
             });
             
-            // 2. Populate toggles (checkboxes) - CRITICAL: Update state before radio restoration
             if (data.isIceAuditEnabled !== undefined) {
                 toggleIce.checked = data.isIceAuditEnabled; 
             }
@@ -903,10 +933,8 @@
                 toggleLuxury.checked = data.isLuxuryAuditEnabled;
             }
             
-            // 3. Update visibility and dynamic max score first
             updateMaxScoreAndUI();
 
-            // 4. Populate radio buttons
             document.querySelectorAll('.radio-group').forEach(group => {
                 const groupName = group.dataset.group;
                 const savedValue = data[groupName];
@@ -918,7 +946,6 @@
                 }
             });
             
-            // 5. Final recalculate score
             calculateScore(true);
         }
 
@@ -931,7 +958,7 @@
                     saveStatusDisplay.innerHTML = '<span class="text-green-400">Loaded Locally.</span>';
                 } else {
                     saveStatusDisplay.innerHTML = '<span class="text-green-400">New Session. Ready.</span>';
-                    updateMaxScoreAndUI(); // Initial UI setup for default state
+                    updateMaxScoreAndUI(); 
                 }
             } catch (e) {
                 console.error("Local Storage Load Error:", e);
@@ -939,29 +966,21 @@
             }
         }
         
-        // --- RESET FUNCTION ---
         function resetForm() {
-            // 1. Clear text inputs and textareas
             document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(input => {
                 input.value = '';
             });
 
-            // 2. Clear radio button selections
             document.querySelectorAll('.score-input').forEach(input => {
                 input.checked = false;
             });
 
-            // 3. Reset toggles to default (enabled)
             toggleIce.checked = true;
             toggleLuxury.checked = true;
 
-            // 4. Clear local storage
             localStorage.removeItem(AUDIT_STORAGE_KEY);
-            
-            // 5. Update UI and save the cleared state
             updateMaxScoreAndUI(); 
             
-            // Optional: Provide visual feedback for reset button
             if (this.id === 'reset-button') {
                 const originalText = resetButton.textContent;
                 resetButton.textContent = 'Form Cleared!';
@@ -976,10 +995,8 @@
             }
         }
 
-        // --- GRAPHIC GENERATION LOGIC ---
         function generateShareableGraphic() {
-            // Data Gathering
-            const name = document.getElementById('barista_name').value || 'Candidate';
+            const name = document.getElementById('barista_name').value || 'Staff Member';
             const auditor = document.getElementById('audit_by').value || 'N/A';
             const date = document.getElementById('date_of_visit').value || 'TBD';
             const score = document.getElementById('current-score').textContent;
@@ -987,17 +1004,16 @@
             
             let percentage = dynamicMaxScore > 0 ? (parseInt(score) / dynamicMaxScore) * 100 : 0;
             let statusText = "NEEDS WORK";
-            let statusColor = "#f87171"; // red-400
+            let statusColor = "#f87171";
 
             if (percentage >= 90) {
                 statusText = "PASSED";
-                statusColor = "#4ade80"; // green-400
+                statusColor = "#4ade80";
             } else if (percentage >= 80) {
                 statusText = "SO CLOSE";
-                statusColor = "#facc15"; // yellow-400
+                statusColor = "#facc15";
             }
 
-            // Update UI on Card
             document.getElementById('card-barista').textContent = name;
             document.getElementById('card-auditor').textContent = auditor;
             document.getElementById('card-date').textContent = `AUDIT DATE: ${date}`;
@@ -1008,7 +1024,6 @@
             statusBox.textContent = statusText;
             statusBox.style.backgroundColor = statusColor;
 
-            // Generate Section Breakdown for Card
             const sectionTitles = ['Golden Rules', 'Milk Preparation', 'Single Origin', 'Coffee Machine', 'Ice Drink', 'Luxury Drink'];
             const sectionContainer = document.getElementById('card-section-breakdown');
             sectionContainer.innerHTML = '';
@@ -1033,22 +1048,19 @@
                 sectionContainer.appendChild(div);
             });
 
-            // Generate Improvements for Card
             const impContainer = document.getElementById('card-improvements');
+            // Get conversational fails for the card too
             const fails = Array.from(document.querySelectorAll('.score-input:checked'))
                 .filter(i => i.value === 'no')
-                .map(i => i.closest('.rule-item')?.querySelector('.rule-label')?.textContent.trim())
-                .filter(f => f);
+                .map(i => coachingAdviceMap[i.name]);
             
             if (fails.length > 0) {
-                // Show max 4 on card to avoid overflow
-                impContainer.innerHTML = fails.slice(0, 4).map(f => `• ${f}`).join('<br>');
-                if (fails.length > 4) impContainer.innerHTML += `<br>• ...and ${fails.length - 4} other items`;
+                impContainer.innerHTML = fails.slice(0, 3).map(f => `• ${f}`).join('<br>');
+                if (fails.length > 3) impContainer.innerHTML += `<br>• ...and ${fails.length - 3} other points`;
             } else {
                 impContainer.innerHTML = "Performance meets all quality standards.";
             }
 
-            // Capture and Download
             const originalText = downloadGraphicButton.textContent;
             downloadGraphicButton.textContent = 'Generating...';
             downloadGraphicButton.disabled = true;
@@ -1067,7 +1079,6 @@
             });
         }
 
-        // --- REPORT COPY LOGIC ---
         function copyReportToClipboard() {
             const auditor = document.getElementById('audit_by').value || 'N/A';
             const dateStr = document.getElementById('date_of_visit').value || 'N/A';
@@ -1129,8 +1140,13 @@
 
             report += `-------------------\nAREAS TO IMPROVE:\n`;
             const fails = Array.from(document.querySelectorAll('.score-input:checked'))
-                .filter(i => i.value === 'no')
-                .map(i => i.closest('.rule-item')?.querySelector('.rule-label')?.textContent.trim());
+                .filter(i => {
+                    const group = i.name;
+                    if (!toggleIce.checked && (group === 'ice2' || group === 'ice3' || group === 'ice4')) return false;
+                    if (!toggleLuxury.checked && (group === 'luxury1' || group === 'luxury2' || group === 'luxury3' || group === 'luxury4')) return false;
+                    return i.value === 'no';
+                })
+                .map(i => coachingAdviceMap[i.name]);
             
             if (fails.length > 0) fails.forEach(f => { if(f) report += `• ${f}\n` });
             else report += `No specific areas for improvement identified.\n`;
@@ -1154,8 +1170,6 @@
             }, 2000);
         }
 
-        // --- EVENT LISTENERS AND INITIALIZATION ---
-        
         function setupForm() {
             formInputs.forEach(input => input.addEventListener('input', handleInput));
             scoreInputs.forEach(input => input.addEventListener('change', handleInput));
