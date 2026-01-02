@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Interactive Barista Quality Checklist (Pure Black & White)</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
@@ -123,9 +124,41 @@
         .blender-radio-group .na-option {
             grid-column: 1 / 2; /* N/A spans the first column, under Yes */
         }
+        /* Card for graphic generation */
+        #share-card {
+            position: fixed;
+            left: -9999px;
+            top: -9999px;
+            width: 500px;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid black;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8">
+
+    <!-- Hidden element used for generating the graphic -->
+    <div id="share-card" class="flex flex-col items-center text-center">
+        <div class="bg-black text-white w-full p-4 rounded-xl mb-6">
+            <h2 class="text-xl font-bold">BARISTA QUALITY AUDIT</h2>
+            <p id="card-date" class="text-xs opacity-80 mt-1"></p>
+        </div>
+        <p class="text-sm font-bold text-gray-500 uppercase tracking-widest">Candidate</p>
+        <h1 id="card-barista" class="text-2xl font-black mb-4">Barista Name</h1>
+        
+        <div class="border-y-2 border-black w-full py-6 my-4">
+            <p class="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">Final Score</p>
+            <div id="card-score" class="text-6xl font-black">0 / 100</div>
+        </div>
+
+        <div id="card-status-box" class="px-6 py-2 rounded-full text-white font-bold text-lg">
+            PASSED
+        </div>
+        <p id="card-store" class="mt-6 text-sm text-gray-600 font-medium"></p>
+        <p class="mt-2 text-[10px] text-gray-400">Coffee Quality Assurance Program</p>
+    </div>
 
     <div class="max-w-4xl mx-auto rounded-xl overflow-hidden shadow-2xl bg-white">
         
@@ -610,12 +643,15 @@
                     <span id="final-score-footer" class="text-3xl font-extrabold text-white">0 / 100</span>
                 </div>
                 
-                <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <div class="flex flex-wrap gap-2 justify-center sm:justify-end">
                     <button id="reset-button" class="px-4 py-2 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition duration-200 hover:bg-red-700">
                         Start New Audit
                     </button>
                     <button id="copy-report-button" class="px-4 py-2 bg-white text-black font-bold rounded-lg shadow-lg hover:shadow-xl transition duration-200 hover:bg-gray-100">
                         Copy Full Report
+                    </button>
+                    <button id="download-graphic-button" class="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition duration-200 hover:bg-blue-700">
+                        Download Scorecard Image
                     </button>
                 </div>
             </div>
@@ -640,6 +676,7 @@
         const passMarkDisplay = document.getElementById('pass-mark-display');
         const copyButton = document.getElementById('copy-report-button');
         const resetButton = document.getElementById('reset-button');
+        const downloadGraphicButton = document.getElementById('download-graphic-button');
         const clearTopButton = document.getElementById('clear-top-button');
         const saveStatusDisplay = document.getElementById('save-status');
         const formInputs = document.querySelectorAll('input, textarea');
@@ -875,6 +912,55 @@
             }
         }
 
+        // --- GRAPHIC GENERATION LOGIC ---
+        function generateShareableGraphic() {
+            // 1. Prepare data for the graphic
+            const name = document.getElementById('barista_name').value || 'Candidate';
+            const date = document.getElementById('date_of_visit').value || 'TBD';
+            const score = document.getElementById('current-score').textContent;
+            const store = document.getElementById('store_number').value || 'Unknown Store';
+            
+            let percentage = dynamicMaxScore > 0 ? (parseInt(score) / dynamicMaxScore) * 100 : 0;
+            let statusText = "NEEDS WORK";
+            let statusColor = "#f87171"; // red-400
+
+            if (percentage >= 90) {
+                statusText = "PASSED";
+                statusColor = "#4ade80"; // green-400
+            } else if (percentage >= 80) {
+                statusText = "SO CLOSE";
+                statusColor = "#facc15"; // yellow-400
+            }
+
+            // 2. Update hidden card element
+            document.getElementById('card-barista').textContent = name;
+            document.getElementById('card-date').textContent = `AUDIT DATE: ${date}`;
+            document.getElementById('card-score').textContent = `${score} / ${dynamicMaxScore}`;
+            document.getElementById('card-store').textContent = `STORE: ${store}`;
+            
+            const statusBox = document.getElementById('card-status-box');
+            statusBox.textContent = statusText;
+            statusBox.style.backgroundColor = statusColor;
+
+            // 3. Capture and Download
+            const originalText = downloadGraphicButton.textContent;
+            downloadGraphicButton.textContent = 'Generating... 🎨';
+            downloadGraphicButton.disabled = true;
+
+            html2canvas(document.getElementById('share-card')).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Barista_Audit_${name.replace(/\s+/g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                downloadGraphicButton.textContent = 'Image Ready! ✅';
+                setTimeout(() => {
+                    downloadGraphicButton.textContent = originalText;
+                    downloadGraphicButton.disabled = false;
+                }, 2000);
+            });
+        }
+
         // --- REPORT COPY LOGIC ---
         function copyReportToClipboard() {
             // 1. Gather Admin/General Info
@@ -1080,6 +1166,7 @@
             copyButton.addEventListener('click', copyReportToClipboard);
             resetButton.addEventListener('click', resetForm);
             clearTopButton.addEventListener('click', resetForm);
+            downloadGraphicButton.addEventListener('click', generateShareableGraphic);
 
             // Load saved data when the page loads
             loadLocalData();
