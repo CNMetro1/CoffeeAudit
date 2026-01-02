@@ -1133,6 +1133,9 @@
                 return `${current}/${max}`;
             }
 
+            // Object to hold coaching points by section for organized advice at bottom
+            const organizedAdvice = {};
+
             sectionGroups.forEach(sec => {
                 if (!sec.enabled) return;
                 report += `-------------------\n${sec.title} (${getSectionScore(sec.title)})\n\n`;
@@ -1145,7 +1148,15 @@
                         const checkedInput = rg.querySelector('input:checked');
                         let choice = checkedInput ? checkedInput.value.toUpperCase() : "-";
                         let earned = (choice === 'YES' || choice === 'NA') ? pts : 0;
+                        
                         report += `${qIndex}. ${label}\n[${choice}] (${earned} pts)\n\n`;
+                        
+                        // Collect NO responses for organized coaching advice section
+                        if (choice === 'NO') {
+                            if (!organizedAdvice[sec.title]) organizedAdvice[sec.title] = [];
+                            organizedAdvice[sec.title].push(coachingAdviceMap[rg.dataset.group]);
+                        }
+
                         qIndex++;
                     }
                 });
@@ -1153,20 +1164,21 @@
                 if (cmt) report += `Notes: ${cmt}\n\n`;
             });
 
-            report += `-------------------\nAREAS TO IMPROVE:\n`;
-            const fails = Array.from(document.querySelectorAll('.score-input:checked'))
-                .filter(i => {
-                    const group = i.name;
-                    if (!toggleIce.checked && (group === 'ice2' || group === 'ice3' || group === 'ice4')) return false;
-                    if (!toggleLuxury.checked && (group === 'luxury1' || group === 'luxury2' || group === 'luxury3' || group === 'luxury4')) return false;
-                    return i.value === 'no';
-                })
-                .map(i => coachingAdviceMap[i.name]);
+            report += `-------------------\nAREAS TO IMPROVE:\n\n`;
             
-            if (fails.length > 0) fails.forEach(f => { if(f) report += `• ${f}\n` });
-            else report += `No specific areas for improvement identified.\n`;
+            const adviceSections = Object.keys(organizedAdvice);
+            if (adviceSections.length > 0) {
+                adviceSections.forEach(section => {
+                    report += `[ ${section.toUpperCase()} ]\n`;
+                    organizedAdvice[section].forEach(advice => {
+                        report += `• ${advice}\n\n`; // Double line break as requested
+                    });
+                });
+            } else {
+                report += `No specific areas for improvement identified.\n\n`;
+            }
 
-            report += `\n-------------------\nOverall Feedback:\n${document.getElementById('overall_feedback').value.trim() || "No additional feedback provided."}\n\nEND OF AUDIT REPORT`;
+            report += `-------------------\nOverall Feedback:\n${document.getElementById('overall_feedback').value.trim() || "No additional feedback provided."}\n\nEND OF AUDIT REPORT`;
 
             const el = document.createElement('textarea');
             el.value = report;
