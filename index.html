@@ -658,7 +658,7 @@
                 <h2 class="text-xl font-bold mb-3 text-black">
                     🎯 Areas to Improve
                 </h2>
-                <div id="coaching-points-list" class="space-y-1 text-sm text-gray-700">
+                <div id="coaching-points-list" class="space-y-4 text-sm text-gray-700">
                     <p class="italic text-gray-500">No issues identified yet. Keep up the good work!</p>
                 </div>
             </div>
@@ -805,7 +805,7 @@
 
         function calculateScore(updateDisplay = true) {
             let totalScore = 0;
-            const coachingPoints = [];
+            const coachingPointsBySection = {};
 
             // 1. Determine which groups are currently disabled based on toggles
             const disabledGroups = [];
@@ -829,9 +829,12 @@
                     } 
                     // Identify Coaching Points
                     else if (checkedInput.value === 'no') {
-                        // Use conversational advice if available, else fallback to technical label
+                        const sectionTitle = groupToSectionTitle[groupName] || 'General';
+                        if (!coachingPointsBySection[sectionTitle]) {
+                            coachingPointsBySection[sectionTitle] = [];
+                        }
                         const advice = coachingAdviceMap[groupName] || "Focus on improving this step of the process.";
-                        coachingPoints.push(advice);
+                        coachingPointsBySection[sectionTitle].push(advice);
                     }
                 }
             });
@@ -860,14 +863,26 @@
                 passFailStatus.textContent = statusText;
                 passFailStatus.className = statusClass;
 
-                // Update Coaching Points List (Actionable items)
-                if (coachingPoints.length > 0) {
-                    coachingPointsList.innerHTML = coachingPoints.map(f => `
-                        <div class="flex items-start mb-2 group">
-                            <span class="mr-2 text-red-500 font-bold">•</span> 
-                            <span class="text-gray-700 italic">"${f}"</span>
-                        </div>
-                    `).join('');
+                // Update Coaching Points List (Actionable items grouped by section)
+                const sectionKeys = Object.keys(coachingPointsBySection);
+                if (sectionKeys.length > 0) {
+                    let htmlContent = "";
+                    sectionKeys.forEach(section => {
+                        htmlContent += `
+                            <div>
+                                <h3 class="font-bold text-black border-b border-gray-100 mb-2 uppercase text-[10px] tracking-widest">${section}</h3>
+                                <div class="space-y-1 pl-1">
+                                    ${coachingPointsBySection[section].map(f => `
+                                        <div class="flex items-start group">
+                                            <span class="mr-2 text-red-500 font-bold">•</span> 
+                                            <span class="text-gray-700 italic">"${f}"</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    coachingPointsList.innerHTML = htmlContent;
                 } else {
                     coachingPointsList.innerHTML = `<p class="italic text-gray-500">No issues identified yet. Keep up the good work!</p>`;
                 }
