@@ -10,10 +10,9 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6; /* Soft light gray background to pop the white card */
+            background-color: #f3f4f6;
         }
         
-        /* Main White Card Style */
         .main-card {
             background-color: #ffffff;
             border-radius: 1rem;
@@ -23,12 +22,20 @@
 
         .rule-item {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 0.5rem;
-            padding: 0.5rem 0;
-            border-bottom: 1px dashed #cccccc; /* Light gray for subtle separation */
+            flex-direction: column; /* Stack vertically on small screens */
+            margin-bottom: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed #cccccc;
         }
+        
+        @media (min-width: 640px) {
+            .rule-item {
+                flex-direction: row; /* Horizontal on tablets/desktops */
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
         .rule-item:last-child {
             border-bottom: none;
         }
@@ -36,32 +43,46 @@
             flex-grow: 1;
             margin-right: 1rem;
             font-size: 0.95rem;
-            color: #000000; /* Pure Black */
+            color: #000000;
+            margin-bottom: 0.5rem; /* Space when stacked */
+        }
+        @media (min-width: 640px) {
+            .rule-label {
+                margin-bottom: 0;
+            }
         }
         .rule-points {
             font-weight: 600;
-            color: #333333; /* Darker gray for points for readability */
+            color: #333333;
             min-width: 40px;
-            text-align: right;
+            text-align: left;
             margin-right: 1rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
         }
-        /* Custom Radio Group Styling */
+        @media (min-width: 640px) {
+            .rule-points {
+                text-align: right;
+                font-size: 0.95rem;
+                opacity: 1;
+            }
+        }
         .radio-group input[type="radio"] {
             margin-left: 0.5rem;
             cursor: pointer;
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
-            width: 1rem;
-            height: 1rem;
-            border: 1px solid #666666; /* Medium gray border */
+            width: 1.1rem;
+            height: 1.1rem;
+            border: 1px solid #666666;
             border-radius: 50%;
             outline: none;
             transition: all 0.2s ease-in-out;
             position: relative;
         }
         .radio-group input[type="radio"]:checked {
-            border-color: #000000; /* Pure Black for checked */
+            border-color: #000000;
             background-color: #000000;
         }
         .radio-group input[type="radio"]:checked::before {
@@ -80,23 +101,24 @@
             cursor: pointer;
             margin-left: 0.25rem;
             margin-right: 0.75rem;
-            color: #000000; /* Pure Black */
+            color: #000000;
             font-weight: 500;
         }
         .section-subheading {
             font-size: 1rem;
             font-weight: 600;
-            color: #000000; /* Pure Black */
-            margin-top: 1rem;
+            color: #000000;
+            margin-top: 1.5rem;
             padding-bottom: 0.25rem;
             border-bottom: 1px solid #cccccc;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
         }
         textarea {
             resize: vertical;
             min-height: 60px;
         }
-        /* Custom checkbox style for Tailwind/Inter look */
         input[type="checkbox"] {
             appearance: none;
             -webkit-appearance: none;
@@ -123,16 +145,14 @@
             color: white;
             line-height: 1;
         }
-        /* Style for the Blender button group layout */
         .blender-radio-group {
             display: grid;
-            grid-template-columns: auto auto; /* Two columns for Yes/No */
+            grid-template-columns: auto auto;
             gap: 0.5rem;
         }
         .blender-radio-group .na-option {
-            grid-column: 1 / 2; /* N/A spans the first column, under Yes */
+            grid-column: 1 / 2;
         }
-        /* Card for graphic generation */
         #share-card {
             position: fixed;
             left: -9999px;
@@ -153,7 +173,6 @@
 </head>
 <body class="p-4 sm:p-8">
 
-    <!-- Hidden element used for generating the graphic -->
     <div id="share-card" class="flex flex-col">
         <div class="bg-black text-white w-full p-6 rounded-xl mb-6 flex justify-between items-start">
             <div>
@@ -161,9 +180,7 @@
                 <p id="card-date" class="text-xs opacity-80 mt-2 uppercase font-bold tracking-widest"></p>
             </div>
             <div id="card-status-box" class="px-5 rounded-xl text-white font-black text-center min-w-[140px] flex flex-col justify-center items-center">
-                <!-- Percentage at Top -->
                 <div id="card-status-percent" class="text-3xl leading-none font-black">0%</div>
-                <!-- Category at Bottom -->
                 <div id="card-status-tag" class="text-[10px] uppercase tracking-[0.15em] leading-none opacity-90 mt-2">N/A</div>
             </div>
         </div>
@@ -185,16 +202,12 @@
                 <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Total Performance</p>
                 <div id="card-score" class="text-5xl font-black">0 / 100</div>
             </div>
-            <div id="card-section-breakdown" class="text-[10px] font-bold grid grid-cols-1 gap-1">
-                <!-- Section scores injected here -->
-            </div>
+            <div id="card-section-breakdown" class="text-[10px] font-bold grid grid-cols-1 gap-1"></div>
         </div>
 
         <div class="mt-4">
             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Key Improvement Areas</p>
-            <div id="card-improvements" class="text-xs space-y-1 font-medium italic text-gray-700">
-                <!-- Improvements injected here -->
-            </div>
+            <div id="card-improvements" class="text-xs space-y-1 font-medium italic text-gray-700"></div>
         </div>
 
         <div class="mt-10 flex justify-between items-end border-t border-gray-100 pt-4">
@@ -289,6 +302,7 @@
                 </div>
             </div>
             
+            <!-- Section 1 -->
             <div class="lg:col-span-1 p-6 rounded-2xl border border-gray-100 bg-white shadow-sm">
                 <h2 class="text-xl font-bold mb-4 text-black flex items-center justify-between">
                     <span>🏆 1. 5 GOLDEN RULES</span>
@@ -299,7 +313,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was button 3 used for flushing the group head at the start?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden1" data-subrule="1. FLUSH">
+                    <div class="radio-group flex items-center" data-points="6" data-group="golden1">
                         <input type="radio" id="golden1_yes" name="golden1" value="yes" class="score-input">
                         <label for="golden1_yes">Yes</label>
                         <input type="radio" id="golden1_no" name="golden1" value="no" class="score-input">
@@ -311,7 +325,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the steam wand purged before and after steaming?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden2" data-subrule="2. PURGE AND WIPE">
+                    <div class="radio-group flex items-center" data-points="6" data-group="golden2">
                         <input type="radio" id="golden2_yes" name="golden2" value="yes" class="score-input">
                         <label for="golden2_yes">Yes</label>
                         <input type="radio" id="golden2_no" name="golden2" value="no" class="score-input">
@@ -321,7 +335,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the steam wand wiped after preparing the milk?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden3" data-subrule="2. PURGE AND WIPE">
+                    <div class="radio-group flex items-center" data-points="6" data-group="golden3">
                         <input type="radio" id="golden3_yes" name="golden3" value="yes" class="score-input">
                         <label for="golden3_yes">Yes</label>
                         <input type="radio" id="golden3_no" name="golden3" value="no" class="score-input">
@@ -406,9 +420,10 @@
                 </div>
 
                 <label for="golden_rules_comments" class="block text-sm font-bold text-gray-700 mt-6 mb-2">Comments for 5 Golden Rules:</label>
-                <textarea id="golden_rules_comments" name="golden_rules_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter notes on preparation, extraction, timing, and cleanliness..."></textarea>
+                <textarea id="golden_rules_comments" name="golden_rules_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter notes..."></textarea>
             </div>
 
+            <!-- Section 2 -->
             <div class="lg:col-span-1 p-6 rounded-2xl border border-gray-100 bg-white shadow-sm">
                 <h2 class="text-xl font-bold mb-4 text-black flex items-center justify-between">
                     <span>🥛 2. Milk Preparation</span>
@@ -477,9 +492,10 @@
                     </div>
                 </div>
                 <label for="milk_comments" class="block text-sm font-bold text-gray-700 mt-6 mb-2">Comments for Milk Preparation:</label>
-                <textarea id="milk_comments" name="milk_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter notes on texture, pouring, and foam levels..."></textarea>
+                <textarea id="milk_comments" name="milk_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter notes..."></textarea>
             </div>
 
+            <!-- Section 3 -->
             <div class="lg:col-span-1 p-6 rounded-2xl border border-gray-100 bg-white shadow-sm">
                 <h2 class="text-xl font-bold mb-4 text-black flex items-center justify-between">
                     <span>🌍 3. Single Origin</span>
@@ -518,11 +534,12 @@
                     </div>
                 </div>
                 <label for="single_comments" class="block text-sm font-bold text-gray-700 mt-6 mb-2">Comments for Single Origin:</label>
-                <textarea id="single_comments" name="single_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter notes on knowledge and dosing..."></textarea>
+                <textarea id="single_comments" name="single_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter notes..."></textarea>
             </div>
             
             <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-8 pt-8 border-t border-gray-100">
                 
+                <!-- Section 4 -->
                 <div class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm">
                     <h3 class="font-bold mb-4 text-md text-black flex items-center justify-between">
                         <span>⚙️ 4. Machine</span> 
@@ -554,12 +571,12 @@
                     <textarea id="machine_comments" name="machine_comments" class="w-full p-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black min-h-[50px] outline-none"></textarea>
                 </div>
 
+                <!-- Section 5 -->
                 <div id="section-ice-drink" class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm">
                     <h3 class="font-bold mb-4 text-md text-black flex items-center justify-between">
                         <span>🧊 5. Ice Drink</span> 
                         <span class="px-2 py-0.5 text-[10px] font-black rounded-lg bg-gray-100 text-black">5 PTS</span>
                     </h3>
-                    
                     <div class="space-y-1">
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Barista used the measuring cup.</span>
@@ -604,6 +621,7 @@
                     <textarea id="ice_comments" name="ice_comments" class="w-full p-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black min-h-[50px] outline-none"></textarea>
                 </div>
 
+                <!-- Section 6 -->
                 <div id="section-luxury-drink" class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm">
                     <h3 class="font-bold mb-4 text-md text-black flex items-center justify-between">
                         <span>👑 6. Luxury Drink</span> 
@@ -674,11 +692,9 @@
             <p class="text-sm font-medium text-gray-400 mb-6">
                 Provide comprehensive feedback to the individual and Manager on Duty before leaving today.
             </p>
-            <label for="overall_feedback" class="sr-only">Overall Feedback</label>
             <textarea id="overall_feedback" name="overall_feedback" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black min-h-[120px] outline-none transition-all" placeholder="Type your overall feedback and notes here..."></textarea>
             
             <div class="mt-10 flex flex-col sm:flex-row justify-between items-center text-lg space-y-6 sm:space-y-0">
-                
                 <div class="flex items-center space-x-6">
                     <span class="font-bold text-gray-500 uppercase text-sm tracking-widest">Final Score</span>
                     <span id="final-score-footer" class="text-4xl font-black text-black">0 / 100</span>
@@ -703,7 +719,6 @@
 
     <script>
         const AUDIT_STORAGE_KEY = 'baristaAuditData'; 
-        
         const BASE_MAX_SCORE = 100;
         const ICE_DRINK_POINTS = 5;
         const LUXURY_DRINK_POINTS = 4;
@@ -772,9 +787,9 @@
         };
 
         function getStatusInfo(percentage) {
-            if (percentage >= 90) return { tag: "PASSED", color: "#22c55e" }; // Green
-            if (percentage >= 80) return { tag: "SO CLOSE", color: "#eab308" }; // Yellow
-            return { tag: "NEEDS WORK", color: "#ef4444" }; // Red
+            if (percentage >= 90) return { tag: "PASSED", color: "#22c55e" };
+            if (percentage >= 80) return { tag: "SO CLOSE", color: "#eab308" };
+            return { tag: "NEEDS WORK", color: "#ef4444" };
         }
 
         function updateMaxScoreAndUI() {
@@ -987,7 +1002,7 @@
             html2canvas(document.getElementById('share-card'), { scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `Audit_Card_${name.replace(/\s+/g, '_')}.png`;
-                link.href = canvas.toDataURL('image/png');
+                link.href = canvas.toToDataURL('image/png');
                 link.click();
                 downloadGraphicButton.textContent = originalText;
             });
@@ -1090,6 +1105,6 @@
 
         document.addEventListener('DOMContentLoaded', setupForm);
     </script>
-
 </body>
-                                </html>
+</html>
+
