@@ -22,7 +22,7 @@
 
         .rule-item {
             display: flex;
-            flex-direction: column; /* Stack vertically on small screens */
+            flex-direction: column; 
             margin-bottom: 0.75rem;
             padding: 0.75rem 0;
             border-bottom: 1px dashed #cccccc;
@@ -30,7 +30,7 @@
         
         @media (min-width: 640px) {
             .rule-item {
-                flex-direction: row; /* Horizontal on tablets/desktops */
+                flex-direction: row; 
                 align-items: center;
                 justify-content: space-between;
             }
@@ -44,7 +44,7 @@
             margin-right: 1rem;
             font-size: 0.95rem;
             color: #000000;
-            margin-bottom: 0.5rem; /* Space when stacked */
+            margin-bottom: 0.75rem;
         }
         @media (min-width: 640px) {
             .rule-label {
@@ -67,43 +67,64 @@
                 opacity: 1;
             }
         }
+
+        .radio-group {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
         .radio-group input[type="radio"] {
-            margin-left: 0.5rem;
-            cursor: pointer;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            width: 1.1rem;
-            height: 1.1rem;
-            border: 1px solid #666666;
-            border-radius: 50%;
-            outline: none;
-            transition: all 0.2s ease-in-out;
-            position: relative;
-        }
-        .radio-group input[type="radio"]:checked {
-            border-color: #000000;
-            background-color: #000000;
-        }
-        .radio-group input[type="radio"]:checked::before {
-            content: '';
-            display: block;
-            width: 0.5rem;
-            height: 0.5rem;
-            background-color: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            display: none;
         }
         .radio-group label {
             cursor: pointer;
-            margin-left: 0.25rem;
-            margin-right: 0.75rem;
-            color: #000000;
-            font-weight: 500;
+            padding: 0.4rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 800;
+            border: 1.5px solid #e5e7eb;
+            background: #f9fafb;
+            color: #6b7280;
+            transition: all 0.2s ease;
+            user-select: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 54px;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
         }
+        
+        .radio-group input[value="yes"]:checked + label {
+            background-color: #ecfdf5;
+            border-color: #10b981;
+            color: #065f46;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
+        }
+        
+        .radio-group input[value="no"]:checked + label {
+            background-color: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+        }
+
+        .radio-group input[value="na"]:checked + label {
+            background-color: #fffbeb;
+            border-color: #f59e0b;
+            color: #92400e;
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1);
+        }
+
+        .radio-group label:hover {
+            border-color: #d1d5db;
+            background-color: #f3f4f6;
+        }
+
+        .radio-group label:active {
+            transform: scale(0.96);
+        }
+
         .section-subheading {
             font-size: 1rem;
             font-weight: 600;
@@ -146,12 +167,9 @@
             line-height: 1;
         }
         .blender-radio-group {
-            display: grid;
-            grid-template-columns: auto auto;
+            display: flex;
+            flex-wrap: wrap;
             gap: 0.5rem;
-        }
-        .blender-radio-group .na-option {
-            grid-column: 1 / 2;
         }
         #share-card {
             position: fixed;
@@ -279,25 +297,26 @@
                     <div>
                         <label for="hot_drinks_made" class="block text-xs font-black uppercase tracking-wider mb-2 text-gray-500">Hot Drinks (Section 1-3): Choose 3</label>
                         <textarea id="hot_drinks_made" name="hot_drinks_made" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none min-h-[80px]" placeholder="e.g., Single Espresso, Small Latte, Large Cappuccino"></textarea>
+                        
+                        <!-- Moved Checkboxes Here -->
+                        <div class="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="toggle_ice" name="isIceAuditEnabled" checked class="h-5 w-5 rounded text-black border-gray-300 focus:ring-black">
+                                <label for="toggle_ice" class="text-sm font-bold text-gray-700 cursor-pointer">Include Ice Drink Audit (5 pts)</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="toggle_luxury" name="isLuxuryAuditEnabled" checked class="h-5 w-5 rounded text-black border-gray-300 focus:ring-black">
+                                <label for="toggle_luxury" class="text-sm font-bold text-gray-700 cursor-pointer">Include Luxury Drink Audit (4 pts)</label>
+                            </div>
+                        </div>
                     </div>
-                    <div>
+                    <div id="input-ice-drinks">
                         <label for="ice_drinks_made" class="block text-xs font-black uppercase tracking-wider mb-2 text-gray-500">Iced Drinks (Section 5): Choose 2</label>
                         <input type="text" id="ice_drinks_made" name="ice_drinks_made" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="e.g., Small Iced Latte, Large Frappe">
                     </div>
-                    <div>
+                    <div id="input-luxury-drinks">
                         <label for="luxury_drinks_prepared" class="block text-xs font-black uppercase tracking-wider mb-2 text-gray-500">Luxury Drinks (Section 6): Choose 1</label>
                         <input type="text" id="luxury_drinks_prepared" name="luxury_drinks_prepared" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="e.g., Seasonal Hot Chocolate, Caramel Macchiato">
-                    </div>
-                </div>
-
-                <div class="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row justify-between space-y-4 sm:space-y-0">
-                    <div class="flex items-center space-x-3">
-                        <input type="checkbox" id="toggle_ice" name="isIceAuditEnabled" checked class="h-5 w-5 rounded text-black border-gray-300 focus:ring-black">
-                        <label for="toggle_ice" class="text-sm font-bold text-gray-700 cursor-pointer">Include Ice Drink Audit (5 pts)</label>
-                    </div>
-                    <div class="flex items-center space-x-3">
-                        <input type="checkbox" id="toggle_luxury" name="isLuxuryAuditEnabled" checked class="h-5 w-5 rounded text-black border-gray-300 focus:ring-black">
-                        <label for="toggle_luxury" class="text-sm font-bold text-gray-700 cursor-pointer">Include Luxury Drink Audit (4 pts)</label>
                     </div>
                 </div>
             </div>
@@ -313,7 +332,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was button 3 used for flushing the group head at the start?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden1">
+                    <div class="radio-group" data-points="6" data-group="golden1">
                         <input type="radio" id="golden1_yes" name="golden1" value="yes" class="score-input">
                         <label for="golden1_yes">Yes</label>
                         <input type="radio" id="golden1_no" name="golden1" value="no" class="score-input">
@@ -325,7 +344,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the steam wand purged before and after steaming?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden2">
+                    <div class="radio-group" data-points="6" data-group="golden2">
                         <input type="radio" id="golden2_yes" name="golden2" value="yes" class="score-input">
                         <label for="golden2_yes">Yes</label>
                         <input type="radio" id="golden2_no" name="golden2" value="no" class="score-input">
@@ -335,7 +354,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the steam wand wiped after preparing the milk?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden3">
+                    <div class="radio-group" data-points="6" data-group="golden3">
                         <input type="radio" id="golden3_yes" name="golden3" value="yes" class="score-input">
                         <label for="golden3_yes">Yes</label>
                         <input type="radio" id="golden3_no" name="golden3" value="no" class="score-input">
@@ -347,7 +366,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the coffee leveled properly?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden4">
+                    <div class="radio-group" data-points="6" data-group="golden4">
                         <input type="radio" id="golden4_yes" name="golden4" value="yes" class="score-input">
                         <label for="golden4_yes">Yes</label>
                         <input type="radio" id="golden4_no" name="golden4" value="no" class="score-input">
@@ -357,7 +376,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the handle wiped after being leveled?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden5">
+                    <div class="radio-group" data-points="6" data-group="golden5">
                         <input type="radio" id="golden5_yes" name="golden5" value="yes" class="score-input">
                         <label for="golden5_yes">Yes</label>
                         <input type="radio" id="golden5_no" name="golden5" value="no" class="score-input">
@@ -367,7 +386,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the Coffee tamped properly (1x for espresso, 2x for ristretto)?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="golden6">
+                    <div class="radio-group" data-points="6" data-group="golden6">
                         <input type="radio" id="golden6_yes" name="golden6" value="yes" class="score-input">
                         <label for="golden6_yes">Yes</label>
                         <input type="radio" id="golden6_no" name="golden6" value="no" class="score-input">
@@ -379,7 +398,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was extraction started within 10 seconds of the handle being placed into the group head?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="extract1">
+                    <div class="radio-group" data-points="6" data-group="extract1">
                         <input type="radio" id="extract1_yes" name="extract1" value="yes" class="score-input">
                         <label for="extract1_yes">Yes</label>
                         <input type="radio" id="extract1_no" name="extract1" value="no" class="score-input">
@@ -389,7 +408,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Was the timer in use?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="extract2">
+                    <div class="radio-group" data-points="6" data-group="extract2">
                         <input type="radio" id="extract2_yes" name="extract2" value="yes" class="score-input">
                         <label for="extract2_yes">Yes</label>
                         <input type="radio" id="extract2_no" name="extract2" value="no" class="score-input">
@@ -399,7 +418,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Correct Rate of Pour (20-22s for espresso, 15s for ristretto)?</span>
                     <span class="rule-points">6 pts</span>
-                    <div class="radio-group flex items-center" data-points="6" data-group="extract4">
+                    <div class="radio-group" data-points="6" data-group="extract4">
                         <input type="radio" id="extract4_yes" name="extract4" value="yes" class="score-input">
                         <label for="extract4_yes">Yes</label>
                         <input type="radio" id="extract4_no" name="extract4" value="no" class="score-input">
@@ -411,7 +430,7 @@
                 <div class="rule-item">
                     <span class="rule-label">Is the coffee production area clean and tidy? (Around section and around coffee machine)</span>
                     <span class="rule-points">1 pt</span>
-                    <div class="radio-group flex items-center" data-points="1" data-group="clean">
+                    <div class="radio-group" data-points="1" data-group="clean">
                         <input type="radio" id="clean_yes" name="clean" value="yes" class="score-input">
                         <label for="clean_yes">Yes</label>
                         <input type="radio" id="clean_no" name="clean" value="no" class="score-input">
@@ -433,7 +452,7 @@
                     <div class="rule-item">
                         <span class="rule-label">4 steps of milk steaming followed correctly.</span>
                         <span class="rule-points">4 pts</span>
-                        <div class="radio-group flex items-center" data-points="4" data-group="milk1">
+                        <div class="radio-group" data-points="4" data-group="milk1">
                             <input type="radio" id="milk1_yes" name="milk1" value="yes" class="score-input">
                             <label for="milk1_yes">Yes</label>
                             <input type="radio" id="milk1_no" name="milk1" value="no" class="score-input">
@@ -443,7 +462,7 @@
                     <div class="rule-item">
                         <span class="rule-label">Was the milk thermometer in use?</span>
                         <span class="rule-points">4 pts</span>
-                        <div class="radio-group flex items-center" data-points="4" data-group="milk2">
+                        <div class="radio-group" data-points="4" data-group="milk2">
                             <input type="radio" id="milk2_yes" name="milk2" value="yes" class="score-input">
                             <label for="milk2_yes">Yes</label>
                             <input type="radio" id="milk2_no" name="milk2" value="no" class="score-input">
@@ -453,7 +472,7 @@
                     <div class="rule-item">
                         <span class="rule-label">Was the milk steamed while coffee was extracting?</span>
                         <span class="rule-points">4 pts</span>
-                        <div class="radio-group flex items-center" data-points="4" data-group="milk_steamed_extracted">
+                        <div class="radio-group" data-points="4" data-group="milk_steamed_extracted">
                             <input type="radio" id="milk_steamed_extracted_yes" name="milk_steamed_extracted" value="yes" class="score-input">
                             <label for="milk_steamed_extracted_yes">Yes</label>
                             <input type="radio" id="milk_steamed_extracted_no" name="milk_steamed_extracted" value="no" class="score-input">
@@ -463,7 +482,7 @@
                     <div class="rule-item">
                         <span class="rule-label">Milk poured correctly (spout for latte, side for cappuccino).</span>
                         <span class="rule-points">4 pts</span>
-                        <div class="radio-group flex items-center" data-points="4" data-group="milk3">
+                        <div class="radio-group" data-points="4" data-group="milk3">
                             <input type="radio" id="milk3_yes" name="milk3" value="yes" class="score-input">
                             <label for="milk3_yes">Yes</label>
                             <input type="radio" id="milk3_no" name="milk3" value="no" class="score-input">
@@ -473,7 +492,7 @@
                     <div class="rule-item">
                         <span class="rule-label">Foam levels correct (cappuccino: 2-2.5cm, latte: 1-1.5cm, flat white: 0.5cm).</span>
                         <span class="rule-points">4 pts</span>
-                        <div class="radio-group flex items-center" data-points="4" data-group="milk4">
+                        <div class="radio-group" data-points="4" data-group="milk4">
                             <input type="radio" id="milk4_yes" name="milk4" value="yes" class="score-input">
                             <label for="milk4_yes">Yes</label>
                             <input type="radio" id="milk4_no" name="milk4" value="no" class="score-input">
@@ -483,7 +502,7 @@
                     <div class="rule-item">
                         <span class="rule-label">Presentation up to standard (no spills, no crema overflow).</span>
                         <span class="rule-points">6 pts</span>
-                        <div class="radio-group flex items-center" data-points="6" data-group="milk5">
+                        <div class="radio-group" data-points="6" data-group="milk5">
                             <input type="radio" id="milk5_yes" name="milk5" value="yes" class="score-input">
                             <label for="milk5_yes">Yes</label>
                             <input type="radio" id="milk5_no" name="milk5" value="no" class="score-input">
@@ -505,7 +524,7 @@
                     <div class="rule-item">
                         <span class="rule-label">Single Origin offered?</span>
                         <span class="rule-points">6 pts</span>
-                        <div class="radio-group flex items-center" data-points="6" data-group="single1">
+                        <div class="radio-group" data-points="6" data-group="single1">
                             <input type="radio" id="single1_yes" name="single1" value="yes" class="score-input">
                             <label for="single1_yes">Yes</label>
                             <input type="radio" id="single1_no" name="single1" value="no" class="score-input">
@@ -515,7 +534,7 @@
                     <div class="rule-item">
                         <span class="rule-label">Can the barista explain difference between Classic and Single Origin?</span>
                         <span class="rule-points">1 pt</span>
-                        <div class="radio-group flex items-center" data-points="1" data-group="single2">
+                        <div class="radio-group" data-points="1" data-group="single2">
                             <input type="radio" id="single2_yes" name="single2" value="yes" class="score-input">
                             <label for="single2_yes">Yes</label>
                             <input type="radio" id="single2_no" name="single2" value="no" class="score-input">
@@ -525,7 +544,7 @@
                     <div class="rule-item">
                         <span class="rule-label">Correct grams of coffee for Single Origin / Seasonal (17-18g SO / 16-16.5g Seasonal).</span>
                         <span class="rule-points">1 pt</span>
-                        <div class="radio-group flex items-center" data-points="1" data-group="single3">
+                        <div class="radio-group" data-points="1" data-group="single3">
                             <input type="radio" id="single3_yes" name="single3" value="yes" class="score-input">
                             <label for="single3_yes">Yes</label>
                             <input type="radio" id="single3_no" name="single3" value="no" class="score-input">
@@ -549,7 +568,7 @@
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Pump pressure between 9-10 Bar.</span>
                             <span class="rule-points">1 pt</span>
-                            <div class="radio-group flex items-center" data-points="1" data-group="machine1">
+                            <div class="radio-group" data-points="1" data-group="machine1">
                                 <input type="radio" id="machine1_yes" name="machine1" value="yes" class="score-input">
                                 <label for="machine1_yes">Yes</label>
                                 <input type="radio" id="machine1_no" name="machine1" value="no" class="score-input">
@@ -559,7 +578,7 @@
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Steam pressure between 0.9-1.1 Bar.</span>
                             <span class="rule-points">1 pt</span>
-                            <div class="radio-group flex items-center" data-points="1" data-group="machine2">
+                            <div class="radio-group" data-points="1" data-group="machine2">
                                 <input type="radio" id="machine2_yes" name="machine2" value="yes" class="score-input">
                                 <label for="machine2_yes">Yes</label>
                                 <input type="radio" id="machine2_no" name="machine2" value="no" class="score-input">
@@ -581,7 +600,7 @@
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Barista used the measuring cup.</span>
                             <span class="rule-points">2 pts</span>
-                            <div class="radio-group flex items-center" data-points="2" data-group="ice2">
+                            <div class="radio-group" data-points="2" data-group="ice2">
                                 <input type="radio" id="ice2_yes" name="ice2" value="yes" class="score-input">
                                 <label for="ice2_yes">Yes</label>
                                 <input type="radio" id="ice2_no" name="ice2" value="no" class="score-input">
@@ -591,7 +610,7 @@
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Correct lid and straw put on top.</span>
                             <span class="rule-points">2 pts</span>
-                            <div class="radio-group flex items-center" data-points="2" data-group="ice3">
+                            <div class="radio-group" data-points="2" data-group="ice3">
                                 <input type="radio" id="ice3_yes" name="ice3" value="yes" class="score-input">
                                 <label for="ice3_yes">Yes</label>
                                 <input type="radio" id="ice3_no" name="ice3" value="no" class="score-input">
@@ -601,19 +620,13 @@
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Right button pressed on blender.</span>
                             <span class="rule-points">1 pt</span>
-                            <div class="radio-group blender-radio-group" data-points="1" data-group="ice4">
-                                <div class="flex items-center">
-                                    <input type="radio" id="ice4_yes" name="ice4" value="yes" class="score-input">
-                                    <label for="ice4_yes">Yes</label>
-                                </div>
-                                <div class="flex items-center">
-                                    <input type="radio" id="ice4_no" name="ice4" value="no" class="score-input">
-                                    <label for="ice4_no">No</label>
-                                </div>
-                                <div class="flex items-center na-option">
-                                    <input type="radio" id="ice4_na" name="ice4" value="na" class="score-input">
-                                    <label for="ice4_na">N/A</label>
-                                </div>
+                            <div class="blender-radio-group radio-group" data-points="1" data-group="ice4">
+                                <input type="radio" id="ice4_yes" name="ice4" value="yes" class="score-input">
+                                <label for="ice4_yes">Yes</label>
+                                <input type="radio" id="ice4_no" name="ice4" value="no" class="score-input">
+                                <label for="ice4_no">No</label>
+                                <input type="radio" id="ice4_na" name="ice4" value="na" class="score-input">
+                                <label for="ice4_na">N/A</label>
                             </div>
                         </div>
                     </div>
@@ -631,7 +644,7 @@
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Was the thermometer in use?</span>
                             <span class="rule-points">1 pt</span>
-                            <div class="radio-group flex items-center" data-points="1" data-group="luxury1">
+                            <div class="radio-group" data-points="1" data-group="luxury1">
                                 <input type="radio" id="luxury1_yes" name="luxury1" value="yes" class="score-input">
                                 <label for="luxury1_yes">Yes</label>
                                 <input type="radio" id="luxury1_no" name="luxury1" value="no" class="score-input">
@@ -642,7 +655,7 @@
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">4 steps of milk steaming followed.</span>
                             <span class="rule-points">1 pt</span>
-                            <div class="radio-group flex items-center" data-points="1" data-group="luxury2">
+                            <div class="radio-group" data-points="1" data-group="luxury2">
                                 <input type="radio" id="luxury2_yes" name="luxury2" value="yes" class="score-input">
                                 <label for="luxury2_yes">Yes</label>
                                 <input type="radio" id="luxury2_no" name="luxury2" value="no" class="score-input">
@@ -652,7 +665,7 @@
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Milk steamed while coffee extracted.</span>
                             <span class="rule-points">1 pt</span>
-                            <div class="radio-group flex items-center" data-points="1" data-group="luxury3">
+                            <div class="radio-group" data-points="1" data-group="luxury3">
                                 <input type="radio" id="luxury3_yes" name="luxury3" value="yes" class="score-input">
                                 <label for="luxury3_yes">Yes</label>
                                 <input type="radio" id="luxury3_no" name="luxury3" value="no" class="score-input">
@@ -662,7 +675,7 @@
                         <div class="rule-item !border-b-0">
                             <span class="rule-label">Foam levels correct.</span>
                             <span class="rule-points">1 pt</span>
-                            <div class="radio-group flex items-center" data-points="1" data-group="luxury4">
+                            <div class="radio-group" data-points="1" data-group="luxury4">
                                 <input type="radio" id="luxury4_yes" name="luxury4" value="yes" class="score-input">
                                 <label for="luxury4_yes">Yes</label>
                                 <input type="radio" id="luxury4_no" name="luxury4" value="no" class="score-input">
@@ -742,6 +755,8 @@
         const toggleLuxury = document.getElementById('toggle_luxury');
         const sectionIceDrink = document.getElementById('section-ice-drink');
         const sectionLuxuryDrink = document.getElementById('section-luxury-drink');
+        const inputIceDrinks = document.getElementById('input-ice-drinks');
+        const inputLuxuryDrinks = document.getElementById('input-luxury-drinks');
 
         const groupToSectionTitle = {
             'golden1': 'Golden Rules', 'golden2': 'Golden Rules', 'golden3': 'Golden Rules',
@@ -797,14 +812,18 @@
             if (!toggleIce.checked) {
                 newMax -= ICE_DRINK_POINTS;
                 if (sectionIceDrink) sectionIceDrink.classList.add('hidden');
-            } else if (sectionIceDrink) {
-                sectionIceDrink.classList.remove('hidden');
+                if (inputIceDrinks) inputIceDrinks.classList.add('hidden');
+            } else {
+                if (sectionIceDrink) sectionIceDrink.classList.remove('hidden');
+                if (inputIceDrinks) inputIceDrinks.classList.remove('hidden');
             }
             if (!toggleLuxury.checked) {
                 newMax -= LUXURY_DRINK_POINTS;
                 if (sectionLuxuryDrink) sectionLuxuryDrink.classList.add('hidden');
-            } else if (sectionLuxuryDrink) {
-                sectionLuxuryDrink.classList.remove('hidden');
+                if (inputLuxuryDrinks) inputLuxuryDrinks.classList.add('hidden');
+            } else {
+                if (sectionLuxuryDrink) sectionLuxuryDrink.classList.remove('hidden');
+                if (inputLuxuryDrinks) inputLuxuryDrinks.classList.remove('hidden');
             }
             dynamicMaxScore = newMax;
             passMarkDisplay.textContent = `🎯 Max Score: ${dynamicMaxScore} Points`;
@@ -1002,7 +1021,7 @@
             html2canvas(document.getElementById('share-card'), { scale: 2 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = `Audit_Card_${name.replace(/\s+/g, '_')}.png`;
-                link.href = canvas.toToDataURL('image/png');
+                link.href = canvas.toDataURL('image/png');
                 link.click();
                 downloadGraphicButton.textContent = originalText;
             });
