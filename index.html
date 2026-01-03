@@ -434,7 +434,7 @@
                         <input type="radio" id="clean_yes" name="clean" value="yes" class="score-input">
                         <label for="clean_yes">Yes</label>
                         <input type="radio" id="clean_no" name="clean" value="no" class="score-input">
-                        <label for="clean_no">No</label>
+                        <label for="clean_yes">No</label>
                     </div>
                 </div>
 
@@ -713,15 +713,16 @@
                     <span id="final-score-footer" class="text-4xl font-black text-black">0 / 100</span>
                 </div>
                 
-                <div class="flex flex-wrap gap-3 justify-center sm:justify-end">
-                    <button id="reset-button" class="px-5 py-3 text-sm border border-gray-200 text-gray-600 font-bold rounded-xl hover:bg-red-50 hover:text-red-600 transition duration-200">
-                        Start New Audit
+                <!-- Updated Button Container for Horizontal Layout -->
+                <div class="flex flex-row flex-wrap gap-3 justify-center sm:justify-end w-full sm:w-auto">
+                    <button id="reset-button" class="flex-1 sm:flex-none px-5 py-3 text-sm border border-gray-200 text-gray-600 font-bold rounded-xl hover:bg-red-50 hover:text-red-600 transition duration-200">
+                        New Audit
                     </button>
-                    <button id="copy-report-button" class="px-5 py-3 text-sm bg-gray-100 text-black font-bold rounded-xl hover:bg-gray-200 transition duration-200">
-                        Copy Full Report
+                    <button id="copy-report-button" class="flex-1 sm:flex-none px-5 py-3 text-sm bg-gray-100 text-black font-bold rounded-xl hover:bg-gray-200 transition duration-200">
+                        Copy Report
                     </button>
-                    <button id="download-graphic-button" class="px-6 py-3 text-sm bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition duration-200 shadow-xl shadow-gray-200">
-                        Download Scorecard
+                    <button id="download-graphic-button" class="flex-1 sm:flex-none px-6 py-3 text-sm bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition duration-200 shadow-xl shadow-gray-200">
+                        Scorecard
                     </button>
                 </div>
             </div>
