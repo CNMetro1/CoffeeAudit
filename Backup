@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee Standards & Quality Audit</title>
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/924/924514.png">
+    
+    <!-- Manifest Data URI (To stay as one file) -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNvZmZlZSBRdWFsaXR5IEF1ZGl0IiwKICAic2hvcnRfbmFtZSI6ICJDb2ZmZWVBdWRpdCIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29sb3IiOiAiIzAwMDAwMCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzkyNC85MjQ1MTQucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        
+        .main-card {
+            background-color: #ffffff;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        .rule-item {
+            display: flex;
+            flex-direction: column; 
+            margin-bottom: 0.75rem;
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed #cccccc;
+        }
+        
+        @media (min-width: 640px) {
+            .rule-item {
+                flex-direction: row; 
+                align-items: center;
+                justify-content: space-between;
+            }
+        }
+
+        .rule-item:last-child {
+            border-bottom: none;
+        }
+        .rule-label {
+            flex-grow: 1;
+            margin-right: 1rem;
+            font-size: 0.95rem;
+            color: #000000;
+            margin-bottom: 0.75rem;
+        }
+        @media (min-width: 640px) {
+            .rule-label {
+                margin-bottom: 0;
+            }
+        }
+        .rule-points {
+            font-weight: 600;
+            color: #333333;
+            min-width: 40px;
+            text-align: left;
+            margin-right: 1rem;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        @media (min-width: 640px) {
+            .rule-points {
+                text-align: right;
+                font-size: 0.95rem;
+                opacity: 1;
+            }
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+        .radio-group input[type="radio"] {
+            display: none;
+        }
+        .radio-group label {
+            cursor: pointer;
+            padding: 0.4rem 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 800;
+            border: 1.5px solid #e5e7eb;
+            background: #f9fafb;
+            color: #6b7280;
+            transition: all 0.2s ease;
+            user-select: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 54px;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+        
+        .radio-group input[value="yes"]:checked + label {
+            background-color: #ecfdf5;
+            border-color: #10b981;
+            color: #065f46;
+            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
+        }
+        
+        .radio-group input[value="no"]:checked + label {
+            background-color: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+        }
+
+        .radio-group input[value="na"]:checked + label {
+            background-color: #fffbeb;
+            border-color: #f59e0b;
+            color: #92400e;
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1);
+        }
+
+        .radio-group label:hover {
+            border-color: #d1d5db;
+            background-color: #f3f4f6;
+        }
+
+        .radio-group label:active {
+            transform: scale(0.96);
+        }
+
+        .section-subheading {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #000000;
+            margin-top: 1.5rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 1px solid #cccccc;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+        input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            height: 1.25rem;
+            width: 1.25rem;
+            border: 1px solid #666666;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+            transition: all 0.2s ease-in-out;
+        }
+        input[type="checkbox"]:checked {
+            background-color: #000000;
+            border-color: #000000;
+        }
+        input[type="checkbox"]:checked:after {
+            content: '✔';
+            position: absolute;
+            top: -1px;
+            left: 2px;
+            font-size: 1rem;
+            color: white;
+            line-height: 1;
+        }
+        .blender-radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        #share-card {
+            position: fixed;
+            left: -9999px;
+            top: -9999px;
+            width: 600px;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            border: 4px solid black;
+            color: black;
+            text-align: left;
+        }
+        #card-status-box {
+            padding-top: 16px;
+            padding-bottom: 16px;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-8">
+
+    <div id="share-card" class="flex flex-col">
+        <div class="bg-black text-white w-full p-6 rounded-xl mb-6 flex justify-between items-start">
+            <div>
+                <h2 class="text-2xl font-black tracking-tight leading-none">COFFEE QUALITY AUDIT</h2>
+                <p id="card-date" class="text-xs opacity-80 mt-2 uppercase font-bold tracking-widest"></p>
+            </div>
+            <div id="card-status-box" class="px-5 rounded-xl text-white font-black text-center min-w-[140px] flex flex-col justify-center items-center">
+                <div id="card-status-percent" class="text-3xl leading-none font-black">0%</div>
+                <div id="card-status-tag" class="text-[10px] uppercase tracking-[0.15em] leading-none opacity-90 mt-2">N/A</div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-8 mb-6">
+            <div>
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Staff Member</p>
+                <h1 id="card-barista" class="text-2xl font-black">Barista Name</h1>
+                <p id="card-store" class="text-sm text-gray-600 font-bold mt-1"></p>
+            </div>
+            <div class="text-right">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Audited By</p>
+                <h2 id="card-auditor" class="text-xl font-bold">Auditor Name</h2>
+            </div>
+        </div>
+        
+        <div class="border-y-2 border-black w-full py-4 my-2 grid grid-cols-2 items-center">
+            <div>
+                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Total Performance</p>
+                <div id="card-score" class="text-5xl font-black">0 / 100</div>
+            </div>
+            <div id="card-section-breakdown" class="text-[10px] font-bold grid grid-cols-1 gap-1"></div>
+        </div>
+
+        <div class="mt-4">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Key Improvement Areas</p>
+            <div id="card-improvements" class="text-xs space-y-1 font-medium italic text-gray-700"></div>
+        </div>
+
+        <div class="mt-10 flex justify-between items-end border-t border-gray-100 pt-4">
+            <div>
+                <p class="text-[10px] text-gray-400 font-bold uppercase">Coffee Standards & Quality Audit</p>
+                <p class="text-[8px] text-gray-400 mt-1">Audit completed by Maestro or Management Team</p>
+            </div>
+            <p class="text-[10px] text-gray-300">#MaestroAudits☕️</p>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto main-card overflow-hidden">
+        
+        <header class="bg-white border-b border-gray-100 p-6 sm:p-8">
+            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 text-black">
+                Coffee Standards & Quality Audit
+            </h1>
+            <p class="text-lg font-medium text-gray-500 mb-4">
+                Evaluate coffee preparation with Yes/No checks and add direct feedback.
+            </p>
+            
+            <div class="flex justify-between items-center mb-4">
+                <div id="save-status" class="text-sm font-semibold transition duration-500">
+                    <span class="text-green-600">Ready.</span>
+                </div>
+                <button id="clear-top-button" class="text-xs px-3 py-1.5 border border-gray-200 hover:bg-red-50 hover:text-red-600 rounded-md font-semibold transition duration-200">
+                    Clear All
+                </button>
+            </div>
+
+            <div class="mt-6 space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="audit_by" class="block text-sm font-bold text-gray-700 mb-1">Audit by:</label>
+                        <input type="text" id="audit_by" name="audit_by" class="w-full p-2.5 rounded-lg bg-gray-50 border border-gray-200 text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black outline-none transition-all" placeholder="Auditor Name">
+                    </div>
+                    <div>
+                        <label for="date_of_visit" class="block text-sm font-bold text-gray-700 mb-1">Date of Visit:</label>
+                        <input type="date" id="date_of_visit" name="date_of_visit" class="w-full p-2.5 rounded-lg bg-gray-50 border border-gray-200 text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black outline-none transition-all">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="barista_name" class="block text-sm font-bold text-gray-700 mb-1">Barista Name & Position:</label>
+                        <input type="text" id="barista_name" name="barista_name" class="w-full p-2.5 rounded-lg bg-gray-50 border border-gray-200 text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black outline-none transition-all" placeholder="Name, Position">
+                    </div>
+                    <div>
+                        <label for="store_number" class="block text-sm font-bold text-gray-700 mb-1">Store Name & Number:</label>
+                        <input type="text" id="store_number" name="store_number" class="w-full p-2.5 rounded-lg bg-gray-50 border border-gray-200 text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black outline-none transition-all" placeholder="Store Name, #">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 p-4 rounded-xl bg-gray-50 border border-gray-100 flex justify-between items-center text-sm font-semibold">
+                <span id="pass-mark-display" class="text-gray-600">🎯 Max Score: 100 Points</span>
+                <span class="text-black flex items-center">
+                    Total Score: <span id="current-score" class="ml-2 text-2xl font-black">0</span> / <span id="current-score-max">100</span>
+                </span>
+            </div>
+        </header>
+
+        <main class="p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <div class="lg:col-span-2 p-6 mb-4 rounded-2xl border border-gray-100 bg-white shadow-sm">
+                <h2 class="text-xl font-bold mb-4 text-black flex items-center">
+                    <span class="mr-2">📋</span> Drinks Evaluated for Audit
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label for="hot_drinks_made" class="block text-xs font-black uppercase tracking-wider mb-2 text-gray-500">Hot Drinks (Section 1-3): Choose 3</label>
+                        <textarea id="hot_drinks_made" name="hot_drinks_made" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none min-h-[80px]" placeholder="e.g., Single Espresso, Small Latte, Large Cappuccino"></textarea>
+                        
+                        <div class="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="toggle_ice" name="isIceAuditEnabled" checked class="h-5 w-5 rounded text-black border-gray-300 focus:ring-black">
+                                <label for="toggle_ice" class="text-sm font-bold text-gray-700 cursor-pointer">Include Ice Drink Audit (5 pts)</label>
+                            </div>
+                            <div class="flex items-center space-x-3">
+                                <input type="checkbox" id="toggle_luxury" name="isLuxuryAuditEnabled" checked class="h-5 w-5 rounded text-black border-gray-300 focus:ring-black">
+                                <label for="toggle_luxury" class="text-sm font-bold text-gray-700 cursor-pointer">Include Luxury Drink Audit (4 pts)</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="input-ice-drinks">
+                        <label for="ice_drinks_made" class="block text-xs font-black uppercase tracking-wider mb-2 text-gray-500">Iced Drinks (Section 5): Choose 2</label>
+                        <input type="text" id="ice_drinks_made" name="ice_drinks_made" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="e.g., Small Iced Latte, Large Frappe">
+                    </div>
+                    <div id="input-luxury-drinks">
+                        <label for="luxury_drinks_prepared" class="block text-xs font-black uppercase tracking-wider mb-2 text-gray-500">Luxury Drinks (Section 6): Choose 1</label>
+                        <input type="text" id="luxury_drinks_prepared" name="luxury_drinks_prepared" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="e.g., Seasonal Hot Chocolate, Caramel Macchiato">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Section 1 -->
+            <div class="lg:col-span-1 p-6 rounded-2xl border border-gray-100 bg-white shadow-sm">
+                <h2 class="text-xl font-bold mb-4 text-black flex items-center justify-between">
+                    <span>🏆 1. 5 GOLDEN RULES</span>
+                    <span class="px-2.5 py-1 text-[10px] font-black rounded-lg bg-gray-100 text-black">55 PTS</span>
+                </h2>
+
+                <div class="section-subheading">1. FLUSH</div>
+                <div class="rule-item">
+                    <span class="rule-label">Was button 3 used for flushing the group head at the start?</span>
+                    <span class="rule-points">6 pts</span>
+                    <div class="radio-group" data-points="6" data-group="golden1">
+                        <input type="radio" id="golden1_yes" name="golden1" value="yes" class="score-input">
+                        <label for="golden1_yes">Yes</label>
+                        <input type="radio" id="golden1_no" name="golden1" value="no" class="score-input">
+                        <label for="golden1_no">No</label>
+                    </div>
+                </div>
+
+                <div class="section-subheading">2. PURGE AND WIPE</div>
+                <div class="rule-item">
+                    <span class="rule-label">Was the steam wand purged before and after steaming?</span>
+                    <span class="rule-points">6 pts</span>
+                    <div class="radio-group" data-points="6" data-group="golden2">
+                        <input type="radio" id="golden2_yes" name="golden2" value="yes" class="score-input">
+                        <label for="golden2_yes">Yes</label>
+                        <input type="radio" id="golden2_no" name="golden2" value="no" class="score-input">
+                        <label for="golden2_no">No</label>
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-label">Was the steam wand wiped after preparing the milk?</span>
+                    <span class="rule-points">6 pts</span>
+                    <div class="radio-group" data-points="6" data-group="golden3">
+                        <input type="radio" id="golden3_yes" name="golden3" value="yes" class="score-input">
+                        <label for="golden3_yes">Yes</label>
+                        <input type="radio" id="golden3_no" name="golden3" value="no" class="score-input">
+                        <label for="golden3_no">No</label>
+                    </div>
+                </div>
+
+                <div class="section-subheading">3. LEVEL AND WIPE</div>
+                <div class="rule-item">
+                    <span class="rule-label">Was the coffee leveled properly?</span>
+                    <span class="rule-points">6 pts</span>
+                    <div class="radio-group" data-points="6" data-group="golden4">
+                        <input type="radio" id="golden4_yes" name="golden4" value="yes" class="score-input">
+                        <label for="golden4_yes">Yes</label>
+                        <input type="radio" id="golden4_no" name="golden4" value="no" class="score-input">
+                        <label for="golden4_no">No</label>
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-label">Was the handle wiped after being leveled?</span>
+                    <span class="rule-points">6 pts</span>
+                    <div class="radio-group" data-points="6" data-group="golden5">
+                        <input type="radio" id="golden5_yes" name="golden5" value="yes" class="score-input">
+                        <label for="golden5_yes">Yes</label>
+                        <input type="radio" id="golden5_no" name="golden5" value="no" class="score-input">
+                        <label for="golden5_no">No</label>
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-label">Was the Coffee tamped properly (1x for espresso, 2x for ristretto)?</span>
+                    <span class="rule-points">6 pts</span>
+                    <div class="radio-group" data-points="6" data-group="golden6">
+                        <input type="radio" id="golden6_yes" name="golden6" value="yes" class="score-input">
+                        <label for="golden6_yes">Yes</label>
+                        <input type="radio" id="golden6_no" name="golden6" value="no" class="score-input">
+                        <label for="golden6_no">No</label>
+                    </div>
+                </div>
+
+                <div class="section-subheading">4. EXTRACT AND TIME</div>
+                <div class="rule-item">
+                    <span class="rule-label">Was extraction started within 10 seconds of the handle being placed into the group head?</span>
+                    <span class="rule-points">6 pts</span>
+                    <div class="radio-group" data-points="6" data-group="extract1">
+                        <input type="radio" id="extract1_yes" name="extract1" value="yes" class="score-input">
+                        <label for="extract1_yes">Yes</label>
+                        <input type="radio" id="extract1_no" name="extract1" value="no" class="score-input">
+                        <label for="extract1_no">No</label>
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-label">Was the timer in use?</span>
+                    <span class="rule-points">6 pts</span>
+                    <div class="radio-group" data-points="6" data-group="extract2">
+                        <input type="radio" id="extract2_yes" name="extract2" value="yes" class="score-input">
+                        <label for="extract2_yes">Yes</label>
+                        <input type="radio" id="extract2_no" name="extract2" value="no" class="score-input">
+                        <label for="extract2_no">No</label>
+                    </div>
+                </div>
+                <div class="rule-item">
+                    <span class="rule-label">Correct Rate of Pour (20-22s for espresso, 15s for ristretto)?</span>
+                    <span class="rule-points">6 pts</span>
+                    <div class="radio-group" data-points="6" data-group="extract4">
+                        <input type="radio" id="extract4_yes" name="extract4" value="yes" class="score-input">
+                        <label for="extract4_yes">Yes</label>
+                        <input type="radio" id="extract4_no" name="extract4" value="no" class="score-input">
+                        <label for="extract4_no">No</label>
+                    </div>
+                </div>
+
+                <div class="section-subheading">5. CLEAN AS YOU GO</div>
+                <div class="rule-item">
+                    <span class="rule-label">Is the coffee production area clean and tidy? (Around section and around coffee machine)</span>
+                    <span class="rule-points">1 pt</span>
+                    <div class="radio-group" data-points="1" data-group="clean">
+                        <input type="radio" id="clean_yes" name="clean" value="yes" class="score-input">
+                        <label for="clean_yes">Yes</label>
+                        <input type="radio" id="clean_no" name="clean" value="no" class="score-input">
+                        <label for="clean_no">No</label>
+                    </div>
+                </div>
+
+                <label for="golden_rules_comments" class="block text-sm font-bold text-gray-700 mt-6 mb-2">Comments for 5 Golden Rules:</label>
+                <textarea id="golden_rules_comments" name="golden_rules_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter notes..."></textarea>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="lg:col-span-1 p-6 rounded-2xl border border-gray-100 bg-white shadow-sm">
+                <h2 class="text-xl font-bold mb-4 text-black flex items-center justify-between">
+                    <span>🥛 2. Milk Preparation</span>
+                    <span class="px-2.5 py-1 text-[10px] font-black rounded-lg bg-gray-100 text-black">26 PTS</span>
+                </h2>
+                <div class="space-y-2">
+                    <div class="rule-item">
+                        <span class="rule-label">4 steps of milk steaming followed correctly.</span>
+                        <span class="rule-points">4 pts</span>
+                        <div class="radio-group" data-points="4" data-group="milk1">
+                            <input type="radio" id="milk1_yes" name="milk1" value="yes" class="score-input">
+                            <label for="milk1_yes">Yes</label>
+                            <input type="radio" id="milk1_no" name="milk1" value="no" class="score-input">
+                            <label for="milk1_no">No</label>
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <span class="rule-label">Was the milk thermometer in use?</span>
+                        <span class="rule-points">4 pts</span>
+                        <div class="radio-group" data-points="4" data-group="milk2">
+                            <input type="radio" id="milk2_yes" name="milk2" value="yes" class="score-input">
+                            <label for="milk2_yes">Yes</label>
+                            <input type="radio" id="milk2_no" name="milk2" value="no" class="score-input">
+                            <label for="milk2_no">No</label>
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <span class="rule-label">Was the milk steamed while coffee was extracting?</span>
+                        <span class="rule-points">4 pts</span>
+                        <div class="radio-group" data-points="4" data-group="milk_steamed_extracted">
+                            <input type="radio" id="milk_steamed_extracted_yes" name="milk_steamed_extracted" value="yes" class="score-input">
+                            <label for="milk_steamed_extracted_yes">Yes</label>
+                            <input type="radio" id="milk_steamed_extracted_no" name="milk_steamed_extracted" value="no" class="score-input">
+                            <label for="milk_steamed_extracted_no">No</label>
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <span class="rule-label">Milk poured correctly (spout for latte, side for cappuccino).</span>
+                        <span class="rule-points">4 pts</span>
+                        <div class="radio-group" data-points="4" data-group="milk3">
+                            <input type="radio" id="milk3_yes" name="milk3" value="yes" class="score-input">
+                            <label for="milk3_yes">Yes</label>
+                            <input type="radio" id="milk3_no" name="milk3" value="no" class="score-input">
+                            <label for="milk3_no">No</label>
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <span class="rule-label">Foam levels correct (cappuccino: 2-2.5cm, latte: 1-1.5cm, flat white: 0.5cm).</span>
+                        <span class="rule-points">4 pts</span>
+                        <div class="radio-group" data-points="4" data-group="milk4">
+                            <input type="radio" id="milk4_yes" name="milk4" value="yes" class="score-input">
+                            <label for="milk4_yes">Yes</label>
+                            <input type="radio" id="milk4_no" name="milk4" value="no" class="score-input">
+                            <label for="milk4_no">No</label>
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <span class="rule-label">Presentation up to standard (no spills, no crema overflow).</span>
+                        <span class="rule-points">6 pts</span>
+                        <div class="radio-group" data-points="6" data-group="milk5">
+                            <input type="radio" id="milk5_yes" name="milk5" value="yes" class="score-input">
+                            <label for="milk5_yes">Yes</label>
+                            <input type="radio" id="milk5_no" name="milk5" value="no" class="score-input">
+                            <label for="milk5_no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <label for="milk_comments" class="block text-sm font-bold text-gray-700 mt-6 mb-2">Comments for Milk Preparation:</label>
+                <textarea id="milk_comments" name="milk_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter notes..."></textarea>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="lg:col-span-1 p-6 rounded-2xl border border-gray-100 bg-white shadow-sm">
+                <h2 class="text-xl font-bold mb-4 text-black flex items-center justify-between">
+                    <span>🌍 3. Single Origin</span>
+                    <span class="px-2.5 py-1 text-[10px] font-black rounded-lg bg-gray-100 text-black">8 PTS</span>
+                </h2>
+                <div class="space-y-2">
+                    <div class="rule-item">
+                        <span class="rule-label">Single Origin offered?</span>
+                        <span class="rule-points">6 pts</span>
+                        <div class="radio-group" data-points="6" data-group="single1">
+                            <input type="radio" id="single1_yes" name="single1" value="yes" class="score-input">
+                            <label for="single1_yes">Yes</label>
+                            <input type="radio" id="single1_no" name="single1" value="no" class="score-input">
+                            <label for="single1_no">No</label>
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <span class="rule-label">Can the barista explain difference between Classic and Single Origin?</span>
+                        <span class="rule-points">1 pt</span>
+                        <div class="radio-group" data-points="1" data-group="single2">
+                            <input type="radio" id="single2_yes" name="single2" value="yes" class="score-input">
+                            <label for="single2_yes">Yes</label>
+                            <input type="radio" id="single2_no" name="single2" value="no" class="score-input">
+                            <label for="single2_no">No</label>
+                        </div>
+                    </div>
+                    <div class="rule-item">
+                        <span class="rule-label">Correct grams of coffee for Single Origin / Seasonal (17-18g SO / 16-16.5g Seasonal).</span>
+                        <span class="rule-points">1 pt</span>
+                        <div class="radio-group" data-points="1" data-group="single3">
+                            <input type="radio" id="single3_yes" name="single3" value="yes" class="score-input">
+                            <label for="single3_yes">Yes</label>
+                            <input type="radio" id="single3_no" name="single3" value="no" class="score-input">
+                            <label for="single3_no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <label for="single_comments" class="block text-sm font-bold text-gray-700 mt-6 mb-2">Comments for Single Origin:</label>
+                <textarea id="single_comments" name="single_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter notes..."></textarea>
+            </div>
+            
+            <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-8 pt-8 border-t border-gray-100">
+                
+                <!-- Section 4 -->
+                <div class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm">
+                    <h3 class="font-bold mb-4 text-md text-black flex items-center justify-between">
+                        <span>⚙️ 4. Machine</span> 
+                        <span class="px-2 py-0.5 text-[10px] font-black rounded-lg bg-gray-100 text-black">2 PTS</span>
+                    </h3>
+                    <div class="space-y-1">
+                        <div class="rule-item !border-b-0">
+                            <span class="rule-label">Pump pressure between 9-10 Bar.</span>
+                            <span class="rule-points">1 pt</span>
+                            <div class="radio-group" data-points="1" data-group="machine1">
+                                <input type="radio" id="machine1_yes" name="machine1" value="yes" class="score-input">
+                                <label for="machine1_yes">Yes</label>
+                                <input type="radio" id="machine1_no" name="machine1" value="no" class="score-input">
+                                <label for="machine1_no">No</label>
+                            </div>
+                        </div>
+                        <div class="rule-item !border-b-0">
+                            <span class="rule-label">Steam pressure between 0.9-1.1 Bar.</span>
+                            <span class="rule-points">1 pt</span>
+                            <div class="radio-group" data-points="1" data-group="machine2">
+                                <input type="radio" id="machine2_yes" name="machine2" value="yes" class="score-input">
+                                <label for="machine2_yes">Yes</label>
+                                <input type="radio" id="machine2_no" name="machine2" value="no" class="score-input">
+                                <label for="machine2_no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <label for="machine_comments" class="block text-[10px] font-black uppercase tracking-wider text-gray-400 mt-4 mb-2">Comments:</label>
+                    <textarea id="machine_comments" name="machine_comments" class="w-full p-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black min-h-[50px] outline-none"></textarea>
+                </div>
+
+                <!-- Section 5 -->
+                <div id="section-ice-drink" class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm">
+                    <h3 class="font-bold mb-4 text-md text-black flex items-center justify-between">
+                        <span>🧊 5. Ice Drink</span> 
+                        <span class="px-2 py-0.5 text-[10px] font-black rounded-lg bg-gray-100 text-black">5 PTS</span>
+                    </h3>
+                    <div class="space-y-1">
+                        <div class="rule-item !border-b-0">
+                            <span class="rule-label">Barista used the measuring cup.</span>
+                            <span class="rule-points">2 pts</span>
+                            <div class="radio-group" data-points="2" data-group="ice2">
+                                <input type="radio" id="ice2_yes" name="ice2" value="yes" class="score-input">
+                                <label for="ice2_yes">Yes</label>
+                                <input type="radio" id="ice2_no" name="ice2" value="no" class="score-input">
+                                <label for="ice2_no">No</label>
+                            </div>
+                        </div>
+                        <div class="rule-item !border-b-0">
+                            <span class="rule-label">Correct lid and straw put on top.</span>
+                            <span class="rule-points">2 pts</span>
+                            <div class="radio-group" data-points="2" data-group="ice3">
+                                <input type="radio" id="ice3_yes" name="ice3" value="yes" class="score-input">
+                                <label for="ice3_yes">Yes</label>
+                                <input type="radio" id="ice3_no" name="ice3" value="no" class="score-input">
+                                <label for="ice3_no">No</label>
+                            </div>
+                        </div>
+                        <div class="rule-item !border-b-0">
+                            <span class="rule-label">Right button pressed on blender.</span>
+                            <span class="rule-points">1 pt</span>
+                            <div class="blender-radio-group radio-group" data-points="1" data-group="ice4">
+                                <input type="radio" id="ice4_yes" name="ice4" value="yes" class="score-input">
+                                <label for="ice4_yes">Yes</label>
+                                <input type="radio" id="ice4_no" name="ice4" value="no" class="score-input">
+                                <label for="ice4_no">No</label>
+                                <input type="radio" id="ice4_na" name="ice4" value="na" class="score-input">
+                                <label for="ice4_na">N/A</label>
+                            </div>
+                        </div>
+                    </div>
+                    <label for="ice_comments" class="block text-[10px] font-black uppercase tracking-wider text-gray-400 mt-4 mb-2">Comments:</label>
+                    <textarea id="ice_comments" name="ice_comments" class="w-full p-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black min-h-[50px] outline-none"></textarea>
+                </div>
+
+                <!-- Section 6 -->
+                <div id="section-luxury-drink" class="p-6 rounded-2xl bg-white border border-gray-100 shadow-sm">
+                    <h3 class="font-bold mb-4 text-md text-black flex items-center justify-between">
+                        <span>👑 6. Luxury Drink</span> 
+                        <span class="px-2 py-0.5 text-[10px] font-black rounded-lg bg-gray-100 text-black">4 PTS</span>
+                    </h3>
+                    <div class="space-y-1">
+                        <div class="rule-item !border-b-0">
+                            <span class="rule-label">Was the thermometer in use?</span>
+                            <span class="rule-points">1 pt</span>
+                            <div class="radio-group" data-points="1" data-group="luxury1">
+                                <input type="radio" id="luxury1_yes" name="luxury1" value="yes" class="score-input">
+                                <label for="luxury1_yes">Yes</label>
+                                <input type="radio" id="luxury1_no" name="luxury1" value="no" class="score-input">
+                                <label for="luxury1_no">No</label>
+                            </div>
+                        </div>
+
+                        <div class="rule-item !border-b-0">
+                            <span class="rule-label">4 steps of milk steaming followed.</span>
+                            <span class="rule-points">1 pt</span>
+                            <div class="radio-group" data-points="1" data-group="luxury2">
+                                <input type="radio" id="luxury2_yes" name="luxury2" value="yes" class="score-input">
+                                <label for="luxury2_yes">Yes</label>
+                                <input type="radio" id="luxury2_no" name="luxury2" value="no" class="score-input">
+                                <label for="luxury2_no">No</label>
+                            </div>
+                        </div>
+                        <div class="rule-item !border-b-0">
+                            <span class="rule-label">Milk steamed while coffee extracted.</span>
+                            <span class="rule-points">1 pt</span>
+                            <div class="radio-group" data-points="1" data-group="luxury3">
+                                <input type="radio" id="luxury3_yes" name="luxury3" value="yes" class="score-input">
+                                <label for="luxury3_yes">Yes</label>
+                                <input type="radio" id="luxury3_no" name="luxury3" value="no" class="score-input">
+                                <label for="luxury3_no">No</label>
+                            </div>
+                        </div>
+                        <div class="rule-item !border-b-0">
+                            <span class="rule-label">Foam levels correct.</span>
+                            <span class="rule-points">1 pt</span>
+                            <div class="radio-group" data-points="1" data-group="luxury4">
+                                <input type="radio" id="luxury4_yes" name="luxury4" value="yes" class="score-input">
+                                <label for="luxury4_yes">Yes</label>
+                                <input type="radio" id="luxury4_no" name="luxury4" value="no" class="score-input">
+                                <label for="luxury4_no">No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <label for="luxury_comments" class="block text-[10px] font-black uppercase tracking-wider text-gray-400 mt-4 mb-2">Comments:</label>
+                    <textarea id="luxury_comments" name="luxury_comments" class="w-full p-2 text-sm bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black min-h-[50px] outline-none"></textarea>
+                </div>
+
+            </div>
+
+            <div class="lg:col-span-2 p-8 rounded-2xl border border-red-100 bg-red-50/30">
+                <h2 class="text-xl font-bold mb-4 text-black flex items-center">
+                    <span class="mr-2">🎯</span> Areas to Improve
+                </h2>
+                <div id="coaching-points-list" class="space-y-4 text-sm text-gray-700">
+                    <p class="italic text-gray-400">No issues identified yet. Keep up the good work!</p>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="bg-white p-8 sm:p-10 border-t border-gray-100 rounded-b-2xl">
+            <h3 class="text-xl font-bold mb-2 text-black">Overall Feedback</h3>
+            <p class="text-sm font-medium text-gray-400 mb-6">
+                Provide comprehensive feedback to the individual and Manager on Duty before leaving today.
+            </p>
+            <textarea id="overall_feedback" name="overall_feedback" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black min-h-[120px] outline-none transition-all" placeholder="Type your overall feedback and notes here..."></textarea>
+            
+            <div class="mt-10 flex flex-col sm:flex-row justify-between items-center text-lg space-y-6 sm:space-y-0">
+                <div class="flex items-center space-x-6">
+                    <span class="font-bold text-gray-500 uppercase text-sm tracking-widest">Final Score</span>
+                    <span id="final-score-footer" class="text-4xl font-black text-black">0 / 100</span>
+                </div>
+                
+                <div class="flex flex-row flex-wrap gap-3 justify-center sm:justify-end w-full sm:w-auto">
+                    <button id="reset-button" class="flex-1 sm:flex-none px-5 py-3 text-sm border border-gray-200 text-gray-600 font-bold rounded-xl hover:bg-red-50 hover:text-red-600 transition duration-200">
+                        New Audit
+                    </button>
+                    <button id="copy-report-button" class="flex-1 sm:flex-none px-5 py-3 text-sm bg-gray-100 text-black font-bold rounded-xl hover:bg-gray-200 transition duration-200">
+                        Copy Report
+                    </button>
+                    <button id="download-graphic-button" class="flex-1 sm:flex-none px-6 py-3 text-sm bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition duration-200 shadow-xl shadow-gray-200">
+                        Scorecard
+                    </button>
+                </div>
+            </div>
+            <p id="pass-fail-status" class="text-center mt-6 text-xl font-black uppercase tracking-widest"></p>
+        </footer>
+
+    </div>
+
+    <script>
+        // PWA Service Worker Inline (Necessary for Offline/Add to Home Screen)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                const swCode = `
+                    self.addEventListener('install', (event) => self.skipWaiting());
+                    self.addEventListener('activate', (event) => event.waitUntil(clients.claim()));
+                    self.addEventListener('fetch', (event) => {
+                        event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+                    });
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(blob);
+                navigator.serviceWorker.register(swUrl).then(() => {
+                    console.log('Service Worker Registered');
+                });
+            });
+        }
+
+        const AUDIT_STORAGE_KEY = 'baristaAuditData'; 
+        const BASE_MAX_SCORE = 100;
+        const ICE_DRINK_POINTS = 5;
+        const LUXURY_DRINK_POINTS = 4;
+
+        let dynamicMaxScore = BASE_MAX_SCORE;
+        
+        const currentScoreDisplay = document.getElementById('current-score');
+        const currentScoreMaxDisplay = document.getElementById('current-score-max');
+        const finalScoreFooterDisplay = document.getElementById('final-score-footer');
+        const passFailStatus = document.getElementById('pass-fail-status');
+        const passMarkDisplay = document.getElementById('pass-mark-display');
+        const copyButton = document.getElementById('copy-report-button');
+        const resetButton = document.getElementById('reset-button');
+        const downloadGraphicButton = document.getElementById('download-graphic-button');
+        const clearTopButton = document.getElementById('clear-top-button');
+        const saveStatusDisplay = document.getElementById('save-status');
+        const coachingPointsList = document.getElementById('coaching-points-list');
+        const formInputs = document.querySelectorAll('input, textarea');
+        const scoreInputs = document.querySelectorAll('.score-input');
+        const toggleIce = document.getElementById('toggle_ice');
+        const toggleLuxury = document.getElementById('toggle_luxury');
+        const sectionIceDrink = document.getElementById('section-ice-drink');
+        const sectionLuxuryDrink = document.getElementById('section-luxury-drink');
+        const inputIceDrinks = document.getElementById('input-ice-drinks');
+        const inputLuxuryDrinks = document.getElementById('input-luxury-drinks');
+
+        const groupToSectionTitle = {
+            'golden1': 'Golden Rules', 'golden2': 'Golden Rules', 'golden3': 'Golden Rules',
+            'golden4': 'Golden Rules', 'golden5': 'Golden Rules', 'golden6': 'Golden Rules',
+            'extract1': 'Golden Rules', 'extract2': 'Golden Rules', 'extract4': 'Golden Rules', 'clean': 'Golden Rules',
+            'milk1': 'Milk Preparation', 'milk2': 'Milk Preparation', 'milk_steamed_extracted': 'Milk Preparation',
+            'milk3': 'Milk Preparation', 'milk4': 'Milk Preparation', 'milk5': 'Milk Preparation',
+            'single1': 'Single Origin', 'single2': 'Single Origin', 'single3': 'Single Origin',
+            'machine1': 'Coffee Machine', 'machine2': 'Coffee Machine',
+            'ice2': 'Ice Drink', 'ice3': 'Ice Drink', 'ice4': 'Ice Drink',
+            'luxury1': 'Luxury Drink', 'luxury2': 'Luxury Drink', 'luxury3': 'Luxury Drink', 'luxury4': 'Luxury Drink'
+        };
+
+        const coachingAdviceMap = {
+            'golden1': 'Make sure you use button 3 to flush the group head before every shot to clear any old coffee grounds & balance the water temperature.',
+            'golden2': 'Remember to purge the steam wand before steaming to clear condensation, and immediately after to keep it clean.',
+            'golden3': 'Always wipe the steam wand with a clean cloth immediately after preparing milk to prevent milk buildup.',
+            'golden4': 'Focus on leveling the coffee grounds evenly in the portafilter before tamping to ensure a balanced extraction.',
+            'golden5': 'Give the handle a quick wipe after leveling to keep the group head clean and the seal tight.',
+            'golden6': 'Check your tamping technique; remember it is 1 firm tamp for espresso and 2 for ristretto.',
+            'extract1': 'Try to start the extraction within 10 seconds of inserting the handle so the coffee doesn\'t "cook" in the heat.',
+            'extract2': 'Keep using the timer for every shot to ensure we maintain high consistency in our flavor profile.',
+            'extract4': 'Your extraction timing is a bit off—aim for 20-22 seconds for espresso to get the best flavor.',
+            'clean': 'Try to tidy up your station as you work; a clean workspace helps you stay organized during busy periods.',
+            'milk1': 'Review the 4 steps of milk steaming; Steam wand position, Injecting the correct amount of air, creating the Vortex, banging and swirling the milk. Each of these is key for that silky texture.',
+            'milk2': 'Please use the milk thermometer for every jug to ensure we are hitting the perfect temperature every time.',
+            'milk_steamed_extracted': 'Try to time your milk steaming so it happens while the coffee is extracting—this keeps the drink fresh.',
+            'milk3': 'Remember the pouring technique: use the spout for lattes and the side of the jug for cappuccinos.',
+            'milk4': 'Watch your foam levels; we are looking for 2-2.5cm for cappuccino style milk, about 1cm for latte style and 0.5-1cm for Flat Whites & Cortados.',
+            'milk5': 'Focus on your presentation; make sure there are no spills on the cup and the crema looks clean.',
+            'single1': 'Make sure you are actively offering Single Origin to customers—it\'s a great way to elevate their experience.',
+            'single2': 'Take some time to learn the specific flavor notes between Classic and Single Origin so you can explain them clearly.',
+            'single3': 'Double-check your dose for Single Origin / Seasonal; it needs to be 17-18g for SO & 16-16.5g in Seasonal (Winter Blend etc) for the best result.',
+            'machine1': 'Keep an eye on the pump pressure; it should stay consistently between 9-10 Bar.',
+            'machine2': 'Monitor the steam pressure regularly to ensure it stays in the optimal 0.9-1.1 Bar range.',
+            'ice2': 'Always use the measuring cup for iced drinks to ensure the ratios are consistent for every customer.',
+            'ice3': 'Check that you are using the correct lid and straw combination for each specific iced drink type.',
+            'ice4': 'Make sure you are selecting the correct program on the blender for the specific drink you are making.',
+            'luxury1': 'Even for luxury drinks, the thermometer is essential to ensure we don\'t overheat the specialty ingredients.',
+            'luxury2': 'Apply the standard 4 steps of milk steaming to luxury drinks as well for consistent quality.',
+            'luxury3': 'Work on your workflow so the milk is ready just as the coffee finishes extracting for luxury recipes.',
+            'luxury4': 'Keep the foam levels precise on luxury drinks to maintain consistent serving standards.'
+        };
+
+        function getStatusInfo(percentage) {
+            if (percentage >= 90) return { tag: "PASSED", color: "#22c55e" };
+            if (percentage >= 80) return { tag: "SO CLOSE", color: "#eab308" };
+            return { tag: "NEEDS WORK", color: "#ef4444" };
+        }
+
+        function updateMaxScoreAndUI() {
+            let newMax = BASE_MAX_SCORE;
+            if (!toggleIce.checked) {
+                newMax -= ICE_DRINK_POINTS;
+                if (sectionIceDrink) sectionIceDrink.classList.add('hidden');
+                if (inputIceDrinks) inputIceDrinks.classList.add('hidden');
+            } else {
+                if (sectionIceDrink) sectionIceDrink.classList.remove('hidden');
+                if (inputIceDrinks) inputIceDrinks.classList.remove('hidden');
+            }
+            if (!toggleLuxury.checked) {
+                newMax -= LUXURY_DRINK_POINTS;
+                if (sectionLuxuryDrink) sectionLuxuryDrink.classList.add('hidden');
+                if (inputLuxuryDrinks) inputLuxuryDrinks.classList.add('hidden');
+            } else {
+                if (sectionLuxuryDrink) sectionLuxuryDrink.classList.remove('hidden');
+                if (inputLuxuryDrinks) inputLuxuryDrinks.classList.remove('hidden');
+            }
+            dynamicMaxScore = newMax;
+            passMarkDisplay.textContent = `🎯 Max Score: ${dynamicMaxScore} Points`;
+            currentScoreMaxDisplay.textContent = dynamicMaxScore;
+            calculateScore(true);
+        }
+
+        function calculateScore(updateDisplay = true) {
+            let totalScore = 0;
+            const coachingPointsBySection = {};
+            const disabledGroups = [];
+            if (!toggleIce.checked) disabledGroups.push('ice2', 'ice3', 'ice4');
+            if (!toggleLuxury.checked) disabledGroups.push('luxury1', 'luxury2', 'luxury3', 'luxury4');
+
+            const uniqueGroups = new Set(Array.from(scoreInputs).map(i => i.name));
+            uniqueGroups.forEach(groupName => {
+                if (disabledGroups.includes(groupName)) return;
+                const checkedInput = document.querySelector(`input[name="${groupName}"]:checked`);
+                const groupContainer = document.querySelector(`.radio-group[data-points][data-group="${groupName}"]`);
+                const points = parseInt(groupContainer.dataset.points);
+                if (checkedInput) {
+                    if (checkedInput.value === 'yes' || checkedInput.value === 'na') {
+                        totalScore += points;
+                    } else if (checkedInput.value === 'no') {
+                        const sectionTitle = groupToSectionTitle[groupName] || 'General';
+                        if (!coachingPointsBySection[sectionTitle]) coachingPointsBySection[sectionTitle] = [];
+                        coachingPointsBySection[sectionTitle].push(coachingAdviceMap[groupName] || "Focus on improving this step.");
+                    }
+                }
+            });
+            
+            if (updateDisplay) {
+                currentScoreDisplay.textContent = totalScore;
+                finalScoreFooterDisplay.textContent = `${totalScore} / ${dynamicMaxScore}`; 
+                let percentage = dynamicMaxScore > 0 ? (totalScore / dynamicMaxScore) * 100 : 0;
+                let roundedPercent = Math.round(percentage);
+                let statusInfo = getStatusInfo(roundedPercent);
+                passFailStatus.textContent = `Status: ${statusInfo.tag} (${roundedPercent}%)`;
+                
+                let statusClass = "text-center mt-6 text-xl font-black uppercase tracking-widest";
+                if (statusInfo.tag === "PASSED") statusClass += " text-green-600";
+                else if (statusInfo.tag === "SO CLOSE") statusClass += " text-yellow-600";
+                else statusClass += " text-red-600";
+                passFailStatus.className = statusClass;
+
+                const sectionKeys = Object.keys(coachingPointsBySection);
+                if (sectionKeys.length > 0) {
+                    let htmlContent = "";
+                    sectionKeys.forEach(section => {
+                        htmlContent += `<div><h3 class="font-black text-black border-b border-gray-100 pb-1 mb-2 uppercase text-[10px] tracking-widest">${section}</h3><div class="space-y-2 pl-1">${coachingPointsBySection[section].map(f => `<div class="flex items-start group"><span class="mr-3 text-red-500 font-black">•</span><span class="text-gray-700 italic">"${f}"</span></div>`).join('')}</div></div>`;
+                    });
+                    coachingPointsList.innerHTML = htmlContent;
+                } else {
+                    coachingPointsList.innerHTML = `<p class="italic text-gray-400">No issues identified yet. Keep up the good work!</p>`;
+                }
+            }
+            return totalScore;
+        }
+
+        function handleInput() {
+            calculateScore(true);
+            saveLocalData();
+        }
+
+        function collectFormData() {
+            const data = {};
+            document.querySelectorAll('[name]').forEach(input => {
+                if (input.type === 'checkbox') data[input.name] = input.checked;
+                else data[input.name] = input.value;
+            });
+            document.querySelectorAll('.radio-group').forEach(group => {
+                const groupName = group.dataset.group;
+                const checkedInput = document.querySelector(`input[name="${groupName}"]:checked`);
+                data[groupName] = checkedInput ? checkedInput.value : '';
+            });
+            data.calculatedScore = calculateScore(false);
+            data.dynamicMaxScore = dynamicMaxScore;
+            return data;
+        }
+
+        function saveLocalData() {
+            try {
+                const data = collectFormData();
+                localStorage.setItem(AUDIT_STORAGE_KEY, JSON.stringify(data));
+                saveStatusDisplay.innerHTML = '<span class="text-green-600">Saved.</span>';
+            } catch (e) {
+                saveStatusDisplay.innerHTML = '<span class="text-red-400">Error.</span>';
+            }
+        }
+
+        function loadAudit(data) {
+            if (!data) return;
+            document.querySelectorAll('[name]').forEach(input => {
+                if (input.type !== 'checkbox' && input.type !== 'radio' && data[input.name] !== undefined) {
+                    input.value = data[input.name];
+                }
+            });
+            if (data.isIceAuditEnabled !== undefined) toggleIce.checked = data.isIceAuditEnabled; 
+            if (data.isLuxuryAuditEnabled !== undefined) toggleLuxury.checked = data.isLuxuryAuditEnabled;
+            updateMaxScoreAndUI();
+            document.querySelectorAll('.radio-group').forEach(group => {
+                const groupName = group.dataset.group;
+                const savedValue = data[groupName];
+                if (savedValue) {
+                    const input = document.querySelector(`input[name="${groupName}"][value="${savedValue}"]`);
+                    if (input) input.checked = true;
+                }
+            });
+            calculateScore(true);
+        }
+
+        function loadLocalData() {
+            try {
+                const dataString = localStorage.getItem(AUDIT_STORAGE_KEY);
+                if (dataString) {
+                    loadAudit(JSON.parse(dataString));
+                    saveStatusDisplay.innerHTML = '<span class="text-green-600">Restored.</span>';
+                } else {
+                    saveStatusDisplay.innerHTML = '<span class="text-green-600">New Session.</span>';
+                    updateMaxScoreAndUI(); 
+                }
+            } catch (e) {
+                saveStatusDisplay.innerHTML = '<span class="text-red-400">Load Error.</span>';
+            }
+        }
+        
+        function resetForm() {
+            document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(input => input.value = '');
+            document.querySelectorAll('.score-input').forEach(input => input.checked = false);
+            toggleIce.checked = true;
+            toggleLuxury.checked = true;
+            localStorage.removeItem(AUDIT_STORAGE_KEY);
+            updateMaxScoreAndUI(); 
+            if (this.id === 'reset-button') {
+                const originalText = resetButton.textContent;
+                resetButton.textContent = 'Reset Done';
+                setTimeout(() => { resetButton.textContent = originalText; }, 1500);
+            }
+            if (this.id === 'clear-top-button') saveStatusDisplay.innerHTML = '<span class="text-green-600">Cleared.</span>';
+        }
+
+        function generateShareableGraphic() {
+            const name = document.getElementById('barista_name').value || 'Staff Member';
+            const auditor = document.getElementById('audit_by').value || 'N/A';
+            const date = document.getElementById('date_of_visit').value || 'TBD';
+            const score = document.getElementById('current-score').textContent;
+            const store = document.getElementById('store_number').value || 'Unknown Store';
+            let percentage = dynamicMaxScore > 0 ? (parseInt(score) / dynamicMaxScore) * 100 : 0;
+            let roundedPercent = Math.round(percentage);
+            let statusInfo = getStatusInfo(roundedPercent);
+
+            document.getElementById('card-barista').textContent = name;
+            document.getElementById('card-auditor').textContent = auditor;
+            document.getElementById('card-date').textContent = `AUDIT DATE: ${date}`;
+            document.getElementById('card-score').textContent = `${score} / ${dynamicMaxScore}`;
+            document.getElementById('card-store').textContent = `STORE: ${store}`;
+            
+            const statusBox = document.getElementById('card-status-box');
+            document.getElementById('card-status-percent').textContent = `${roundedPercent}%`;
+            document.getElementById('card-status-tag').textContent = statusInfo.tag;
+            statusBox.style.backgroundColor = statusInfo.color;
+
+            const sectionContainer = document.getElementById('card-section-breakdown');
+            sectionContainer.innerHTML = '';
+            ['Golden Rules', 'Milk Preparation', 'Single Origin', 'Coffee Machine', 'Ice Drink', 'Luxury Drink'].forEach(title => {
+                if (title === 'Ice Drink' && !toggleIce.checked) return;
+                if (title === 'Luxury Drink' && !toggleLuxury.checked) return;
+                let sCurrent = 0, sMax = 0;
+                document.querySelectorAll('.rule-item').forEach(item => {
+                    const rg = item.querySelector('.radio-group');
+                    if (rg && groupToSectionTitle[rg.dataset.group] === title) {
+                        const pts = parseInt(rg.dataset.points);
+                        sMax += pts;
+                        const checked = rg.querySelector('input:checked');
+                        if (checked && (checked.value === 'yes' || checked.value === 'na')) sCurrent += pts;
+                    }
+                });
+                const div = document.createElement('div');
+                div.className = 'flex justify-between uppercase';
+                div.innerHTML = `<span>${title}</span> <span class="text-gray-400">${sCurrent}/${sMax}</span>`;
+                sectionContainer.appendChild(div);
+            });
+
+            const impContainer = document.getElementById('card-improvements');
+            const fails = Array.from(document.querySelectorAll('.score-input:checked')).filter(i => i.value === 'no').map(i => coachingAdviceMap[i.name]);
+            if (fails.length > 0) {
+                impContainer.innerHTML = fails.slice(0, 3).map(f => `• ${f}`).join('<br>');
+                if (fails.length > 3) impContainer.innerHTML += `<br>• ...and ${fails.length - 3} other points`;
+            } else {
+                impContainer.innerHTML = "Performance meets all quality standards.";
+            }
+
+            const originalText = downloadGraphicButton.textContent;
+            downloadGraphicButton.textContent = '...';
+            html2canvas(document.getElementById('share-card'), { scale: 2 }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Audit_Card_${name.replace(/\s+/g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                downloadGraphicButton.textContent = originalText;
+            });
+        }
+
+        function copyReportToClipboard() {
+            const auditor = document.getElementById('audit_by').value || 'N/A';
+            const dateStr = document.getElementById('date_of_visit').value || 'N/A';
+            const barista = document.getElementById('barista_name').value || 'N/A';
+            const store = document.getElementById('store_number').value || 'N/A';
+            const hotDrinks = document.getElementById('hot_drinks_made').value || 'N/A';
+            const icedDrinks = toggleIce.checked ? (document.getElementById('ice_drinks_made').value || 'N/A') : '[Not Tested]';
+            const luxuryDrinks = toggleLuxury.checked ? (document.getElementById('luxury_drinks_prepared').value || 'N/A') : '[Not Tested]';
+            const totalScore = document.getElementById('current-score').textContent;
+            const rawPercent = dynamicMaxScore > 0 ? (parseInt(totalScore) / dynamicMaxScore) * 100 : 0;
+            const roundedPercent = Math.round(rawPercent);
+            const statusInfo = getStatusInfo(roundedPercent);
+            const statusFinal = `${statusInfo.tag} (${roundedPercent}%)`;
+            const sectionGroups = [
+                { title: 'Golden Rules', commentId: 'golden_rules_comments', enabled: true },
+                { title: 'Milk Preparation', commentId: 'milk_comments', enabled: true },
+                { title: 'Single Origin', commentId: 'single_comments', enabled: true },
+                { title: 'Coffee Machine', commentId: 'machine_comments', enabled: true },
+                { title: 'Ice Drink', commentId: 'ice_comments', enabled: toggleIce.checked },
+                { title: 'Luxury Drink', commentId: 'luxury_comments', enabled: toggleLuxury.checked }
+            ];
+
+            let report = `COFFEE STANDARDS & QUALITY AUDIT REPORT\n\nBarista: ${barista}\nStore: ${store}\nAudit Date: ${dateStr}\nAuditor: ${auditor}\n\nFinal Status: ${statusFinal}\nTotal Score: ${totalScore} / ${dynamicMaxScore}\n\nDrinks Evaluated:\nHot: ${hotDrinks}\nIce: ${icedDrinks}\nLuxury: ${luxuryDrinks}\n\n`;
+            const organizedAdvice = {};
+
+            sectionGroups.forEach(sec => {
+                if (!sec.enabled) return;
+                let current = 0, max = 0;
+                document.querySelectorAll('.rule-item').forEach(item => {
+                    const rg = item.querySelector('.radio-group');
+                    if (rg && groupToSectionTitle[rg.dataset.group] === sec.title) {
+                        const pts = parseInt(rg.dataset.points);
+                        max += pts;
+                        const checked = rg.querySelector('input:checked');
+                        if (checked && (checked.value === 'yes' || checked.value === 'na')) current += pts;
+                    }
+                });
+                report += `-------------------\n${sec.title} (${current}/${max})\n\n`;
+                let qIndex = 1;
+                document.querySelectorAll('.rule-item').forEach(item => {
+                    const rg = item.querySelector('.radio-group');
+                    if (rg && groupToSectionTitle[rg.dataset.group] === sec.title) {
+                        const label = item.querySelector('.rule-label').textContent.trim();
+                        const pts = rg.dataset.points;
+                        const checked = rg.querySelector('input:checked');
+                        let choice = checked ? checked.value.toUpperCase() : "-";
+                        let earned = (choice === 'YES' || choice === 'NA') ? pts : 0;
+                        report += `${qIndex}. ${label}\n[${choice}] (${earned} pts)\n\n`;
+                        if (choice === 'NO') {
+                            if (!organizedAdvice[sec.title]) organizedAdvice[sec.title] = [];
+                            organizedAdvice[sec.title].push(coachingAdviceMap[rg.dataset.group]);
+                        }
+                        qIndex++;
+                    }
+                });
+                const cmt = document.getElementById(sec.commentId).value.trim();
+                if (cmt) report += `Notes: ${cmt}\n\n`;
+            });
+
+            report += `-------------------\nAREAS TO IMPROVE:\n\n`;
+            const adviceSections = Object.keys(organizedAdvice);
+            if (adviceSections.length > 0) {
+                adviceSections.forEach(section => {
+                    report += `[ ${section.toUpperCase()} ]\n`;
+                    organizedAdvice[section].forEach(advice => { report += `• ${advice}\n\n`; });
+                });
+            } else {
+                report += `No specific areas for improvement identified.\n\n`;
+            }
+            report += `-------------------\nOverall Feedback:\n${document.getElementById('overall_feedback').value.trim() || "No additional feedback provided."}\n\nEND OF AUDIT REPORT`;
+
+            const el = document.createElement('textarea');
+            el.value = report;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute'; el.style.left = '-9999px';
+            document.body.appendChild(el); el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            const originalText = copyButton.textContent;
+            copyButton.textContent = 'Copied!';
+            setTimeout(() => { copyButton.textContent = originalText; }, 2000);
+        }
+
+        function setupForm() {
+            formInputs.forEach(input => input.addEventListener('input', handleInput));
+            scoreInputs.forEach(input => input.addEventListener('change', handleInput));
+            toggleIce.addEventListener('change', () => { updateMaxScoreAndUI(); saveLocalData(); });
+            toggleLuxury.addEventListener('change', () => { updateMaxScoreAndUI(); saveLocalData(); });
+            copyButton.addEventListener('click', copyReportToClipboard);
+            resetButton.addEventListener('click', resetForm);
+            clearTopButton.addEventListener('click', resetForm);
+            downloadGraphicButton.addEventListener('click', generateShareableGraphic);
+            loadLocalData();
+        }
+
+        document.addEventListener('DOMContentLoaded', setupForm);
+    </script>
+</body>
+</html>
