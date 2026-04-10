@@ -1,4 +1,3 @@
-[Beta] 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -500,10 +499,25 @@
         });
 
         document.getElementById('reset-button').addEventListener('click', () => {
-            if(confirm('Clear all data for a new audit?')) {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = "fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50";
+            modalOverlay.innerHTML = `
+                <div class="bg-white p-6 rounded-lg max-w-sm w-full border-2 border-black">
+                    <h3 class="font-black text-xl mb-4">RESET AUDIT?</h3>
+                    <p class="text-sm text-gray-600 mb-6">This will clear all current scores and inputs. This action cannot be undone.</p>
+                    <div class="flex gap-2">
+                        <button id="confirm-reset" class="flex-1 bg-red-600 text-white font-black py-2 rounded-sm uppercase text-xs">Clear Everything</button>
+                        <button id="cancel-reset" class="flex-1 bg-gray-200 text-black font-black py-2 rounded-sm uppercase text-xs">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalOverlay);
+            
+            document.getElementById('confirm-reset').onclick = () => {
                 localStorage.removeItem(AUDIT_STORAGE_KEY);
                 location.reload();
-            }
+            };
+            document.getElementById('cancel-reset').onclick = () => modalOverlay.remove();
         });
 
         document.querySelectorAll('input, textarea').forEach(input => {
@@ -514,8 +528,40 @@
         });
 
         window.onload = loadLocalData;
+
+        // --- PWA SERVICE WORKER REGISTRATION (BLOB METHOD) ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                const swCode = `
+                    const CACHE_NAME = 'coffee-audit-v3';
+                    const urlsToCache = [
+                        '${window.location.href}',
+                        'https://cdn.tailwindcss.com',
+                        'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
+                    ];
+
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
+                        );
+                    });
+
+                    self.addEventListener('fetch', event => {
+                        event.respondWith(
+                            caches.match(event.request).then(response => response || fetch(event.request))
+                        );
+                    });
+                `;
+                const blob = new Blob([swCode], { type: 'application/javascript' });
+                const workerUrl = URL.createObjectURL(blob);
+                
+                navigator.serviceWorker.register(workerUrl).then(reg => {
+                    console.log('SW Registered');
+                }).catch(err => {
+                    console.log('SW Failed', err);
+                });
+            });
+        }
     </script>
 </body>
 </html>
-
-```
