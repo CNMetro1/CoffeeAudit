@@ -30,7 +30,6 @@
             border: 1px solid #000;
         }
 
-        /* Reference Image Table Styling */
         .audit-table {
             width: 100%;
             border-collapse: collapse;
@@ -55,7 +54,6 @@
             letter-spacing: 0.05em;
         }
 
-        /* Radio Buttons for Table */
         .radio-cell {
             text-align: center !important;
             width: 60px;
@@ -67,90 +65,78 @@
             accent-color: #000;
         }
 
-        /* Toggle Styling */
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #f8fafc;
-            padding: 0.75rem;
-            border-radius: 0.75rem;
-            border: 1px solid #e2e8f0;
-            margin-top: 0.5rem;
-        }
-        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 24px; }
-        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: #000000; }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        .hidden-comment { display: none; margin-top: 0.75rem; animation: fadeIn 0.2s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-
         #share-card {
             position: fixed;
             left: -9999px;
             top: -9999px;
             width: 800px;
             background: white;
-            padding: 40px;
+            padding: 0;
             color: black;
         }
     </style>
 </head>
 <body class="p-4 sm:p-8">
 
-    <!-- Share Graphic Template (Matches the Reference Table View) -->
+    <!-- Share Graphic Template (Matches Reference Image) -->
     <div id="share-card" class="flex flex-col border-[3px] border-black">
         <div class="bg-black text-white p-6 flex justify-between items-center">
-            <h2 class="text-3xl font-black tracking-tighter">COFFEE STANDARDS & QUALITY AUDIT</h2>
+            <h2 class="text-3xl font-black tracking-tighter uppercase">Coffee Audit</h2>
             <div class="text-right">
                 <div id="card-status-percent" class="text-4xl font-black">0%</div>
                 <div id="card-status-tag" class="text-xs font-bold tracking-widest opacity-80 uppercase">Incomplete</div>
             </div>
         </div>
 
+        <!-- Info Grid -->
         <div class="grid grid-cols-2 border-b-2 border-black">
             <div class="p-4 border-r-2 border-black">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Barista Name</p>
-                <p id="card-barista" class="text-xl font-black">--</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Maestro Name</p>
+                <p id="card-maestro" class="text-xl font-black uppercase">--</p>
             </div>
             <div class="p-4">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Date</p>
-                <p id="card-date" class="text-xl font-black">--</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Barista Name</p>
+                <p id="card-barista" class="text-xl font-black uppercase">--</p>
             </div>
         </div>
         <div class="grid grid-cols-2 border-b-2 border-black">
             <div class="p-4 border-r-2 border-black">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Store</p>
-                <p id="card-store" class="text-xl font-black">--</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Store Name & Number</p>
+                <p id="card-store" class="text-xl font-black uppercase">--</p>
             </div>
             <div class="p-4">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Auditor</p>
-                <p id="card-auditor" class="text-xl font-black">--</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Drink Audited</p>
+                <p id="card-drink" class="text-xl font-black uppercase">--</p>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 border-b-2 border-black">
+            <div class="p-4">
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Date of Visit</p>
+                <p id="card-date" class="text-xl font-black uppercase">--</p>
             </div>
         </div>
 
+        <!-- Table Content -->
         <div class="p-0">
-            <table class="audit-table">
+            <table class="audit-table border-none">
                 <thead>
                     <tr>
-                        <th>Standards / Checks</th>
+                        <th class="border-l-0">Standards / Checks</th>
                         <th class="radio-cell">Yes</th>
                         <th class="radio-cell">No</th>
-                        <th class="radio-cell">N/A</th>
+                        <th class="radio-cell border-r-0">N/A</th>
                     </tr>
                 </thead>
                 <tbody id="card-table-body">
-                    <!-- Populated via JS for image capture -->
+                    <!-- Populated via JS -->
                 </tbody>
             </table>
         </div>
 
+        <!-- Feedback -->
         <div class="p-6 bg-gray-50 border-t-2 border-black">
-            <p class="text-xs font-bold uppercase mb-2">Overall Feedback</p>
-            <p id="card-overall-feedback" class="text-sm italic text-gray-700">No feedback provided.</p>
+            <p class="text-xs font-bold uppercase mb-2">Overall Comments & Feedback</p>
+            <p id="card-overall-feedback" class="text-sm italic text-gray-700 whitespace-pre-wrap">No feedback provided.</p>
         </div>
     </div>
 
@@ -160,7 +146,7 @@
         <header class="bg-white border-b border-gray-100 p-6 sm:p-8">
             <div class="flex justify-between items-start mb-6">
                 <div>
-                    <h1 class="text-3xl font-black tracking-tight text-black uppercase">Coffee Standards Audit</h1>
+                    <h1 class="text-3xl font-black tracking-tight text-black uppercase">Coffee Audit</h1>
                     <p class="text-gray-500 font-medium">Digital Scorecard based on Quality Protocol</p>
                 </div>
                 <div id="save-status" class="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">READY</div>
@@ -179,8 +165,8 @@
                 </div>
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-1">Audited By</label>
-                        <input type="text" id="audit_by" name="audit_by" class="w-full p-2 border-b-2 border-black outline-none focus:bg-gray-50" placeholder="Auditor Name">
+                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-1">Maestro Name</label>
+                        <input type="text" id="audit_by" name="audit_by" class="w-full p-2 border-b-2 border-black outline-none focus:bg-gray-50" placeholder="Maestro Name">
                     </div>
                     <div>
                         <label class="block text-[10px] font-black text-gray-400 uppercase mb-1">Barista Name & Position</label>
@@ -205,137 +191,13 @@
                         <th class="radio-cell">N/A</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- FLUSH -->
-                    <tr class="section-header"><td colspan="4">Flush</td></tr>
-                    <tr>
-                        <td>Was button 3 used for flushing at the start?</td>
-                        <td class="radio-cell"><input type="radio" name="q1" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q1" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q1" value="na"></td>
-                    </tr>
-
-                    <!-- LEVEL & WIPED -->
-                    <tr class="section-header"><td colspan="4">Level & Wiped</td></tr>
-                    <tr>
-                        <td>Has the coffee been levelled properly?</td>
-                        <td class="radio-cell"><input type="radio" name="q2" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q2" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q2" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Has the handle been wiped after levelling?</td>
-                        <td class="radio-cell"><input type="radio" name="q3" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q3" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q3" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Was the coffee tamped properly?</td>
-                        <td class="radio-cell"><input type="radio" name="q4" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q4" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q4" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Was the tamper working correctly?</td>
-                        <td class="radio-cell"><input type="radio" name="q5" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q5" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q5" value="na"></td>
-                    </tr>
-
-                    <!-- EXTRACT & TIMED -->
-                    <tr class="section-header"><td colspan="4">Extract & Timed</td></tr>
-                    <tr>
-                        <td>Was extraction started within 10s of placing handle?</td>
-                        <td class="radio-cell"><input type="radio" name="q6" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q6" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q6" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Was the timer in use?</td>
-                        <td class="radio-cell"><input type="radio" name="q7" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q7" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q7" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Correct ROP? (20-22s)</td>
-                        <td class="radio-cell"><input type="radio" name="q8" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q8" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q8" value="na"></td>
-                    </tr>
-
-                    <!-- PURGE & WIPE -->
-                    <tr class="section-header"><td colspan="4">Purge & Wipe</td></tr>
-                    <tr>
-                        <td>Steamer purged before and after?</td>
-                        <td class="radio-cell"><input type="radio" name="q9" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q9" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q9" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Steam wand wiped immediately after milk?</td>
-                        <td class="radio-cell"><input type="radio" name="q10" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q10" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q10" value="na"></td>
-                    </tr>
-
-                    <!-- CLEAN AS YOU GO -->
-                    <tr class="section-header"><td colspan="4">Clean As You Go</td></tr>
-                    <tr>
-                        <td>Is the coffee production area clean and tidy?</td>
-                        <td class="radio-cell"><input type="radio" name="q11" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q11" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q11" value="na"></td>
-                    </tr>
-
-                    <!-- MILK -->
-                    <tr class="section-header"><td colspan="4">Recipe Book - Milk</td></tr>
-                    <tr>
-                        <td>4 steps of milk steaming followed correctly?</td>
-                        <td class="radio-cell"><input type="radio" name="q12" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q12" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q12" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Was a thermometer in use?</td>
-                        <td class="radio-cell"><input type="radio" name="q13" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q13" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q13" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Clean presentable milk jugs?</td>
-                        <td class="radio-cell"><input type="radio" name="q14" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q14" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q14" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Milk steamed whilst coffee extracting?</td>
-                        <td class="radio-cell"><input type="radio" name="q15" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q15" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q15" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Was the milk poured correctly?</td>
-                        <td class="radio-cell"><input type="radio" name="q16" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q16" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q16" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Are the foam levels correct?</td>
-                        <td class="radio-cell"><input type="radio" name="q17" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q17" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q17" value="na"></td>
-                    </tr>
-                    <tr>
-                        <td>Presentation up to standard?</td>
-                        <td class="radio-cell"><input type="radio" name="q18" value="yes"></td>
-                        <td class="radio-cell"><input type="radio" name="q18" value="no"></td>
-                        <td class="radio-cell"><input type="radio" name="q18" value="na"></td>
-                    </tr>
+                <tbody id="main-table-body">
+                    <!-- Sections defined in JS for easier sync with graphic -->
                 </tbody>
             </table>
 
             <div class="p-6 border-t border-gray-200">
-                <h3 class="text-sm font-black uppercase mb-3">Overall Feedback & Comments</h3>
+                <h3 class="text-sm font-black uppercase mb-3">Overall Comments & Feedback</h3>
                 <textarea id="overall_feedback" name="overall_feedback" class="w-full p-4 bg-gray-50 border border-black rounded-sm min-h-[120px] outline-none" placeholder="Enter detailed audit notes here..."></textarea>
             </div>
         </main>
@@ -363,22 +225,48 @@
     <script>
         const AUDIT_STORAGE_KEY = 'coffeeAuditDataV3'; 
 
-        const questionsList = [
-            "Was button 3 used for flushing at the start?", "Has the coffee been levelled properly?", 
-            "Has the handle been wiped after levelling?", "Was the coffee tamped properly?", 
-            "Was the tamper working correctly?", "Was extraction started within 10s of placing handle?", 
-            "Was the timer in use?", "Correct ROP? (20-22s)", "Steamer purged before and after?", 
-            "Steam wand wiped immediately after milk?", "Is the coffee production area clean and tidy?",
-            "4 steps of milk steaming followed correctly?", "Was a thermometer in use?", 
-            "Clean presentable milk jugs?", "Milk steamed whilst coffee extracting?", 
-            "Was the milk poured correctly?", "Are the foam levels correct?", "Presentation up to standard?"
+        const sections = [
+            { title: "Flush", questions: ["Was button 3 used for flushing at the start?"] },
+            { title: "Level & Wiped", questions: ["Has the coffee been levelled properly?", "Has the handle been wiped after levelling?", "Was the coffee tamped properly?", "Was the tamper working correctly?"] },
+            { title: "Extract & Timed", questions: ["Was extraction started within 10s of placing handle?", "Was the timer in use?", "Correct ROP? (20-22s)"] },
+            { title: "Purge & Wipe", questions: ["Steamer purged before and after?", "Steam wand wiped immediately after milk?"] },
+            { title: "Clean As You Go", questions: ["Is the coffee production area clean and tidy?"] },
+            { title: "Recipe Book - Milk", questions: ["4 steps of milk steaming followed correctly?", "Was a thermometer in use?", "Clean presentable milk jugs?", "Milk steamed whilst coffee extracting?", "Was the milk poured correctly?", "Are the foam levels correct?", "Presentation up to standard?"] }
         ];
+
+        let qGlobalCount = 1;
+
+        function buildMainTable() {
+            const tbody = document.getElementById('main-table-body');
+            tbody.innerHTML = '';
+            qGlobalCount = 1;
+
+            sections.forEach(section => {
+                const headRow = document.createElement('tr');
+                headRow.className = "section-header";
+                headRow.innerHTML = `<td colspan="4">${section.title}</td>`;
+                tbody.appendChild(headRow);
+
+                section.questions.forEach(q => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${q}</td>
+                        <td class="radio-cell"><input type="radio" name="q${qGlobalCount}" value="yes"></td>
+                        <td class="radio-cell"><input type="radio" name="q${qGlobalCount}" value="no"></td>
+                        <td class="radio-cell"><input type="radio" name="q${qGlobalCount}" value="na"></td>
+                    `;
+                    tbody.appendChild(row);
+                    qGlobalCount++;
+                });
+            });
+        }
 
         function calculateScore() {
             let totalPoints = 0;
             let applicablePoints = 0;
+            const totalQuestions = qGlobalCount - 1;
             
-            for(let i=1; i<=18; i++) {
+            for(let i=1; i<=totalQuestions; i++) {
                 const checked = document.querySelector(`input[name="q${i}"]:checked`);
                 if (checked) {
                     if (checked.value !== 'na') {
@@ -386,15 +274,13 @@
                         if (checked.value === 'yes') totalPoints++;
                     }
                 } else {
-                    applicablePoints++; // Default to 18 if none selected
+                    applicablePoints++;
                 }
             }
 
             const percentage = applicablePoints > 0 ? Math.round((totalPoints / applicablePoints) * 100) : 0;
-            
             document.getElementById('final-score-footer').textContent = `${totalPoints} / ${applicablePoints} (${percentage}%)`;
             
-            // UI Status Update
             const saveStatus = document.getElementById('save-status');
             if (percentage === 100) { saveStatus.textContent = 'PERFECT'; saveStatus.className = 'text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full'; }
             else if (percentage < 83) { saveStatus.textContent = 'ACTION REQUIRED'; saveStatus.className = 'text-xs font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full'; }
@@ -437,42 +323,50 @@
         function generateCardTable() {
             const body = document.getElementById('card-table-body');
             body.innerHTML = '';
+            let qCounter = 1;
             
-            questionsList.forEach((q, index) => {
-                const qNum = index + 1;
-                const checked = document.querySelector(`input[name="q${qNum}"]:checked`)?.value || '';
-                
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${q}</td>
-                    <td class="radio-cell">${checked === 'yes' ? '✔' : ''}</td>
-                    <td class="radio-cell">${checked === 'no' ? '✘' : ''}</td>
-                    <td class="radio-cell">${checked === 'na' ? '-' : ''}</td>
-                `;
-                body.appendChild(tr);
+            sections.forEach(section => {
+                const headRow = document.createElement('tr');
+                headRow.className = "section-header";
+                headRow.innerHTML = `<td colspan="4" class="border-x-0">${section.title}</td>`;
+                body.appendChild(headRow);
+
+                section.questions.forEach(q => {
+                    const checked = document.querySelector(`input[name="q${qCounter}"]:checked`)?.value || '';
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="border-l-0">${q}</td>
+                        <td class="radio-cell font-bold text-lg">${checked === 'yes' ? '✓' : ''}</td>
+                        <td class="radio-cell font-bold text-lg">${checked === 'no' ? '✕' : ''}</td>
+                        <td class="radio-cell border-r-0">${checked === 'na' ? '-' : ''}</td>
+                    `;
+                    body.appendChild(tr);
+                    qCounter++;
+                });
             });
         }
 
         document.getElementById('download-graphic-button').addEventListener('click', () => {
             const stats = calculateScore();
             
-            document.getElementById('card-barista').textContent = document.getElementById('barista_name').value || "N/A";
-            document.getElementById('card-auditor').textContent = document.getElementById('audit_by').value || "N/A";
-            document.getElementById('card-date').textContent = document.getElementById('date_of_visit').value || "TBD";
-            document.getElementById('card-store').textContent = document.getElementById('store_number').value || "N/A";
+            document.getElementById('card-maestro').textContent = document.getElementById('audit_by').value || "--";
+            document.getElementById('card-barista').textContent = document.getElementById('barista_name').value || "--";
+            document.getElementById('card-store').textContent = document.getElementById('store_number').value || "--";
+            document.getElementById('card-drink').textContent = document.getElementById('drink_made').value || "--";
+            document.getElementById('card-date').textContent = document.getElementById('date_of_visit').value || "--";
             document.getElementById('card-overall-feedback').textContent = document.getElementById('overall_feedback').value || "No feedback provided.";
             document.getElementById('card-status-percent').textContent = stats.percentage + '%';
             
             const tag = document.getElementById('card-status-tag');
             if(stats.percentage === 100) tag.textContent = "PERFECT";
             else if(stats.percentage >= 83) tag.textContent = "PASSED";
-            else tag.textContent = "ACTION REQ";
+            else tag.textContent = "ACTION REQUIRED";
 
             generateCardTable();
 
-            html2canvas(document.getElementById('share-card'), { scale: 2 }).then(canvas => {
+            html2canvas(document.getElementById('share-card'), { scale: 2, useCORS: true }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `Audit_${document.getElementById('barista_name').value || 'Report'}.png`;
+                link.download = `CoffeeAudit_${document.getElementById('barista_name').value || 'Report'}.png`;
                 link.href = canvas.toDataURL();
                 link.click();
             });
@@ -481,6 +375,7 @@
         document.getElementById('copy-report-button').addEventListener('click', () => {
             const stats = calculateScore();
             let text = `COFFEE AUDIT REPORT\n`;
+            text += `Maestro: ${document.getElementById('audit_by').value}\n`;
             text += `Barista: ${document.getElementById('barista_name').value}\n`;
             text += `Score: ${stats.totalPoints}/${stats.applicablePoints} (${stats.percentage}%)\n`;
             text += `Drink: ${document.getElementById('drink_made').value}\n\n`;
@@ -520,6 +415,7 @@
             document.getElementById('cancel-reset').onclick = () => modalOverlay.remove();
         });
 
+        buildMainTable();
         document.querySelectorAll('input, textarea').forEach(input => {
             input.addEventListener('change', () => {
                 calculateScore();
@@ -528,40 +424,7 @@
         });
 
         window.onload = loadLocalData;
-
-        // --- PWA SERVICE WORKER REGISTRATION (BLOB METHOD) ---
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                const swCode = `
-                    const CACHE_NAME = 'coffee-audit-v3';
-                    const urlsToCache = [
-                        '${window.location.href}',
-                        'https://cdn.tailwindcss.com',
-                        'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
-                    ];
-
-                    self.addEventListener('install', event => {
-                        event.waitUntil(
-                            caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
-                        );
-                    });
-
-                    self.addEventListener('fetch', event => {
-                        event.respondWith(
-                            caches.match(event.request).then(response => response || fetch(event.request))
-                        );
-                    });
-                `;
-                const blob = new Blob([swCode], { type: 'application/javascript' });
-                const workerUrl = URL.createObjectURL(blob);
-                
-                navigator.serviceWorker.register(workerUrl).then(reg => {
-                    console.log('SW Registered');
-                }).catch(err => {
-                    console.log('SW Failed', err);
-                });
-            });
-        }
     </script>
 </body>
 </html>
+
