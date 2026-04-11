@@ -25,277 +25,114 @@
         
         .main-card {
             background-color: #ffffff;
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e5e7eb;
-        }
-
-        .rule-item {
-            display: flex;
-            flex-direction: column; 
-            margin-bottom: 0.75rem;
-            padding: 0.75rem 0;
-            border-bottom: 1px dashed #cccccc;
-        }
-        
-        @media (min-width: 640px) {
-            .rule-item {
-                flex-direction: row; 
-                align-items: center;
-                justify-content: space-between;
-            }
-        }
-
-        .rule-item:last-child {
-            border-bottom: none;
-        }
-        .rule-label {
-            flex-grow: 1;
-            margin-right: 1rem;
-            font-size: 0.95rem;
-            color: #000000;
-            margin-bottom: 0.75rem;
-        }
-        @media (min-width: 640px) {
-            .rule-label {
-                margin-bottom: 0;
-            }
-        }
-        .rule-points {
-            font-weight: 600;
-            color: #333333;
-            min-width: 40px;
-            text-align: left;
-            margin-right: 1rem;
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-        @media (min-width: 640px) {
-            .rule-points {
-                text-align: right;
-                font-size: 0.95rem;
-                opacity: 1;
-            }
-        }
-
-        .radio-group {
-            display: flex;
-            gap: 0.5rem;
-            justify-content: flex-end;
-        }
-        .radio-group input[type="radio"] {
-            display: none;
-        }
-        .radio-group label {
-            cursor: pointer;
-            padding: 0.4rem 1rem;
             border-radius: 0.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #000;
+        }
+
+        .audit-table {
+            width: 100%;
+            border-collapse: collapse;
             font-size: 0.85rem;
+        }
+        .audit-table th, .audit-table td {
+            border: 1px solid #000;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .audit-table th {
+            background-color: #000;
+            color: #fff;
+            text-transform: uppercase;
             font-weight: 800;
-            border: 1.5px solid #e5e7eb;
-            background: #f9fafb;
-            color: #6b7280;
-            transition: all 0.2s ease;
-            user-select: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 54px;
+            letter-spacing: 0.05em;
+        }
+        .section-header {
+            background-color: #e5e7eb;
+            font-weight: 900;
             text-transform: uppercase;
-            letter-spacing: 0.025em;
-        }
-        
-        .radio-group input[value="yes"]:checked + label {
-            background-color: #ecfdf5;
-            border-color: #10b981;
-            color: #065f46;
-            box-shadow: 0 2px 4px rgba(16, 185, 129, 0.1);
-        }
-        
-        .radio-group input[value="no"]:checked + label {
-            background-color: #fef2f2;
-            border-color: #ef4444;
-            color: #991b1b;
-            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.1);
+            letter-spacing: 0.05em;
         }
 
-        .radio-group input[value="na"]:checked + label {
-            background-color: #fffbeb;
-            border-color: #f59e0b;
-            color: #92400e;
-            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.1);
+        .radio-cell {
+            text-align: center !important;
+            width: 60px;
         }
-
-        .section-subheading {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #000000;
-            margin-top: 1.5rem;
-            padding-bottom: 0.25rem;
-            border-bottom: 1px solid #cccccc;
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.025em;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 60px;
-        }
-        
-        /* Toggle Styling */
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #f8fafc;
-            padding: 0.75rem;
-            border-radius: 0.75rem;
-            border: 1px solid #e2e8f0;
-            margin-top: 0.5rem;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #cbd5e1;
-            transition: .4s;
-            border-radius: 24px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 18px;
+        .radio-cell input[type="radio"] {
             width: 18px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: #000000;
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
-        }
-
-        .hidden-comment {
-            display: none;
-            margin-top: 0.75rem;
-            animation: fadeIn 0.2s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        input[type="checkbox"].native-cb {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            height: 1.25rem;
-            width: 1.25rem;
-            border: 1px solid #666666;
-            border-radius: 0.25rem;
+            height: 18px;
             cursor: pointer;
-            display: inline-block;
-            position: relative;
-            transition: all 0.2s ease-in-out;
-        }
-        input[type="checkbox"].native-cb:checked {
-            background-color: #000000;
-            border-color: #000000;
-        }
-        input[type="checkbox"].native-cb:checked:after {
-            content: '✔';
-            position: absolute;
-            top: -1px;
-            left: 2px;
-            font-size: 1rem;
-            color: white; line-height: 1;
+            accent-color: #000;
         }
 
         #share-card {
             position: fixed;
             left: -9999px;
             top: -9999px;
-            width: 600px;
+            width: 800px;
             background: white;
-            border-radius: 20px;
-            padding: 40px;
-            border: 4px solid black;
+            padding: 0;
             color: black;
-            text-align: left;
         }
     </style>
 </head>
 <body class="p-4 sm:p-8">
 
-    <!-- Share Graphic Template -->
-    <div id="share-card" class="flex flex-col">
-        <div class="bg-black text-white w-full p-6 rounded-xl mb-6 flex justify-between items-start">
-            <div>
-                <h2 class="text-2xl font-black tracking-tight leading-none">COFFEE QUALITY AUDIT</h2>
-                <p id="card-date" class="text-xs opacity-80 mt-2 uppercase font-bold tracking-widest"></p>
+    <!-- Share Graphic Template (Matches Reference Image) -->
+    <div id="share-card" class="flex flex-col border-[3px] border-black">
+        <div class="bg-black text-white p-6">
+            <h2 class="text-3xl font-black tracking-tighter uppercase">Maestro Coffee Check</h2>
+        </div>
+
+        <!-- Info Grid -->
+        <div class="grid grid-cols-1 border-b-2 border-black">
+            <div class="p-4">
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Maestro Name</p>
+                <p id="card-maestro" class="text-xl font-black uppercase">--</p>
             </div>
-            <div id="card-status-box" class="px-5 rounded-xl text-white font-black text-center min-w-[140px] flex flex-col justify-center items-center">
-                <div id="card-status-percent" class="text-3xl leading-none font-black">0%</div>
-                <div id="card-status-tag" class="text-[10px] uppercase tracking-[0.15em] font-black leading-none opacity-90 mt-2">N/A</div>
+        </div>
+        <div class="grid grid-cols-3 border-b-2 border-black">
+            <div class="p-4 border-r-2 border-black">
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Name</p>
+                <p id="card-barista" class="text-xl font-black uppercase">--</p>
+            </div>
+            <div class="p-4 border-r-2 border-black">
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Store</p>
+                <p id="card-store" class="text-xl font-black uppercase">--</p>
+            </div>
+            <div class="p-4">
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Drink made</p>
+                <p id="card-drink" class="text-xl font-black uppercase">--</p>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-8 mb-6">
-            <div>
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Staff Member</p>
-                <h1 id="card-barista" class="text-2xl font-black">Barista Name</h1>
-                <p id="card-store" class="text-sm text-gray-600 font-bold mt-1"></p>
-            </div>
-            <div class="text-right">
-                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Audited By</p>
-                <h2 id="card-auditor" class="text-xl font-bold">Auditor Name</h2>
-            </div>
-        </div>
-        
-        <div class="border-y-2 border-black w-full py-4 my-2 grid grid-cols-2 items-center">
-            <div>
-                <p class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">Total Performance</p>
-                <div id="card-score" class="text-5xl font-black">0 / 18</div>
-            </div>
-            <div id="card-section-breakdown" class="text-[10px] font-bold grid grid-cols-1 gap-1"></div>
-        </div>
-
-        <div class="mt-4">
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2">Key Improvement Areas</p>
-            <div id="card-improvements" class="text-xs space-y-1 font-medium italic text-gray-700"></div>
+        <!-- Table Content -->
+        <div class="p-0">
+            <table class="audit-table border-none">
+                <thead>
+                    <tr>
+                        <th class="border-l-0">Standards / Checks</th>
+                        <th class="radio-cell">Yes</th>
+                        <th class="radio-cell border-r-0">No</th>
+                    </tr>
+                </thead>
+                <tbody id="card-table-body">
+                    <!-- Populated via JS -->
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-right font-black uppercase border-l-0">Total</td>
+                        <td id="card-total-score" class="radio-cell font-black text-xl">0</td>
+                        <td class="radio-cell font-black text-xl border-r-0">18</td>
+                    </tr>
+                </tfoot>
+            </table>
         </div>
 
-        <div class="mt-10 flex justify-between items-end border-t border-gray-100 pt-4">
-            <div>
-                <p class="text-[10px] text-gray-400 font-bold uppercase">Coffee Standards & Quality Audit</p>
-                <p class="text-[8px] text-gray-400 mt-1">Audit completed by Maestro or Management Team</p>
-            </div>
-            <p class="text-[10px] text-gray-300">#MaestroAudits☕️</p>
+        <!-- Feedback -->
+        <div class="p-6 bg-gray-50 border-t-2 border-black">
+            <p class="text-xs font-bold uppercase mb-2">Overall Comments & Feedback</p>
+            <p id="card-overall-feedback" class="text-sm italic text-gray-700 whitespace-pre-wrap">No feedback provided.</p>
         </div>
     </div>
 
@@ -303,464 +140,151 @@
     <div class="max-w-4xl mx-auto main-card overflow-hidden">
         
         <header class="bg-white border-b border-gray-100 p-6 sm:p-8">
-            <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 text-black">
-                Coffee Standards & Quality Audit
-            </h1>
-            <p class="text-lg font-medium text-gray-500 mb-4">
-                Evaluate coffee preparation with Yes/No checks and add direct feedback.
-            </p>
-            
-            <div class="flex justify-between items-center mb-4">
-                <div id="save-status" class="text-sm font-semibold transition duration-500">
-                    <span class="text-green-600">Ready.</span>
+            <div class="flex justify-between items-start mb-6">
+                <div>
+                    <h1 class="text-3xl font-black tracking-tight text-black uppercase">Coffee Audit</h1>
+                    <p class="text-gray-500 font-medium">Digital Scorecard based on Quality Protocol</p>
                 </div>
-                <button id="clear-top-button" class="text-xs px-3 py-1.5 border border-gray-200 hover:bg-red-50 hover:text-red-600 rounded-md font-semibold transition duration-200">
-                    Clear All
-                </button>
+                <div id="save-status" class="text-xs font-bold text-gray-400 bg-gray-50 px-3 py-1 rounded-full">READY</div>
             </div>
 
-            <div class="mt-6 space-y-4">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Audit by:</label>
-                        <input type="text" id="audit_by" name="audit_by" class="w-full p-2.5 rounded-lg bg-gray-50 border border-gray-200 text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black outline-none transition-all" placeholder="Auditor Name">
+                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-1">Date of Visit</label>
+                        <input type="date" id="date_of_visit" name="date_of_visit" class="w-full p-2 border-b-2 border-black outline-none focus:bg-gray-50">
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Date of Visit:</label>
-                        <input type="date" id="date_of_visit" name="date_of_visit" class="w-full p-2.5 rounded-lg bg-gray-50 border border-gray-200 text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black outline-none transition-all">
-                    </div>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Barista Name & Position:</label>
-                        <input type="text" id="barista_name" name="barista_name" class="w-full p-2.5 rounded-lg bg-gray-50 border border-gray-200 text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black outline-none transition-all" placeholder="Name, Position">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Store Name & Number:</label>
-                        <input type="text" id="store_number" name="store_number" class="w-full p-2.5 rounded-lg bg-gray-50 border border-gray-200 text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black outline-none transition-all" placeholder="Store Name, #">
+                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-1">Store Name & Number</label>
+                        <input type="text" id="store_number" name="store_number" class="w-full p-2 border-b-2 border-black outline-none focus:bg-gray-50" placeholder="e.g. Camden #102">
                     </div>
                 </div>
-                <div class="grid grid-cols-1 gap-4">
+                <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-1">Drink Made:</label>
-                        <input type="text" id="drink_made" name="drink_made" class="w-full p-2.5 rounded-lg bg-gray-50 border border-gray-200 text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black outline-none transition-all" placeholder="e.g. Flat White, Latte, etc.">
+                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-1">Maestro Name</label>
+                        <input type="text" id="audit_by" name="audit_by" class="w-full p-2 border-b-2 border-black outline-none focus:bg-gray-50" placeholder="Maestro Name">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black text-gray-400 uppercase mb-1">Barista Name & Position</label>
+                        <input type="text" id="barista_name" name="barista_name" class="w-full p-2 border-b-2 border-black outline-none focus:bg-gray-50" placeholder="Name / Position">
                     </div>
                 </div>
             </div>
-            
-            <div class="mt-8 p-4 rounded-xl bg-gray-50 border border-gray-100 flex justify-between items-center text-sm font-semibold">
-                <span id="pass-mark-display" class="text-gray-600">🎯 Points Audit</span>
-                <span class="text-black flex items-center">
-                    Total Score: <span id="current-score" class="ml-2 text-2xl font-black">0</span> / <span id="current-score-max">18</span>
-                </span>
+
+            <div class="mt-6">
+                <label class="block text-[10px] font-black text-gray-400 uppercase mb-1">Drink Being Audited</label>
+                <input type="text" id="drink_made" name="drink_made" class="w-full p-2 border-b-2 border-black outline-none focus:bg-gray-50" placeholder="e.g. Flat White">
             </div>
         </header>
 
-        <main class="p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <main class="bg-white">
+            <table class="audit-table">
+                <thead>
+                    <tr>
+                        <th>Audit Criteria</th>
+                        <th class="radio-cell">Yes</th>
+                        <th class="radio-cell">No</th>
+                        <th class="radio-cell">N/A</th>
+                    </tr>
+                </thead>
+                <tbody id="main-table-body">
+                    <!-- Sections defined in JS -->
+                </tbody>
+            </table>
 
-            <!-- Section 1 -->
-            <div class="lg:col-span-1 p-6 rounded-2xl border border-gray-100 bg-white shadow-sm">
-                
-                <div class="section-subheading">FLUSH</div>
-                <div class="rule-item">
-                    <span class="rule-label">Was button 3 used for flushing at the start?</span>
-                    <span class="rule-points">1 pt</span>
-                    <div class="radio-group" data-points="1" data-group="q1">
-                        <input type="radio" id="q1_yes" name="q1" value="yes" class="score-input">
-                        <label for="q1_yes">Yes</label>
-                        <input type="radio" id="q1_no" name="q1" value="no" class="score-input">
-                        <label for="q1_no">No</label>
-                    </div>
-                </div>
-
-                <div class="section-subheading">LEVEL & WIPED</div>
-                <div class="rule-item">
-                    <span class="rule-label">Has the coffee been levelled properly?</span>
-                    <span class="rule-points">1 pt</span>
-                    <div class="radio-group" data-points="1" data-group="q2">
-                        <input type="radio" id="q2_yes" name="q2" value="yes" class="score-input">
-                        <label for="q2_yes">Yes</label>
-                        <input type="radio" id="q2_no" name="q2" value="no" class="score-input">
-                        <label for="q2_no">No</label>
-                    </div>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-label">Has the handle been wiped after levelling?</span>
-                    <span class="rule-points">1 pt</span>
-                    <div class="radio-group" data-points="1" data-group="q3">
-                        <input type="radio" id="q3_yes" name="q3" value="yes" class="score-input">
-                        <label for="q3_yes">Yes</label>
-                        <input type="radio" id="q3_no" name="q3" value="no" class="score-input">
-                        <label for="q3_no">No</label>
-                    </div>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-label">Was the coffee tamped properly?</span>
-                    <span class="rule-points">1 pt</span>
-                    <div class="radio-group" data-points="1" data-group="q4">
-                        <input type="radio" id="q4_yes" name="q4" value="yes" class="score-input">
-                        <label for="q4_yes">Yes</label>
-                        <input type="radio" id="q4_no" name="q4" value="no" class="score-input">
-                        <label for="q4_no">No</label>
-                    </div>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-label">Was the tamper working correctly?</span>
-                    <span class="rule-points">1 pt</span>
-                    <div class="radio-group" data-points="1" data-group="q5">
-                        <input type="radio" id="q5_yes" name="q5" value="yes" class="score-input">
-                        <label for="q5_yes">Yes</label>
-                        <input type="radio" id="q5_no" name="q5" value="no" class="score-input">
-                        <label for="q5_no">No</label>
-                    </div>
-                </div>
-                
-                <!-- Handle Prep Toggle -->
-                <div class="toggle-container">
-                    <span class="text-sm font-bold text-gray-800">Handle Prep Comments</span>
-                    <label class="switch">
-                        <input type="checkbox" id="toggle_handle_prep" name="toggle_handle_prep" onchange="toggleCommentArea('handle_prep_comment_area', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div id="handle_prep_comment_area" class="hidden-comment">
-                    <textarea name="handle_prep_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter handle preparation notes..."></textarea>
-                </div>
-
-                <div class="section-subheading">EXTRACT & TIMED</div>
-                <div class="rule-item">
-                    <span class="rule-label">Was extraction started within 10 seconds of placing group handle in machine?</span>
-                    <span class="rule-points">1 pt</span>
-                    <div class="radio-group" data-points="1" data-group="q6">
-                        <input type="radio" id="q6_yes" name="q6" value="yes" class="score-input">
-                        <label for="q6_yes">Yes</label>
-                        <input type="radio" id="q6_no" name="q6" value="no" class="score-input">
-                        <label for="q6_no">No</label>
-                    </div>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-label">Was the timer in use?</span>
-                    <span class="rule-points">1 pt</span>
-                    <div class="radio-group" data-points="1" data-group="q7">
-                        <input type="radio" id="q7_yes" name="q7" value="yes" class="score-input">
-                        <label for="q7_yes">Yes</label>
-                        <input type="radio" id="q7_no" name="q7" value="no" class="score-input">
-                        <label for="q7_no">No</label>
-                    </div>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-label">Correct ROP?</span>
-                    <span class="rule-points">1 pt</span>
-                    <div class="radio-group" data-points="1" data-group="q8">
-                        <input type="radio" id="q8_yes" name="q8" value="yes" class="score-input">
-                        <label for="q8_yes">Yes</label>
-                        <input type="radio" id="q8_no" name="q8" value="no" class="score-input">
-                        <label for="q8_no">No</label>
-                    </div>
-                </div>
-
-                <div class="section-subheading">PURGE & WIPE</div>
-                <div class="rule-item">
-                    <span class="rule-label">Was the steamer purged before and after steaming?</span>
-                    <span class="rule-points">1 pt</span>
-                    <div class="radio-group" data-points="1" data-group="q9">
-                        <input type="radio" id="q9_yes" name="q9" value="yes" class="score-input">
-                        <label for="q9_yes">Yes</label>
-                        <input type="radio" id="q9_no" name="q9" value="no" class="score-input">
-                        <label for="q9_no">No</label>
-                    </div>
-                </div>
-                <div class="rule-item">
-                    <span class="rule-label">Was the steam wand wiped after preparing the milk?</span>
-                    <span class="rule-points">1 pt</span>
-                    <div class="radio-group" data-points="1" data-group="q10">
-                        <input type="radio" id="q10_yes" name="q10" value="yes" class="score-input">
-                        <label for="q10_yes">Yes</label>
-                        <input type="radio" id="q10_no" name="q10" value="no" class="score-input">
-                        <label for="q10_no">No</label>
-                    </div>
-                </div>
-                
-                <!-- Coffee Prep Toggle -->
-                <div class="toggle-container">
-                    <span class="text-sm font-bold text-gray-800">Coffee Preparation Comments</span>
-                    <label class="switch">
-                        <input type="checkbox" id="toggle_coffee_prep" name="toggle_coffee_prep" onchange="toggleCommentArea('coffee_prep_comment_area', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div id="coffee_prep_comment_area" class="hidden-comment">
-                    <textarea name="coffee_prep_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter coffee preparation notes..."></textarea>
-                </div>
-
-                <div class="section-subheading">CLEAN AS YOU GO</div>
-                <div class="rule-item">
-                    <span class="rule-label">Is the Coffee Production Area Clean and Tidy?</span>
-                    <span class="rule-points">1 pt</span>
-                    <div class="radio-group" data-points="1" data-group="q11">
-                        <input type="radio" id="q11_yes" name="q11" value="yes" class="score-input">
-                        <label for="q11_yes">Yes</label>
-                        <input type="radio" id="q11_no" name="q11" value="no" class="score-input">
-                        <label for="q11_no">No</label>
-                    </div>
-                </div>
-                
-                <!-- Clean as you go Toggle -->
-                <div class="toggle-container">
-                    <span class="text-sm font-bold text-gray-800">Clean as You Go Comments</span>
-                    <label class="switch">
-                        <input type="checkbox" id="toggle_clean_go" name="toggle_clean_go" onchange="toggleCommentArea('clean_go_comment_area', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div id="clean_go_comment_area" class="hidden-comment">
-                    <textarea name="clean_go_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter cleanliness notes..."></textarea>
-                </div>
+            <div class="p-6 border-t border-gray-200">
+                <h3 class="text-sm font-black uppercase mb-3">Overall Comments & Feedback</h3>
+                <textarea id="overall_feedback" name="overall_feedback" class="w-full p-4 bg-gray-50 border border-black rounded-sm min-h-[120px] outline-none" placeholder="Enter detailed audit notes here..."></textarea>
             </div>
-
-            <!-- Section 2 -->
-            <div class="lg:col-span-1 p-6 rounded-2xl border border-gray-100 bg-white shadow-sm">
-                <div class="section-subheading">RECIPE BOOK - MILK</div>
-                <div class="space-y-2">
-                    <div class="rule-item">
-                        <span class="rule-label">Are the 4 steps of milk steaming being followed correctly?</span>
-                        <span class="rule-points">1 pt</span>
-                        <div class="radio-group" data-points="1" data-group="q12">
-                            <input type="radio" id="q12_yes" name="q12" value="yes" class="score-input">
-                            <label for="q12_yes">Yes</label>
-                            <input type="radio" id="q12_no" name="q12" value="no" class="score-input">
-                            <label for="q12_no">No</label>
-                        </div>
-                    </div>
-                    <div class="rule-item">
-                        <span class="rule-label">Was a thermometer in use?</span>
-                        <span class="rule-points">1 pt</span>
-                        <div class="radio-group" data-points="1" data-group="q13">
-                            <input type="radio" id="q13_yes" name="q13" value="yes" class="score-input">
-                            <label for="q13_yes">Yes</label>
-                            <input type="radio" id="q13_no" name="q13" value="no" class="score-input">
-                            <label for="q13_no">No</label>
-                        </div>
-                    </div>
-                    <div class="rule-item">
-                        <span class="rule-label">Clean presentable milk jugs?</span>
-                        <span class="rule-points">1 pt</span>
-                        <div class="radio-group" data-points="1" data-group="q14">
-                            <input type="radio" id="q14_yes" name="q14" value="yes" class="score-input">
-                            <label for="q14_yes">Yes</label>
-                            <input type="radio" id="q14_no" name="q14" value="no" class="score-input">
-                            <label for="q14_no">No</label>
-                        </div>
-                    </div>
-                    <div class="rule-item">
-                        <span class="rule-label">Was the milk being steamed whilst coffee was extracting?</span>
-                        <span class="rule-points">1 pt</span>
-                        <div class="radio-group" data-points="1" data-group="q15">
-                            <input type="radio" id="q15_yes" name="q15" value="yes" class="score-input">
-                            <label for="q15_yes">Yes</label>
-                            <input type="radio" id="q15_no" name="q15" value="no" class="score-input">
-                            <label for="q15_no">No</label>
-                        </div>
-                    </div>
-                    <div class="rule-item">
-                        <span class="rule-label">Was the milk poured correctly?</span>
-                        <span class="rule-points">1 pt</span>
-                        <div class="radio-group" data-points="1" data-group="q16">
-                            <input type="radio" id="q16_yes" name="q16" value="yes" class="score-input">
-                            <label for="q16_yes">Yes</label>
-                            <input type="radio" id="q16_no" name="q16" value="no" class="score-input">
-                            <label for="q16_no">No</label>
-                        </div>
-                    </div>
-                    <div class="rule-item">
-                        <span class="rule-label">Are the foam levels correct?</span>
-                        <span class="rule-points">1 pt</span>
-                        <div class="radio-group" data-points="1" data-group="q17">
-                            <input type="radio" id="q17_yes" name="q17" value="yes" class="score-input">
-                            <label for="q17_yes">Yes</label>
-                            <input type="radio" id="q17_no" name="q17" value="no" class="score-input">
-                            <label for="q17_no">No</label>
-                        </div>
-                    </div>
-                    <div class="rule-item">
-                        <span class="rule-label">Presentation up to standard?</span>
-                        <span class="rule-points">1 pt</span>
-                        <div class="radio-group" data-points="1" data-group="q18">
-                            <input type="radio" id="q18_yes" name="q18" value="yes" class="score-input">
-                            <label for="q18_yes">Yes</label>
-                            <input type="radio" id="q18_no" name="q18" value="no" class="score-input">
-                            <label for="q18_no">No</label>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Milk Toggle -->
-                <div class="toggle-container">
-                    <span class="text-sm font-bold text-gray-800">Milk Comments</span>
-                    <label class="switch">
-                        <input type="checkbox" id="toggle_milk" name="toggle_milk" onchange="toggleCommentArea('milk_comment_area', this.checked)">
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <div id="milk_comment_area" class="hidden-comment">
-                    <textarea name="milk_toggle_comments" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-black focus:border-black outline-none" placeholder="Enter milk-specific notes..."></textarea>
-                </div>
-            </div>
-
-            <div class="lg:col-span-2 p-8 rounded-2xl border border-red-100 bg-red-50/30">
-                <h2 class="text-xl font-bold mb-4 text-black flex items-center">
-                    <span class="mr-2">🎯</span> Areas to Improve
-                </h2>
-                <div id="coaching-points-list" class="space-y-4 text-sm text-gray-700">
-                    <p class="italic text-gray-400">No issues identified yet. Keep up the good work!</p>
-                </div>
-            </div>
-
         </main>
 
-        <footer class="bg-white p-8 sm:p-10 border-t border-gray-100 rounded-b-2xl">
-            <h3 class="text-xl font-bold mb-2 text-black">Overall Feedback</h3>
-            <textarea id="overall_feedback" name="overall_feedback" class="w-full p-4 bg-gray-50 border border-gray-200 rounded-xl text-black placeholder-gray-400 focus:ring-2 focus:ring-black focus:border-black min-h-[120px] outline-none transition-all" placeholder="Type your overall feedback here..."></textarea>
-            
-            <div class="mt-10 flex flex-col sm:flex-row justify-between items-center text-lg space-y-6 sm:space-y-0">
-                <div class="flex items-center space-x-6">
-                    <span class="font-bold text-gray-500 uppercase text-sm tracking-widest">Final Score</span>
-                    <span id="final-score-footer" class="text-4xl font-black text-black">0 / 18</span>
-                </div>
-                
-                <div class="flex flex-row flex-wrap gap-3 justify-center sm:justify-end w-full sm:w-auto">
-                    <button id="reset-button" class="flex-1 sm:flex-none px-5 py-3 text-sm border border-gray-200 text-gray-600 font-bold rounded-xl hover:bg-red-50 hover:text-red-600 transition duration-200">
-                        New Audit
-                    </button>
-                    <button id="copy-report-button" class="flex-1 sm:flex-none px-5 py-3 text-sm bg-gray-100 text-black font-bold rounded-xl hover:bg-gray-200 transition duration-200">
-                        Copy Report
-                    </button>
-                    <button id="download-graphic-button" class="flex-1 sm:flex-none px-6 py-3 text-sm bg-black text-white font-bold rounded-xl hover:bg-gray-800 transition duration-200 shadow-xl shadow-gray-200">
-                        Scorecard
-                    </button>
-                </div>
+        <footer class="bg-black text-white p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+            <div class="text-center sm:text-left">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Final Audit Score</p>
+                <div id="final-score-footer" class="text-4xl font-black">0 / 18</div>
             </div>
-            <p id="pass-fail-status" class="text-center mt-6 text-xl font-black uppercase tracking-widest"></p>
+            
+            <div class="flex flex-row flex-wrap gap-2 justify-center w-full sm:w-auto">
+                <button id="reset-button" class="px-5 py-3 text-xs bg-red-600 hover:bg-red-700 text-white font-black uppercase rounded-sm transition">
+                    New Audit
+                </button>
+                <button id="copy-report-button" class="px-5 py-3 text-xs bg-white text-black font-black uppercase rounded-sm transition">
+                    Copy Text
+                </button>
+                <button id="download-graphic-button" class="px-5 py-3 text-xs bg-green-500 text-white font-black uppercase rounded-sm transition">
+                    Download PNG
+                </button>
+            </div>
         </footer>
-
     </div>
 
     <script>
-        const AUDIT_STORAGE_KEY = 'coffeeAuditDataV2'; 
+        const AUDIT_STORAGE_KEY = 'coffeeAuditDataV3'; 
 
-        const coachingAdviceMap = {
-            'q1': 'Ensure the group head is flushed with button 3 before every shot to clear old grounds.',
-            'q2': 'Level the coffee grounds evenly in the portafilter before tamping.',
-            'q3': 'Wipe the ears and rim of the handle after levelling to protect the group head seal.',
-            'q4': 'Apply a firm, level tamp to the coffee to ensure even extraction.',
-            'q5': 'Report or clean the tamper if it is sticking or not functioning correctly.',
-            'q6': 'Place the handle and start extraction immediately (within 10s) to prevent the coffee from burning.',
-            'q7': 'Use the shot timer for every single extraction to maintain standard.',
-            'q8': 'Adjust grinder settings if the Rate of Pour (ROP) is outside the 20-22s window.',
-            'q9': 'Purge the wand before steaming to clear condensation and after to clear milk.',
-            'q10': 'Wipe the wand immediately with a clean cloth to prevent milk buildup.',
-            'q11': 'Clean your station as you go; a messy bar impacts quality and speed.',
-            'q12': 'Review the 4 steps: Position, Air, Vortex, Temperature.',
-            'q13': 'Use a thermometer to ensure milk reaches the perfect 60-65°C.',
-            'q14': 'Ensure jugs are rinsed and dry before reuse—no milk buildup.',
-            'q15': 'Start milk steaming as soon as the shots start to prevent coffee from losing crema.',
-            'q16': 'Pour at the correct angle and height to maintain the crema and texture.',
-            'q17': 'Check foam depth for different drinks (Latte 1cm, Capp 2-3cm).',
-            'q18': 'Ensure the drink looks presentable with no spills or messy rims.'
-        };
+        const sections = [
+            { title: "Flush", questions: ["Was button 3 used for flushing at the start?"] },
+            { title: "Level & Wiped", questions: ["Has the coffee been levelled properly?", "Has the handle been wiped after levelling?", "Was the coffee tamped properly?", "Was the tamper working correctly?"] },
+            { title: "Extract & Timed", questions: ["Was extraction started within 10 seconds of placing group handle in machine?", "Was the timer in use?", "Correct ROP?"] },
+            { title: "Purge & Wipe", questions: ["Was the steamer purged before and after steaming?", "Was the steam wand wiped after preparing the milk?"] },
+            { title: "Clean As You Go", questions: ["Is the Coffee Production Area Clean and Tidy?"] },
+            { title: "Recipe Book - Milk", questions: ["Are the 4 steps of milk steaming being followed correctly?", "Was a thermometer in use?", "Clean presentable milk jugs?", "Was the milk being steamed whilst coffee was extracting?", "Was the milk poured correctly?", "Are the foam levels correct?", "Presentation up to standard?"] }
+        ];
 
-        const groupToSectionTitle = {
-            'q1': 'Flush', 'q2': 'Level & Wiped', 'q3': 'Level & Wiped', 'q4': 'Level & Wiped', 'q5': 'Level & Wiped',
-            'q6': 'Extract & Timed', 'q7': 'Extract & Timed', 'q8': 'Extract & Timed',
-            'q9': 'Purge & Wipe', 'q10': 'Purge & Wipe', 'q11': 'Clean As You Go',
-            'q12': 'RECIPE BOOK - MILK', 'q13': 'RECIPE BOOK - MILK', 'q14': 'RECIPE BOOK - MILK', 
-            'q15': 'RECIPE BOOK - MILK', 'q16': 'RECIPE BOOK - MILK', 'q17': 'RECIPE BOOK - MILK', 'q18': 'RECIPE BOOK - MILK'
-        };
+        let qGlobalCount = 1;
 
-        function toggleCommentArea(id, isVisible) {
-            const area = document.getElementById(id);
-            area.style.display = isVisible ? 'block' : 'none';
-            saveLocalData();
+        function buildMainTable() {
+            const tbody = document.getElementById('main-table-body');
+            tbody.innerHTML = '';
+            qGlobalCount = 1;
+
+            sections.forEach(section => {
+                const headRow = document.createElement('tr');
+                headRow.className = "section-header";
+                headRow.innerHTML = `<td colspan="4">${section.title}</td>`;
+                tbody.appendChild(headRow);
+
+                section.questions.forEach(q => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${q}</td>
+                        <td class="radio-cell"><input type="radio" name="q${qGlobalCount}" value="yes"></td>
+                        <td class="radio-cell"><input type="radio" name="q${qGlobalCount}" value="no"></td>
+                        <td class="radio-cell"><input type="radio" name="q${qGlobalCount}" value="na"></td>
+                    `;
+                    tbody.appendChild(row);
+                    qGlobalCount++;
+                });
+            });
         }
 
         function calculateScore() {
-            let totalScore = 0;
-            const maxPointsAvailable = 18; 
-            const coachingPointsBySection = {};
-
-            const radioGroups = document.querySelectorAll('.radio-group');
-            radioGroups.forEach(group => {
-                const groupName = group.dataset.group;
-                const points = parseInt(group.dataset.points);
-
-                const checkedInput = document.querySelector(`input[name="${groupName}"]:checked`);
-                if (checkedInput) {
-                    if (checkedInput.value === 'yes') {
-                        totalScore += points;
-                    } else if (checkedInput.value === 'no') {
-                        const sectionTitle = groupToSectionTitle[groupName];
-                        if (!coachingPointsBySection[sectionTitle]) coachingPointsBySection[sectionTitle] = [];
-                        coachingPointsBySection[sectionTitle].push(coachingAdviceMap[groupName]);
-                    }
+            let totalPoints = 0;
+            const totalQuestions = qGlobalCount - 1;
+            
+            for(let i=1; i<=totalQuestions; i++) {
+                const checked = document.querySelector(`input[name="q${i}"]:checked`);
+                if (checked && checked.value === 'yes') {
+                    totalPoints++;
                 }
-            });
-
-            const percentage = Math.round((totalScore / maxPointsAvailable) * 100);
-
-            document.getElementById('current-score').textContent = totalScore;
-            document.getElementById('current-score-max').textContent = maxPointsAvailable;
-            document.getElementById('final-score-footer').textContent = `${totalScore} / ${maxPointsAvailable} (${percentage}%)`;
-
-            // Update Share Card
-            document.getElementById('card-status-percent').textContent = `${percentage}%`;
-            document.getElementById('card-score').textContent = `${totalScore} / ${maxPointsAvailable}`;
-
-            const statusBox = document.getElementById('pass-fail-status');
-            const cardStatusTag = document.getElementById('card-status-tag');
-
-            if (percentage === 100) {
-                statusBox.textContent = `Status: Perfect Audit (${percentage}%)`;
-                statusBox.className = "text-center mt-6 text-xl font-black uppercase tracking-widest text-green-600";
-                cardStatusTag.textContent = "PERFECT";
-            } else if (percentage >= 83 && percentage <= 94) {
-                statusBox.textContent = `Status: Minor Improvements (${percentage}%)`;
-                statusBox.className = "text-center mt-6 text-xl font-black uppercase tracking-widest text-orange-500";
-                cardStatusTag.textContent = "IMPROVE";
-            } else if (percentage < 83) {
-                statusBox.textContent = `Status: Action Required (${percentage}%)`;
-                statusBox.className = "text-center mt-6 text-xl font-black uppercase tracking-widest text-red-600";
-                cardStatusTag.textContent = "ACTION REQ";
-            } else {
-                statusBox.textContent = `Status: Passed (${percentage}%)`;
-                statusBox.className = "text-center mt-6 text-xl font-black uppercase tracking-widest text-green-600";
-                cardStatusTag.textContent = "PASSED";
             }
 
-            const coachingList = document.getElementById('coaching-points-list');
-            const sections = Object.keys(coachingPointsBySection);
-            if (sections.length > 0) {
-                coachingList.innerHTML = sections.map(s => `
-                    <div>
-                        <h3 class="font-black text-black border-b border-gray-100 pb-1 mb-2 uppercase text-[10px] tracking-widest">${s}</h3>
-                        <div class="space-y-2 pl-1">${coachingPointsBySection[s].map(f => `<div class="flex items-start"><span class="mr-3 text-red-500 font-black">•</span><span class="text-gray-700 italic">"${f}"</span></div>`).join('')}</div>
-                    </div>
-                `).join('');
-            } else {
-                coachingList.innerHTML = `<p class="italic text-gray-400">No issues identified yet. Keep up the good work!</p>`;
-            }
+            document.getElementById('final-score-footer').textContent = `${totalPoints} / 18`;
+            document.getElementById('save-status').textContent = 'SAVED';
+            document.getElementById('save-status').className = 'text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full';
+
+            return { totalPoints };
         }
 
         function saveLocalData() {
             const data = {};
             document.querySelectorAll('[name]').forEach(input => {
-                if (input.type === 'radio' || input.type === 'checkbox') {
-                    if (input.checked) data[input.name] = input.type === 'checkbox' ? true : input.value;
+                if (input.type === 'radio') {
+                    if (input.checked) data[input.name] = input.value;
                 } else {
                     data[input.name] = input.value;
                 }
             });
             localStorage.setItem(AUDIT_STORAGE_KEY, JSON.stringify(data));
-            document.getElementById('save-status').innerHTML = '<span class="text-green-600">Saved.</span>';
         }
 
         function loadLocalData() {
@@ -773,13 +297,6 @@
                         if (input.type === 'radio') {
                             const radio = document.querySelector(`input[name="${key}"][value="${data[key]}"]`);
                             if (radio) radio.checked = true;
-                        } else if (input.type === 'checkbox') {
-                            input.checked = data[key];
-                            // Trigger logic for toggles
-                            if (key === 'toggle_handle_prep') toggleCommentArea('handle_prep_comment_area', data[key]);
-                            if (key === 'toggle_coffee_prep') toggleCommentArea('coffee_prep_comment_area', data[key]);
-                            if (key === 'toggle_clean_go') toggleCommentArea('clean_go_comment_area', data[key]);
-                            if (key === 'toggle_milk') toggleCommentArea('milk_comment_area', data[key]);
                         } else {
                             input.value = data[key];
                         }
@@ -789,148 +306,99 @@
             }
         }
 
-        function resetFormFull() {
-            document.querySelectorAll('input[type="text"], input[type="date"], textarea').forEach(i => i.value = '');
-            document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(i => i.checked = false);
-            // Manually hide comment areas
-            ['handle_prep_comment_area', 'coffee_prep_comment_area', 'clean_go_comment_area', 'milk_comment_area'].forEach(id => {
-               document.getElementById(id).style.display = 'none';
+        function generateCardTable() {
+            const body = document.getElementById('card-table-body');
+            body.innerHTML = '';
+            let qCounter = 1;
+            
+            sections.forEach(section => {
+                const headRow = document.createElement('tr');
+                headRow.className = "section-header";
+                headRow.innerHTML = `<td colspan="3" class="border-x-0 font-black">${section.title}</td>`;
+                body.appendChild(headRow);
+
+                section.questions.forEach(q => {
+                    const checked = document.querySelector(`input[name="q${qCounter}"]:checked`)?.value || '';
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td class="border-l-0">${q}</td>
+                        <td class="radio-cell font-black text-lg">${checked === 'yes' ? 'X' : ''}</td>
+                        <td class="radio-cell border-r-0 font-black text-lg">${checked === 'no' ? 'X' : ''}</td>
+                    `;
+                    body.appendChild(tr);
+                    qCounter++;
+                });
             });
-            localStorage.removeItem(AUDIT_STORAGE_KEY);
-            calculateScore();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function resetFormPartial() {
-            // Clear Drink Made and Feedback
-            document.getElementById('drink_made').value = '';
-            document.getElementById('overall_feedback').value = '';
+        document.getElementById('download-graphic-button').addEventListener('click', () => {
+            const stats = calculateScore();
             
-            // Clear toggle inputs
-            document.getElementsByName('handle_prep_comments')[0].value = '';
-            document.getElementsByName('coffee_prep_comments')[0].value = '';
-            document.getElementsByName('clean_go_comments')[0].value = '';
-            document.getElementsByName('milk_toggle_comments')[0].value = '';
-            
-            // Reset toggles to off
-            document.getElementById('toggle_handle_prep').checked = false;
-            document.getElementById('toggle_coffee_prep').checked = false;
-            document.getElementById('toggle_clean_go').checked = false;
-            document.getElementById('toggle_milk').checked = false;
-            
-            ['handle_prep_comment_area', 'coffee_prep_comment_area', 'clean_go_comment_area', 'milk_comment_area'].forEach(id => {
-               document.getElementById(id).style.display = 'none';
+            document.getElementById('card-maestro').textContent = document.getElementById('audit_by').value || "--";
+            document.getElementById('card-barista').textContent = document.getElementById('barista_name').value || "--";
+            document.getElementById('card-store').textContent = document.getElementById('store_number').value || "--";
+            document.getElementById('card-drink').textContent = document.getElementById('drink_made').value || "--";
+            document.getElementById('card-overall-feedback').textContent = document.getElementById('overall_feedback').value || "No feedback provided.";
+            document.getElementById('card-total-score').textContent = stats.totalPoints;
+
+            generateCardTable();
+
+            html2canvas(document.getElementById('share-card'), { scale: 2, useCORS: true }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Audit_${document.getElementById('barista_name').value || 'Report'}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
             });
-            
-            // Clear all radio questions
-            document.querySelectorAll('input[type="radio"]').forEach(i => i.checked = false);
-            
-            // Recalculate and Save
-            calculateScore();
-            saveLocalData();
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        });
 
-        function copyReport() {
-            const score = document.getElementById('current-score').textContent;
-            const max = 18;
-            const perc = Math.round((score/max)*100);
-            
-            let status = "Passed";
-            if (perc === 100) status = "Perfect Audit";
-            else if (perc >= 83 && perc <= 94) status = "Minor Improvements";
-            else if (perc < 83) status = "Action Required";
-            
-            const barista = document.getElementById('barista_name').value || "N/A";
-            const auditor = document.getElementById('audit_by').value || "N/A";
-            const store = document.getElementById('store_number').value || "N/A";
-            const drinkMade = document.getElementById('drink_made').value || "N/A";
-            
-            let improvements = [];
-            const radioGroups = document.querySelectorAll('.radio-group');
-            radioGroups.forEach(group => {
-                const groupName = group.dataset.group;
-                const checkedInput = document.querySelector(`input[name="${groupName}"]:checked`);
-                if (checkedInput && checkedInput.value === 'no') {
-                    improvements.push(coachingAdviceMap[groupName]);
-                }
-            });
-
-            const overallFeedback = document.getElementById('overall_feedback').value || "N/A";
-
-            let report = `COFFEE AUDIT \n`;
-            report += `Barista: ${barista}\n`;
-            report += `Audit by: ${auditor}\n`;
-            report += `Store: ${store}\n`;
-            report += `Drink Made: ${drinkMade}\n`;
-            report += `Score: ${score}/${max} (${perc}%)\n`;
-            report += `Status: ${status}\n\n`;
-            report += `Areas for improvement:\n${improvements.length > 0 ? improvements.map(i => `- ${i}`).join('\n') : "None identified."}\n\n`;
-            
-            // Only include specific comment sections if toggles are selected
-            let comments = "";
-            const toggleHandle = document.getElementById('toggle_handle_prep').checked;
-            const toggleCoffee = document.getElementById('toggle_coffee_prep').checked;
-            const toggleClean = document.getElementById('toggle_clean_go').checked;
-            const toggleMilk = document.getElementById('toggle_milk').checked;
-
-            if (toggleHandle || toggleCoffee || toggleClean || toggleMilk) {
-                comments += `Comments:\n`;
-                if (toggleHandle) comments += `Handle Prep - ${document.getElementsByName('handle_prep_comments')[0].value || "None"}\n`;
-                if (toggleCoffee) comments += `Coffee Prep - ${document.getElementsByName('coffee_prep_comments')[0].value || "None"}\n`;
-                if (toggleClean) comments += `C.A.Y.G - ${document.getElementsByName('clean_go_comments')[0].value || "None"}\n`;
-                if (toggleMilk) comments += `Milk - ${document.getElementsByName('milk_toggle_comments')[0].value || "None"}\n`;
-                comments += `\n`;
-            }
-
-            report += comments;
-            report += `Overall Feedback: ${overallFeedback}`;
+        document.getElementById('copy-report-button').addEventListener('click', () => {
+            const stats = calculateScore();
+            let text = `COFFEE AUDIT REPORT\n`;
+            text += `Maestro: ${document.getElementById('audit_by').value}\n`;
+            text += `Barista: ${document.getElementById('barista_name').value}\n`;
+            text += `Score: ${stats.totalPoints} / 18\n`;
+            text += `Drink: ${document.getElementById('drink_made').value}\n\n`;
+            text += `Feedback: ${document.getElementById('overall_feedback').value}`;
 
             const el = document.createElement('textarea');
-            el.value = report;
+            el.value = text;
             document.body.appendChild(el);
             el.select();
             document.execCommand('copy');
             document.body.removeChild(el);
             
             const btn = document.getElementById('copy-report-button');
-            const oldText = btn.textContent;
-            btn.textContent = 'Copied!';
-            setTimeout(() => btn.textContent = oldText, 2000);
-        }
+            btn.textContent = 'COPIED!';
+            setTimeout(() => btn.textContent = 'COPY TEXT', 2000);
+        });
 
+        document.getElementById('reset-button').addEventListener('click', () => {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = "fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50";
+            modalOverlay.innerHTML = `
+                <div class="bg-white p-6 rounded-lg max-w-sm w-full border-2 border-black">
+                    <h3 class="font-black text-xl mb-4">RESET AUDIT?</h3>
+                    <p class="text-sm text-gray-600 mb-6">This will clear all current scores and inputs. This action cannot be undone.</p>
+                    <div class="flex gap-2">
+                        <button id="confirm-reset" class="flex-1 bg-red-600 text-white font-black py-2 rounded-sm uppercase text-xs">Clear Everything</button>
+                        <button id="cancel-reset" class="flex-1 bg-gray-200 text-black font-black py-2 rounded-sm uppercase text-xs">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modalOverlay);
+            
+            document.getElementById('confirm-reset').onclick = () => {
+                localStorage.removeItem(AUDIT_STORAGE_KEY);
+                location.reload();
+            };
+            document.getElementById('cancel-reset').onclick = () => modalOverlay.remove();
+        });
+
+        buildMainTable();
         document.querySelectorAll('input, textarea').forEach(input => {
             input.addEventListener('change', () => {
                 calculateScore();
                 saveLocalData();
-            });
-            input.addEventListener('input', () => {
-                saveLocalData();
-            });
-        });
-
-        // "New Audit" Button (Partial Reset + Scroll Top)
-        document.getElementById('reset-button').addEventListener('click', resetFormPartial);
-        
-        // "Clear All" Button (Full Reset + Scroll Top)
-        document.getElementById('clear-top-button').addEventListener('click', resetFormFull);
-        
-        document.getElementById('copy-report-button').addEventListener('click', copyReport);
-        document.getElementById('download-graphic-button').addEventListener('click', () => {
-            document.getElementById('card-barista').textContent = document.getElementById('barista_name').value || "Staff Member";
-            document.getElementById('card-auditor').textContent = document.getElementById('audit_by').value || "Auditor";
-            document.getElementById('card-date').textContent = "DATE: " + (document.getElementById('date_of_visit').value || "TBD");
-            document.getElementById('card-store').textContent = document.getElementById('store_number').value || "";
-            
-            calculateScore();
-
-            html2canvas(document.getElementById('share-card'), { scale: 2, backgroundColor: "#ffffff" }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'audit_scorecard.png';
-                link.href = canvas.toDataURL();
-                link.click();
             });
         });
 
