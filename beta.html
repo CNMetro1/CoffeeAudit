@@ -80,39 +80,29 @@
 
     <!-- Share Graphic Template (Matches Reference Image) -->
     <div id="share-card" class="flex flex-col border-[3px] border-black">
-        <div class="bg-black text-white p-6 flex justify-between items-center">
-            <h2 class="text-3xl font-black tracking-tighter uppercase">Coffee Audit</h2>
-            <div class="text-right">
-                <div id="card-status-percent" class="text-4xl font-black">0%</div>
-                <div id="card-status-tag" class="text-xs font-bold tracking-widest opacity-80 uppercase">Incomplete</div>
-            </div>
+        <div class="bg-black text-white p-6">
+            <h2 class="text-3xl font-black tracking-tighter uppercase">Maestro Coffee Check</h2>
         </div>
 
         <!-- Info Grid -->
-        <div class="grid grid-cols-2 border-b-2 border-black">
-            <div class="p-4 border-r-2 border-black">
+        <div class="grid grid-cols-1 border-b-2 border-black">
+            <div class="p-4">
                 <p class="text-[10px] font-bold text-gray-400 uppercase">Maestro Name</p>
                 <p id="card-maestro" class="text-xl font-black uppercase">--</p>
             </div>
-            <div class="p-4">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Barista Name</p>
+        </div>
+        <div class="grid grid-cols-3 border-b-2 border-black">
+            <div class="p-4 border-r-2 border-black">
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Name</p>
                 <p id="card-barista" class="text-xl font-black uppercase">--</p>
             </div>
-        </div>
-        <div class="grid grid-cols-2 border-b-2 border-black">
             <div class="p-4 border-r-2 border-black">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Store Name & Number</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Store</p>
                 <p id="card-store" class="text-xl font-black uppercase">--</p>
             </div>
             <div class="p-4">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Drink Audited</p>
+                <p class="text-[10px] font-bold text-gray-400 uppercase">Drink made</p>
                 <p id="card-drink" class="text-xl font-black uppercase">--</p>
-            </div>
-        </div>
-        <div class="grid grid-cols-1 border-b-2 border-black">
-            <div class="p-4">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Date of Visit</p>
-                <p id="card-date" class="text-xl font-black uppercase">--</p>
             </div>
         </div>
 
@@ -123,13 +113,19 @@
                     <tr>
                         <th class="border-l-0">Standards / Checks</th>
                         <th class="radio-cell">Yes</th>
-                        <th class="radio-cell">No</th>
-                        <th class="radio-cell border-r-0">N/A</th>
+                        <th class="radio-cell border-r-0">No</th>
                     </tr>
                 </thead>
                 <tbody id="card-table-body">
                     <!-- Populated via JS -->
                 </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-right font-black uppercase border-l-0">Total</td>
+                        <td id="card-total-score" class="radio-cell font-black text-xl">0</td>
+                        <td id="card-total-possible" class="radio-cell font-black text-xl border-r-0">18</td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
 
@@ -149,7 +145,10 @@
                     <h1 class="text-3xl font-black tracking-tight text-black uppercase">Coffee Audit</h1>
                     <p class="text-gray-500 font-medium">Digital Scorecard based on Quality Protocol</p>
                 </div>
-                <div id="save-status" class="text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">READY</div>
+                <div class="text-right flex flex-col items-end gap-2">
+                    <div id="save-status" class="text-xs font-bold text-gray-400 bg-gray-50 px-3 py-1 rounded-full">READY</div>
+                    <button id="hard-reset-button" class="text-[9px] font-black text-red-500 uppercase hover:underline">Reset All Data</button>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -192,7 +191,7 @@
                     </tr>
                 </thead>
                 <tbody id="main-table-body">
-                    <!-- Sections defined in JS for easier sync with graphic -->
+                    <!-- Sections defined in JS -->
                 </tbody>
             </table>
 
@@ -205,7 +204,7 @@
         <footer class="bg-black text-white p-6 sm:p-10 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
             <div class="text-center sm:text-left">
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Final Audit Score</p>
-                <div id="final-score-footer" class="text-4xl font-black">0 / 18 (0%)</div>
+                <div id="final-score-footer" class="text-4xl font-black">0 / 18</div>
             </div>
             
             <div class="flex flex-row flex-wrap gap-2 justify-center w-full sm:w-auto">
@@ -228,10 +227,10 @@
         const sections = [
             { title: "Flush", questions: ["Was button 3 used for flushing at the start?"] },
             { title: "Level & Wiped", questions: ["Has the coffee been levelled properly?", "Has the handle been wiped after levelling?", "Was the coffee tamped properly?", "Was the tamper working correctly?"] },
-            { title: "Extract & Timed", questions: ["Was extraction started within 10s of placing handle?", "Was the timer in use?", "Correct ROP? (20-22s)"] },
-            { title: "Purge & Wipe", questions: ["Steamer purged before and after?", "Steam wand wiped immediately after milk?"] },
-            { title: "Clean As You Go", questions: ["Is the coffee production area clean and tidy?"] },
-            { title: "Recipe Book - Milk", questions: ["4 steps of milk steaming followed correctly?", "Was a thermometer in use?", "Clean presentable milk jugs?", "Milk steamed whilst coffee extracting?", "Was the milk poured correctly?", "Are the foam levels correct?", "Presentation up to standard?"] }
+            { title: "Extract & Timed", questions: ["Was extraction started within 10 seconds of placing group handle in machine?", "Was the timer in use?", "Correct ROP?"] },
+            { title: "Purge & Wipe", questions: ["Was the steamer purged before and after steaming?", "Was the steam wand wiped after preparing the milk?"] },
+            { title: "Clean As You Go", questions: ["Is the Coffee Production Area Clean and Tidy?"] },
+            { title: "Recipe Book - Milk", questions: ["Are the 4 steps of milk steaming being followed correctly?", "Was a thermometer in use?", "Clean presentable milk jugs?", "Was the milk being steamed whilst coffee was extracting?", "Was the milk poured correctly?", "Are the foam levels correct?", "Presentation up to standard?"] }
         ];
 
         let qGlobalCount = 1;
@@ -263,30 +262,29 @@
 
         function calculateScore() {
             let totalPoints = 0;
-            let applicablePoints = 0;
+            let applicableCount = 0;
             const totalQuestions = qGlobalCount - 1;
             
             for(let i=1; i<=totalQuestions; i++) {
                 const checked = document.querySelector(`input[name="q${i}"]:checked`);
                 if (checked) {
-                    if (checked.value !== 'na') {
-                        applicablePoints++;
-                        if (checked.value === 'yes') totalPoints++;
+                    if (checked.value === 'yes') {
+                        totalPoints++;
+                        applicableCount++;
+                    } else if (checked.value === 'no') {
+                        applicableCount++;
                     }
                 } else {
-                    applicablePoints++;
+                    // Unselected counts as a potential point (denominator stays high)
+                    applicableCount++;
                 }
             }
 
-            const percentage = applicablePoints > 0 ? Math.round((totalPoints / applicablePoints) * 100) : 0;
-            document.getElementById('final-score-footer').textContent = `${totalPoints} / ${applicablePoints} (${percentage}%)`;
-            
-            const saveStatus = document.getElementById('save-status');
-            if (percentage === 100) { saveStatus.textContent = 'PERFECT'; saveStatus.className = 'text-xs font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full'; }
-            else if (percentage < 83) { saveStatus.textContent = 'ACTION REQUIRED'; saveStatus.className = 'text-xs font-bold text-red-600 bg-red-50 px-3 py-1 rounded-full'; }
-            else { saveStatus.textContent = 'SAVED'; saveStatus.className = 'text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full'; }
+            document.getElementById('final-score-footer').textContent = `${totalPoints} / ${applicableCount}`;
+            document.getElementById('save-status').textContent = 'SAVED';
+            document.getElementById('save-status').className = 'text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full';
 
-            return { totalPoints, applicablePoints, percentage };
+            return { totalPoints, applicableCount };
         }
 
         function saveLocalData() {
@@ -328,7 +326,7 @@
             sections.forEach(section => {
                 const headRow = document.createElement('tr');
                 headRow.className = "section-header";
-                headRow.innerHTML = `<td colspan="4" class="border-x-0">${section.title}</td>`;
+                headRow.innerHTML = `<td colspan="3" class="border-x-0 font-black">${section.title}</td>`;
                 body.appendChild(headRow);
 
                 section.questions.forEach(q => {
@@ -336,9 +334,8 @@
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td class="border-l-0">${q}</td>
-                        <td class="radio-cell font-bold text-lg">${checked === 'yes' ? '✓' : ''}</td>
-                        <td class="radio-cell font-bold text-lg">${checked === 'no' ? '✕' : ''}</td>
-                        <td class="radio-cell border-r-0">${checked === 'na' ? '-' : ''}</td>
+                        <td class="radio-cell font-black text-lg">${checked === 'yes' ? 'X' : ''}</td>
+                        <td class="radio-cell border-r-0 font-black text-lg">${checked === 'no' ? 'X' : ''}</td>
                     `;
                     body.appendChild(tr);
                     qCounter++;
@@ -353,20 +350,15 @@
             document.getElementById('card-barista').textContent = document.getElementById('barista_name').value || "--";
             document.getElementById('card-store').textContent = document.getElementById('store_number').value || "--";
             document.getElementById('card-drink').textContent = document.getElementById('drink_made').value || "--";
-            document.getElementById('card-date').textContent = document.getElementById('date_of_visit').value || "--";
             document.getElementById('card-overall-feedback').textContent = document.getElementById('overall_feedback').value || "No feedback provided.";
-            document.getElementById('card-status-percent').textContent = stats.percentage + '%';
-            
-            const tag = document.getElementById('card-status-tag');
-            if(stats.percentage === 100) tag.textContent = "PERFECT";
-            else if(stats.percentage >= 83) tag.textContent = "PASSED";
-            else tag.textContent = "ACTION REQUIRED";
+            document.getElementById('card-total-score').textContent = stats.totalPoints;
+            document.getElementById('card-total-possible').textContent = stats.applicableCount;
 
             generateCardTable();
 
             html2canvas(document.getElementById('share-card'), { scale: 2, useCORS: true }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `CoffeeAudit_${document.getElementById('barista_name').value || 'Report'}.png`;
+                link.download = `Audit_${document.getElementById('barista_name').value || 'Report'}.png`;
                 link.href = canvas.toDataURL();
                 link.click();
             });
@@ -374,12 +366,20 @@
 
         document.getElementById('copy-report-button').addEventListener('click', () => {
             const stats = calculateScore();
-            let text = `COFFEE AUDIT REPORT\n`;
-            text += `Maestro: ${document.getElementById('audit_by').value}\n`;
-            text += `Barista: ${document.getElementById('barista_name').value}\n`;
-            text += `Score: ${stats.totalPoints}/${stats.applicablePoints} (${stats.percentage}%)\n`;
-            text += `Drink: ${document.getElementById('drink_made').value}\n\n`;
-            text += `Feedback: ${document.getElementById('overall_feedback').value}`;
+            const dateStr = document.getElementById('date_of_visit').value || "Not Set";
+            const storeStr = document.getElementById('store_number').value || "Not Set";
+            const maestroStr = document.getElementById('audit_by').value || "Not Set";
+            const baristaStr = document.getElementById('barista_name').value || "Not Set";
+            const drinkStr = document.getElementById('drink_made').value || "Not Set";
+            const feedbackStr = document.getElementById('overall_feedback').value || "No feedback provided.";
+
+            let text = `COFFEE AUDIT\n`;
+            text += `Date: ${dateStr.padEnd(10)} Store: ${storeStr}\n`;
+            text += `Maestro: ${maestroStr}\n`;
+            text += `Barista: ${baristaStr}\n`;
+            text += `Drink: ${drinkStr}\n`;
+            text += `Score: ${stats.totalPoints} / ${stats.applicableCount}\n\n`;
+            text += `Comments & Feedback:\n${feedbackStr}`;
 
             const el = document.createElement('textarea');
             el.value = text;
@@ -393,26 +393,57 @@
             setTimeout(() => btn.textContent = 'COPY TEXT', 2000);
         });
 
-        document.getElementById('reset-button').addEventListener('click', () => {
+        function showConfirmation(title, message, onConfirm) {
             const modalOverlay = document.createElement('div');
-            modalOverlay.className = "fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50";
+            modalOverlay.className = "fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[9999]";
             modalOverlay.innerHTML = `
                 <div class="bg-white p-6 rounded-lg max-w-sm w-full border-2 border-black">
-                    <h3 class="font-black text-xl mb-4">RESET AUDIT?</h3>
-                    <p class="text-sm text-gray-600 mb-6">This will clear all current scores and inputs. This action cannot be undone.</p>
+                    <h3 class="font-black text-xl mb-4 uppercase tracking-tighter">${title}</h3>
+                    <p class="text-sm text-gray-600 mb-6">${message}</p>
                     <div class="flex gap-2">
-                        <button id="confirm-reset" class="flex-1 bg-red-600 text-white font-black py-2 rounded-sm uppercase text-xs">Clear Everything</button>
-                        <button id="cancel-reset" class="flex-1 bg-gray-200 text-black font-black py-2 rounded-sm uppercase text-xs">Cancel</button>
+                        <button id="modal-confirm" class="flex-1 bg-red-600 text-white font-black py-2 rounded-sm uppercase text-xs">Yes, Clear</button>
+                        <button id="modal-cancel" class="flex-1 bg-gray-200 text-black font-black py-2 rounded-sm uppercase text-xs">Cancel</button>
                     </div>
                 </div>
             `;
             document.body.appendChild(modalOverlay);
             
-            document.getElementById('confirm-reset').onclick = () => {
-                localStorage.removeItem(AUDIT_STORAGE_KEY);
-                location.reload();
+            document.getElementById('modal-confirm').onclick = () => {
+                onConfirm();
+                modalOverlay.remove();
             };
-            document.getElementById('cancel-reset').onclick = () => modalOverlay.remove();
+            document.getElementById('modal-cancel').onclick = () => modalOverlay.remove();
+        }
+
+        // Hard Reset: Clears everything
+        document.getElementById('hard-reset-button').addEventListener('click', () => {
+            showConfirmation(
+                "Reset All Data?", 
+                "This will clear the entire audit including Store and Maestro information.", 
+                () => {
+                    localStorage.removeItem(AUDIT_STORAGE_KEY);
+                    location.reload();
+                }
+            );
+        });
+
+        // New Audit: Preserves Store, Date, and Maestro
+        document.getElementById('reset-button').addEventListener('click', () => {
+            showConfirmation(
+                "New Audit?", 
+                "This will clear current scores, barista name, and feedback. Store and Maestro details will be kept.", 
+                () => {
+                    // Clear radios
+                    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+                    // Clear specific text inputs
+                    document.getElementById('barista_name').value = '';
+                    document.getElementById('drink_made').value = '';
+                    document.getElementById('overall_feedback').value = '';
+                    
+                    calculateScore();
+                    saveLocalData();
+                }
+            );
         });
 
         buildMainTable();
