@@ -353,12 +353,13 @@
 
         document.getElementById('copy-report-button').addEventListener('click', () => {
             const stats = calculateScore();
-            let text = `COFFEE AUDIT REPORT\n`;
-            text += `Maestro: ${document.getElementById('audit_by').value}\n`;
-            text += `Barista: ${document.getElementById('barista_name').value}\n`;
-            text += `Score: ${stats.totalPoints} / 18\n`;
-            text += `Drink: ${document.getElementById('drink_made').value}\n\n`;
-            text += `Feedback: ${document.getElementById('overall_feedback').value}`;
+            let text = `COFFEE AUDIT\n`;
+            text += `Maestro: ${document.getElementById('audit_by').value || ''}\n`;
+            text += `Barista: ${document.getElementById('barista_name').value || ''}\n`;
+            text += `Store: ${document.getElementById('store_number').value || ''}\n`;
+            text += `Drink: ${document.getElementById('drink_made').value || ''}\n`;
+            text += `Score: ${stats.totalPoints}/18\n\n`;
+            text += `Comments & Feedback: ${document.getElementById('overall_feedback').value || ''}`;
 
             const el = document.createElement('textarea');
             el.value = text;
