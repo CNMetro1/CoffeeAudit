@@ -74,6 +74,15 @@
             padding: 0;
             color: black;
         }
+
+        /* Improved Readability for Download PNG Labels */
+        .card-label {
+            font-size: 10px;
+            font-weight: 900;
+            color: #000; /* Swapped from grey to black */
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8">
@@ -87,21 +96,21 @@
         <!-- Info Grid -->
         <div class="grid grid-cols-1 border-b-2 border-black">
             <div class="p-4">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Maestro Name</p>
+                <p class="card-label">Maestro Name</p>
                 <p id="card-maestro" class="text-xl font-black uppercase">--</p>
             </div>
         </div>
         <div class="grid grid-cols-3 border-b-2 border-black">
             <div class="p-4 border-r-2 border-black">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Name</p>
+                <p class="card-label">Name</p>
                 <p id="card-barista" class="text-xl font-black uppercase">--</p>
             </div>
             <div class="p-4 border-r-2 border-black">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Store</p>
+                <p class="card-label">Store</p>
                 <p id="card-store" class="text-xl font-black uppercase">--</p>
             </div>
             <div class="p-4">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Drink made</p>
+                <p class="card-label">Drink made</p>
                 <p id="card-drink" class="text-xl font-black uppercase">--</p>
             </div>
         </div>
@@ -131,8 +140,8 @@
 
         <!-- Feedback -->
         <div class="p-6 bg-gray-50 border-t-2 border-black">
-            <p class="text-xs font-bold uppercase mb-2">Overall Comments & Feedback</p>
-            <p id="card-overall-feedback" class="text-sm italic text-gray-700 whitespace-pre-wrap">No feedback provided.</p>
+            <p class="text-xs font-black uppercase mb-2">Overall Comments & Feedback</p>
+            <p id="card-overall-feedback" class="text-sm italic text-black font-medium whitespace-pre-wrap">No feedback provided.</p>
         </div>
     </div>
 
@@ -332,9 +341,9 @@
                     const checked = document.querySelector(`input[name="q${qCounter}"]:checked`)?.value || '';
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td class="border-l-0">${q}</td>
-                        <td class="radio-cell font-black text-lg">${checked === 'yes' ? 'X' : ''}</td>
-                        <td class="radio-cell border-r-0 font-black text-lg">${checked === 'no' ? 'X' : ''}</td>
+                        <td class="border-l-0 text-black font-medium">${q}</td>
+                        <td class="radio-cell font-black text-lg text-black">${checked === 'yes' ? 'X' : ''}</td>
+                        <td class="radio-cell border-r-0 font-black text-lg text-black">${checked === 'no' ? 'X' : ''}</td>
                     `;
                     body.appendChild(tr);
                     qCounter++;
@@ -365,22 +374,23 @@
 
         document.getElementById('copy-report-button').addEventListener('click', () => {
             const stats = calculateScore();
-            const dateVal = document.getElementById('date_of_visit').value;
-            let formattedDate = "[DD/MM/YY]";
-            
-            if (dateVal) {
-                const [year, month, day] = dateVal.split('-');
-                formattedDate = `${day}/${month}/${year.slice(-2)}`;
+            const rawDate = document.getElementById('date_of_visit').value;
+            let dateStr = "";
+            if (rawDate) {
+                const d = new Date(rawDate);
+                dateStr = d.toLocaleDateString('en-GB'); 
+            } else {
+                dateStr = "[DD/MM/YY]";
             }
-
+            
             const storeStr = document.getElementById('store_number').value || "";
             const maestroStr = document.getElementById('audit_by').value || "";
             const baristaStr = document.getElementById('barista_name').value || "";
             const drinkStr = document.getElementById('drink_made').value || "";
-            const feedbackStr = document.getElementById('overall_feedback').value || "[Comment text here]";
+            const feedbackStr = document.getElementById('overall_feedback').value || "";
 
             let text = `COFFEE AUDIT\n`;
-            text += `Date: ${formattedDate}\n`;
+            text += `Date: ${dateStr}\n`;
             text += `Store: ${storeStr}\n`;
             text += `Maestro: ${maestroStr}\n`;
             text += `Barista: ${baristaStr}\n`;
@@ -446,7 +456,6 @@
                     calculateScore();
                     saveLocalData();
                     
-                    // Scroll back to the top of the form
                     document.getElementById('audit-top').scrollIntoView({ behavior: 'smooth' });
                 }
             );
