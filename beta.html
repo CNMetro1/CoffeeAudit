@@ -137,7 +137,7 @@
     </div>
 
     <!-- Main UI -->
-    <div class="max-w-4xl mx-auto main-card overflow-hidden">
+    <div id="audit-top" class="max-w-4xl mx-auto main-card overflow-hidden">
         
         <header class="bg-white border-b border-gray-100 p-6 sm:p-8">
             <div class="flex justify-between items-start mb-6">
@@ -275,7 +275,6 @@
                         applicableCount++;
                     }
                 } else {
-                    // Unselected counts as a potential point (denominator stays high)
                     applicableCount++;
                 }
             }
@@ -366,15 +365,23 @@
 
         document.getElementById('copy-report-button').addEventListener('click', () => {
             const stats = calculateScore();
-            const dateStr = document.getElementById('date_of_visit').value || "Not Set";
-            const storeStr = document.getElementById('store_number').value || "Not Set";
-            const maestroStr = document.getElementById('audit_by').value || "Not Set";
-            const baristaStr = document.getElementById('barista_name').value || "Not Set";
-            const drinkStr = document.getElementById('drink_made').value || "Not Set";
-            const feedbackStr = document.getElementById('overall_feedback').value || "No feedback provided.";
+            const dateVal = document.getElementById('date_of_visit').value;
+            let formattedDate = "[DD/MM/YY]";
+            
+            if (dateVal) {
+                const [year, month, day] = dateVal.split('-');
+                formattedDate = `${day}/${month}/${year.slice(-2)}`;
+            }
+
+            const storeStr = document.getElementById('store_number').value || "";
+            const maestroStr = document.getElementById('audit_by').value || "";
+            const baristaStr = document.getElementById('barista_name').value || "";
+            const drinkStr = document.getElementById('drink_made').value || "";
+            const feedbackStr = document.getElementById('overall_feedback').value || "[Comment text here]";
 
             let text = `COFFEE AUDIT\n`;
-            text += `Date: ${dateStr.padEnd(10)} Store: ${storeStr}\n`;
+            text += `Date: ${formattedDate}\n`;
+            text += `Store: ${storeStr}\n`;
             text += `Maestro: ${maestroStr}\n`;
             text += `Barista: ${baristaStr}\n`;
             text += `Drink: ${drinkStr}\n`;
@@ -415,7 +422,6 @@
             document.getElementById('modal-cancel').onclick = () => modalOverlay.remove();
         }
 
-        // Hard Reset: Clears everything
         document.getElementById('hard-reset-button').addEventListener('click', () => {
             showConfirmation(
                 "Reset All Data?", 
@@ -427,21 +433,21 @@
             );
         });
 
-        // New Audit: Preserves Store, Date, and Maestro
         document.getElementById('reset-button').addEventListener('click', () => {
             showConfirmation(
                 "New Audit?", 
                 "This will clear current scores, barista name, and feedback. Store and Maestro details will be kept.", 
                 () => {
-                    // Clear radios
                     document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-                    // Clear specific text inputs
                     document.getElementById('barista_name').value = '';
                     document.getElementById('drink_made').value = '';
                     document.getElementById('overall_feedback').value = '';
                     
                     calculateScore();
                     saveLocalData();
+                    
+                    // Scroll back to the top of the form
+                    document.getElementById('audit-top').scrollIntoView({ behavior: 'smooth' });
                 }
             );
         });
@@ -458,4 +464,3 @@
     </script>
 </body>
 </html>
-
