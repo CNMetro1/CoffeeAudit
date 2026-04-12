@@ -91,6 +91,20 @@
             height: 1.2em;
             vertical-align: bottom;
         }
+
+        .photo-preview {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1/1;
+            overflow: hidden;
+            border: 2px solid black;
+            border-radius: 4px;
+        }
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8">
@@ -211,6 +225,21 @@
                     <!-- Sections defined in JS -->
                 </tbody>
             </table>
+
+            <!-- Photo Capture Section -->
+            <div class="px-6 py-8 border-t border-gray-100 bg-gray-50/50 flex flex-col items-center">
+                <input type="file" id="cameraInput" accept="image/*" capture="camera" class="hidden">
+                <button id="takePhotoButton" class="flex items-center gap-3 px-8 py-4 bg-black text-white rounded-full font-black uppercase text-sm hover:scale-105 active:scale-95 transition-all shadow-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+                    Take Audit Photo
+                </button>
+                <p class="text-[9px] font-bold text-gray-400 uppercase mt-3 tracking-widest">TAP PREVIEW TO SAVE TO DEVICE GALLERY</p>
+
+                <!-- New Photo Gallery -->
+                <div id="photo-gallery" class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 w-full">
+                    <!-- Images will appear here -->
+                </div>
+            </div>
 
             <div class="p-6 border-t border-gray-200">
                 <h3 class="text-sm font-black uppercase mb-3">Overall Comments & Feedback</h3>
@@ -361,10 +390,60 @@
             });
         }
 
+        // Photo Capture Logic
+        document.getElementById('takePhotoButton').addEventListener('click', () => {
+            document.getElementById('cameraInput').click();
+        });
+
+        document.getElementById('cameraInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const gallery = document.getElementById('photo-gallery');
+                const photoId = 'photo_' + Date.now();
+                
+                const container = document.createElement('div');
+                container.className = 'flex flex-col gap-2';
+                container.id = photoId;
+                
+                container.innerHTML = `
+                    <div class="photo-preview">
+                        <img src="${event.target.result}" alt="Audit Photo">
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <button onclick="downloadPhoto('${event.target.result}', '${photoId}')" class="w-full bg-blue-600 text-white text-[10px] font-black uppercase py-2 rounded-sm">
+                            Save to Gallery
+                        </button>
+                        <button onclick="removePhoto('${photoId}')" class="w-full bg-gray-200 text-black text-[10px] font-black uppercase py-2 rounded-sm">
+                            Remove
+                        </button>
+                    </div>
+                `;
+                
+                gallery.appendChild(container);
+                // Reset input to allow taking same photo again if needed
+                e.target.value = '';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function downloadPhoto(dataUrl, id) {
+            const link = document.createElement('a');
+            const baristaVal = document.getElementById('barista_name').value.trim() || "Maestro";
+            link.download = `Audit_Photo_${baristaVal}_${id}.jpg`;
+            link.href = dataUrl;
+            link.click();
+        }
+
+        function removePhoto(id) {
+            document.getElementById(id).remove();
+        }
+
         document.getElementById('download-graphic-button').addEventListener('click', () => {
             const stats = calculateScore();
             
-            // Text values or blank lines
             const maestroVal = document.getElementById('audit_by').value.trim();
             const baristaVal = document.getElementById('barista_name').value.trim();
             const storeVal = document.getElementById('store_number').value.trim();
@@ -376,14 +455,12 @@
             document.getElementById('card-store').innerHTML = storeVal || '<span class="blank-line"></span>';
             document.getElementById('card-drink').innerHTML = drinkVal || '<span class="blank-line"></span>';
             
-            // Feedback - empty space for print
             if (!feedbackVal) {
                 document.getElementById('card-overall-feedback').innerHTML = '<div class="h-20 border-b border-black w-full"></div>';
             } else {
                 document.getElementById('card-overall-feedback').textContent = feedbackVal;
             }
 
-            // Scores - leave blank if no responses
             if (!stats.hasAnyResponse) {
                 document.getElementById('card-total-score').textContent = "";
                 document.getElementById('card-total-possible').textContent = "";
@@ -394,7 +471,6 @@
 
             generateCardTable();
 
-            // Tiny delay to ensure DOM updates before capture
             setTimeout(() => {
                 html2canvas(document.getElementById('share-card'), { scale: 2, useCORS: true }).then(canvas => {
                     const link = document.createElement('a');
@@ -486,6 +562,7 @@
                     document.getElementById('barista_name').value = '';
                     document.getElementById('drink_made').value = '';
                     document.getElementById('overall_feedback').value = '';
+                    document.getElementById('photo-gallery').innerHTML = '';
                     
                     calculateScore();
                     saveLocalData();
