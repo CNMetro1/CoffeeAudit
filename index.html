@@ -74,6 +74,15 @@
             padding: 0;
             color: black;
         }
+
+        /* Improved Readability for Download PNG Labels */
+        .card-label {
+            font-size: 10px;
+            font-weight: 900;
+            color: #000; /* Swapped from grey to black */
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-8">
@@ -87,21 +96,21 @@
         <!-- Info Grid -->
         <div class="grid grid-cols-1 border-b-2 border-black">
             <div class="p-4">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Maestro Name</p>
+                <p class="card-label">Maestro Name</p>
                 <p id="card-maestro" class="text-xl font-black uppercase">--</p>
             </div>
         </div>
         <div class="grid grid-cols-3 border-b-2 border-black">
             <div class="p-4 border-r-2 border-black">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Name</p>
+                <p class="card-label">Name</p>
                 <p id="card-barista" class="text-xl font-black uppercase">--</p>
             </div>
             <div class="p-4 border-r-2 border-black">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Store</p>
+                <p class="card-label">Store</p>
                 <p id="card-store" class="text-xl font-black uppercase">--</p>
             </div>
             <div class="p-4">
-                <p class="text-[10px] font-bold text-gray-400 uppercase">Drink made</p>
+                <p class="card-label">Drink made</p>
                 <p id="card-drink" class="text-xl font-black uppercase">--</p>
             </div>
         </div>
@@ -123,7 +132,7 @@
                     <tr>
                         <td class="text-right font-black uppercase border-l-0">Total</td>
                         <td id="card-total-score" class="radio-cell font-black text-xl">0</td>
-                        <td class="radio-cell font-black text-xl border-r-0">18</td>
+                        <td id="card-total-possible" class="radio-cell font-black text-xl border-r-0">18</td>
                     </tr>
                 </tfoot>
             </table>
@@ -131,13 +140,13 @@
 
         <!-- Feedback -->
         <div class="p-6 bg-gray-50 border-t-2 border-black">
-            <p class="text-xs font-bold uppercase mb-2">Overall Comments & Feedback</p>
-            <p id="card-overall-feedback" class="text-sm italic text-gray-700 whitespace-pre-wrap">No feedback provided.</p>
+            <p class="text-xs font-black uppercase mb-2">Overall Comments & Feedback</p>
+            <p id="card-overall-feedback" class="text-sm italic text-black font-medium whitespace-pre-wrap">No feedback provided.</p>
         </div>
     </div>
 
     <!-- Main UI -->
-    <div class="max-w-4xl mx-auto main-card overflow-hidden">
+    <div id="audit-top" class="max-w-4xl mx-auto main-card overflow-hidden">
         
         <header class="bg-white border-b border-gray-100 p-6 sm:p-8">
             <div class="flex justify-between items-start mb-6">
@@ -145,7 +154,10 @@
                     <h1 class="text-3xl font-black tracking-tight text-black uppercase">Coffee Audit</h1>
                     <p class="text-gray-500 font-medium">Digital Scorecard based on Quality Protocol</p>
                 </div>
-                <div id="save-status" class="text-xs font-bold text-gray-400 bg-gray-50 px-3 py-1 rounded-full">READY</div>
+                <div class="text-right flex flex-col items-end gap-2">
+                    <div id="save-status" class="text-xs font-bold text-gray-400 bg-gray-50 px-3 py-1 rounded-full">READY</div>
+                    <button id="hard-reset-button" class="text-[9px] font-black text-red-500 uppercase hover:underline">Reset All Data</button>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -259,20 +271,28 @@
 
         function calculateScore() {
             let totalPoints = 0;
+            let applicableCount = 0;
             const totalQuestions = qGlobalCount - 1;
             
             for(let i=1; i<=totalQuestions; i++) {
                 const checked = document.querySelector(`input[name="q${i}"]:checked`);
-                if (checked && checked.value === 'yes') {
-                    totalPoints++;
+                if (checked) {
+                    if (checked.value === 'yes') {
+                        totalPoints++;
+                        applicableCount++;
+                    } else if (checked.value === 'no') {
+                        applicableCount++;
+                    }
+                } else {
+                    applicableCount++;
                 }
             }
 
-            document.getElementById('final-score-footer').textContent = `${totalPoints} / 18`;
+            document.getElementById('final-score-footer').textContent = `${totalPoints} / ${applicableCount}`;
             document.getElementById('save-status').textContent = 'SAVED';
             document.getElementById('save-status').className = 'text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full';
 
-            return { totalPoints };
+            return { totalPoints, applicableCount };
         }
 
         function saveLocalData() {
@@ -321,9 +341,9 @@
                     const checked = document.querySelector(`input[name="q${qCounter}"]:checked`)?.value || '';
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td class="border-l-0">${q}</td>
-                        <td class="radio-cell font-black text-lg">${checked === 'yes' ? 'X' : ''}</td>
-                        <td class="radio-cell border-r-0 font-black text-lg">${checked === 'no' ? 'X' : ''}</td>
+                        <td class="border-l-0 text-black font-medium">${q}</td>
+                        <td class="radio-cell font-black text-lg text-black">${checked === 'yes' ? 'X' : ''}</td>
+                        <td class="radio-cell border-r-0 font-black text-lg text-black">${checked === 'no' ? 'X' : ''}</td>
                     `;
                     body.appendChild(tr);
                     qCounter++;
@@ -340,6 +360,7 @@
             document.getElementById('card-drink').textContent = document.getElementById('drink_made').value || "--";
             document.getElementById('card-overall-feedback').textContent = document.getElementById('overall_feedback').value || "No feedback provided.";
             document.getElementById('card-total-score').textContent = stats.totalPoints;
+            document.getElementById('card-total-possible').textContent = stats.applicableCount;
 
             generateCardTable();
 
@@ -353,13 +374,29 @@
 
         document.getElementById('copy-report-button').addEventListener('click', () => {
             const stats = calculateScore();
+            const rawDate = document.getElementById('date_of_visit').value;
+            let dateStr = "";
+            if (rawDate) {
+                const d = new Date(rawDate);
+                dateStr = d.toLocaleDateString('en-GB'); 
+            } else {
+                dateStr = "[DD/MM/YY]";
+            }
+            
+            const storeStr = document.getElementById('store_number').value || "";
+            const maestroStr = document.getElementById('audit_by').value || "";
+            const baristaStr = document.getElementById('barista_name').value || "";
+            const drinkStr = document.getElementById('drink_made').value || "";
+            const feedbackStr = document.getElementById('overall_feedback').value || "";
+
             let text = `COFFEE AUDIT\n`;
-            text += `Maestro: ${document.getElementById('audit_by').value || ''}\n`;
-            text += `Barista: ${document.getElementById('barista_name').value || ''}\n`;
-            text += `Store: ${document.getElementById('store_number').value || ''}\n`;
-            text += `Drink: ${document.getElementById('drink_made').value || ''}\n`;
-            text += `Score: ${stats.totalPoints}/18\n\n`;
-            text += `Comments & Feedback: ${document.getElementById('overall_feedback').value || ''}`;
+            text += `Date: ${dateStr}\n`;
+            text += `Store: ${storeStr}\n`;
+            text += `Maestro: ${maestroStr}\n`;
+            text += `Barista: ${baristaStr}\n`;
+            text += `Drink: ${drinkStr}\n`;
+            text += `Score: ${stats.totalPoints} / ${stats.applicableCount}\n\n`;
+            text += `Comments & Feedback:\n${feedbackStr}`;
 
             const el = document.createElement('textarea');
             el.value = text;
@@ -373,26 +410,55 @@
             setTimeout(() => btn.textContent = 'COPY TEXT', 2000);
         });
 
-        document.getElementById('reset-button').addEventListener('click', () => {
+        function showConfirmation(title, message, onConfirm) {
             const modalOverlay = document.createElement('div');
-            modalOverlay.className = "fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50";
+            modalOverlay.className = "fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[9999]";
             modalOverlay.innerHTML = `
                 <div class="bg-white p-6 rounded-lg max-w-sm w-full border-2 border-black">
-                    <h3 class="font-black text-xl mb-4">RESET AUDIT?</h3>
-                    <p class="text-sm text-gray-600 mb-6">This will clear all current scores and inputs. This action cannot be undone.</p>
+                    <h3 class="font-black text-xl mb-4 uppercase tracking-tighter">${title}</h3>
+                    <p class="text-sm text-gray-600 mb-6">${message}</p>
                     <div class="flex gap-2">
-                        <button id="confirm-reset" class="flex-1 bg-red-600 text-white font-black py-2 rounded-sm uppercase text-xs">Clear Everything</button>
-                        <button id="cancel-reset" class="flex-1 bg-gray-200 text-black font-black py-2 rounded-sm uppercase text-xs">Cancel</button>
+                        <button id="modal-confirm" class="flex-1 bg-red-600 text-white font-black py-2 rounded-sm uppercase text-xs">Yes, Clear</button>
+                        <button id="modal-cancel" class="flex-1 bg-gray-200 text-black font-black py-2 rounded-sm uppercase text-xs">Cancel</button>
                     </div>
                 </div>
             `;
             document.body.appendChild(modalOverlay);
             
-            document.getElementById('confirm-reset').onclick = () => {
-                localStorage.removeItem(AUDIT_STORAGE_KEY);
-                location.reload();
+            document.getElementById('modal-confirm').onclick = () => {
+                onConfirm();
+                modalOverlay.remove();
             };
-            document.getElementById('cancel-reset').onclick = () => modalOverlay.remove();
+            document.getElementById('modal-cancel').onclick = () => modalOverlay.remove();
+        }
+
+        document.getElementById('hard-reset-button').addEventListener('click', () => {
+            showConfirmation(
+                "Reset All Data?", 
+                "This will clear the entire audit including Store and Maestro information.", 
+                () => {
+                    localStorage.removeItem(AUDIT_STORAGE_KEY);
+                    location.reload();
+                }
+            );
+        });
+
+        document.getElementById('reset-button').addEventListener('click', () => {
+            showConfirmation(
+                "New Audit?", 
+                "This will clear current scores, barista name, and feedback. Store and Maestro details will be kept.", 
+                () => {
+                    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+                    document.getElementById('barista_name').value = '';
+                    document.getElementById('drink_made').value = '';
+                    document.getElementById('overall_feedback').value = '';
+                    
+                    calculateScore();
+                    saveLocalData();
+                    
+                    document.getElementById('audit-top').scrollIntoView({ behavior: 'smooth' });
+                }
+            );
         });
 
         buildMainTable();
