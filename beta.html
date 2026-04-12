@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,19 +76,27 @@
             color: black;
         }
 
-        /* Improved Readability for Download PNG Labels */
+        /* High-Contrast Labels for PNG */
         .card-label {
             font-size: 10px;
             font-weight: 900;
-            color: #000; /* Swapped from grey to black */
+            color: #000;
             text-transform: uppercase;
             margin-bottom: 2px;
+        }
+
+        .blank-line {
+            display: inline-block;
+            min-width: 120px;
+            border-bottom: 1px solid #000;
+            height: 1.2em;
+            vertical-align: bottom;
         }
     </style>
 </head>
 <body class="p-4 sm:p-8">
 
-    <!-- Share Graphic Template (Matches Reference Image) -->
+    <!-- Share Graphic Template (Optimized for PNG/Print) -->
     <div id="share-card" class="flex flex-col border-[3px] border-black">
         <div class="bg-black text-white p-6">
             <h2 class="text-3xl font-black tracking-tighter uppercase">Maestro Coffee Check</h2>
@@ -97,21 +106,21 @@
         <div class="grid grid-cols-1 border-b-2 border-black">
             <div class="p-4">
                 <p class="card-label">Maestro Name</p>
-                <p id="card-maestro" class="text-xl font-black uppercase">--</p>
+                <p id="card-maestro" class="text-xl font-black uppercase"></p>
             </div>
         </div>
         <div class="grid grid-cols-3 border-b-2 border-black">
             <div class="p-4 border-r-2 border-black">
                 <p class="card-label">Name</p>
-                <p id="card-barista" class="text-xl font-black uppercase">--</p>
+                <p id="card-barista" class="text-xl font-black uppercase"></p>
             </div>
             <div class="p-4 border-r-2 border-black">
                 <p class="card-label">Store</p>
-                <p id="card-store" class="text-xl font-black uppercase">--</p>
+                <p id="card-store" class="text-xl font-black uppercase"></p>
             </div>
             <div class="p-4">
                 <p class="card-label">Drink made</p>
-                <p id="card-drink" class="text-xl font-black uppercase">--</p>
+                <p id="card-drink" class="text-xl font-black uppercase"></p>
             </div>
         </div>
 
@@ -130,9 +139,9 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td class="text-right font-black uppercase border-l-0">Total</td>
-                        <td id="card-total-score" class="radio-cell font-black text-xl">0</td>
-                        <td id="card-total-possible" class="radio-cell font-black text-xl border-r-0">18</td>
+                        <td class="text-right font-black uppercase border-l-0">Total Score</td>
+                        <td id="card-total-score" class="radio-cell font-black text-xl"></td>
+                        <td id="card-total-possible" class="radio-cell font-black text-xl border-r-0"></td>
                     </tr>
                 </tfoot>
             </table>
@@ -141,7 +150,7 @@
         <!-- Feedback -->
         <div class="p-6 bg-gray-50 border-t-2 border-black">
             <p class="text-xs font-black uppercase mb-2">Overall Comments & Feedback</p>
-            <p id="card-overall-feedback" class="text-sm italic text-black font-medium whitespace-pre-wrap">No feedback provided.</p>
+            <p id="card-overall-feedback" class="text-sm italic text-black font-medium whitespace-pre-wrap min-h-[60px]"></p>
         </div>
     </div>
 
@@ -273,10 +282,12 @@
             let totalPoints = 0;
             let applicableCount = 0;
             const totalQuestions = qGlobalCount - 1;
+            let hasAnyResponse = false;
             
             for(let i=1; i<=totalQuestions; i++) {
                 const checked = document.querySelector(`input[name="q${i}"]:checked`);
                 if (checked) {
+                    hasAnyResponse = true;
                     if (checked.value === 'yes') {
                         totalPoints++;
                         applicableCount++;
@@ -292,7 +303,7 @@
             document.getElementById('save-status').textContent = 'SAVED';
             document.getElementById('save-status').className = 'text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full';
 
-            return { totalPoints, applicableCount };
+            return { totalPoints, applicableCount, hasAnyResponse };
         }
 
         function saveLocalData() {
@@ -354,22 +365,46 @@
         document.getElementById('download-graphic-button').addEventListener('click', () => {
             const stats = calculateScore();
             
-            document.getElementById('card-maestro').textContent = document.getElementById('audit_by').value || "--";
-            document.getElementById('card-barista').textContent = document.getElementById('barista_name').value || "--";
-            document.getElementById('card-store').textContent = document.getElementById('store_number').value || "--";
-            document.getElementById('card-drink').textContent = document.getElementById('drink_made').value || "--";
-            document.getElementById('card-overall-feedback').textContent = document.getElementById('overall_feedback').value || "No feedback provided.";
-            document.getElementById('card-total-score').textContent = stats.totalPoints;
-            document.getElementById('card-total-possible').textContent = stats.applicableCount;
+            // Text values or blank lines
+            const maestroVal = document.getElementById('audit_by').value.trim();
+            const baristaVal = document.getElementById('barista_name').value.trim();
+            const storeVal = document.getElementById('store_number').value.trim();
+            const drinkVal = document.getElementById('drink_made').value.trim();
+            const feedbackVal = document.getElementById('overall_feedback').value.trim();
+
+            document.getElementById('card-maestro').innerHTML = maestroVal || '<span class="blank-line"></span>';
+            document.getElementById('card-barista').innerHTML = baristaVal || '<span class="blank-line"></span>';
+            document.getElementById('card-store').innerHTML = storeVal || '<span class="blank-line"></span>';
+            document.getElementById('card-drink').innerHTML = drinkVal || '<span class="blank-line"></span>';
+            
+            // Feedback - empty space for print
+            if (!feedbackVal) {
+                document.getElementById('card-overall-feedback').innerHTML = '<div class="h-20 border-b border-black w-full"></div>';
+            } else {
+                document.getElementById('card-overall-feedback').textContent = feedbackVal;
+            }
+
+            // Scores - leave blank if no responses
+            if (!stats.hasAnyResponse) {
+                document.getElementById('card-total-score').textContent = "";
+                document.getElementById('card-total-possible').textContent = "";
+            } else {
+                document.getElementById('card-total-score').textContent = stats.totalPoints;
+                document.getElementById('card-total-possible').textContent = stats.applicableCount;
+            }
 
             generateCardTable();
 
-            html2canvas(document.getElementById('share-card'), { scale: 2, useCORS: true }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `Audit_${document.getElementById('barista_name').value || 'Report'}.png`;
-                link.href = canvas.toDataURL();
-                link.click();
-            });
+            // Tiny delay to ensure DOM updates before capture
+            setTimeout(() => {
+                html2canvas(document.getElementById('share-card'), { scale: 2, useCORS: true }).then(canvas => {
+                    const link = document.createElement('a');
+                    const fileName = baristaVal || "Blank_Audit_Form";
+                    link.download = `Audit_${fileName}.png`;
+                    link.href = canvas.toDataURL();
+                    link.click();
+                });
+            }, 50);
         });
 
         document.getElementById('copy-report-button').addEventListener('click', () => {
