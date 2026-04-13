@@ -92,27 +92,25 @@
             vertical-align: bottom;
         }
 
-        .photo-preview-box {
+        .photo-preview {
             position: relative;
             width: 100%;
             aspect-ratio: 1/1;
             overflow: hidden;
             border: 2px solid black;
             border-radius: 4px;
-            background: #eee;
         }
-        .photo-preview-box img {
+        .photo-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        /* Full Screen Overlay */
-        #img-modal {
+        #image-modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.9);
             z-index: 10000;
             padding: 20px;
             flex-direction: column;
@@ -123,17 +121,18 @@
 </head>
 <body class="p-4 sm:p-8">
 
-    <!-- Full Image Preview Modal -->
-    <div id="img-modal" onclick="this.style.display='none'">
-        <img id="modal-img" class="max-w-full max-h-[85vh] object-contain border-2 border-white shadow-2xl">
-        <p class="text-white font-black uppercase text-sm mt-4">Tap anywhere to close</p>
+    <!-- Image Modal for Large Preview -->
+    <div id="image-modal" onclick="this.style.display='none'">
+        <img id="modal-img" class="max-w-full max-h-[80vh] border-4 border-white object-contain shadow-2xl" src="" alt="Large Preview">
+        <p class="text-white font-black uppercase mt-4 tracking-widest text-sm">Tap anywhere to close</p>
     </div>
 
-    <!-- Share Graphic Template -->
+    <!-- Share Graphic Template (Optimized for PNG/Print) -->
     <div id="share-card" class="flex flex-col border-[3px] border-black">
         <div class="bg-black text-white p-6">
             <h2 class="text-3xl font-black tracking-tighter uppercase">Maestro Coffee Check</h2>
         </div>
+
         <div class="grid grid-cols-1 border-b-2 border-black">
             <div class="p-4">
                 <p class="card-label">Maestro Name</p>
@@ -154,6 +153,7 @@
                 <p id="card-drink" class="text-xl font-black uppercase"></p>
             </div>
         </div>
+
         <div class="p-0">
             <table class="audit-table border-none">
                 <thead>
@@ -173,6 +173,7 @@
                 </tfoot>
             </table>
         </div>
+
         <div class="p-6 bg-gray-50 border-t-2 border-black">
             <p class="text-xs font-black uppercase mb-2">Overall Comments & Feedback</p>
             <p id="card-overall-feedback" class="text-sm italic text-black font-medium whitespace-pre-wrap min-h-[60px]"></p>
@@ -181,6 +182,7 @@
 
     <!-- Main UI -->
     <div id="audit-top" class="max-w-4xl mx-auto main-card overflow-hidden">
+        
         <header class="bg-white border-b border-gray-100 p-6 sm:p-8">
             <div class="flex justify-between items-start mb-6">
                 <div>
@@ -242,7 +244,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
                     Take Audit Photo
                 </button>
-                <p class="text-[9px] font-bold text-gray-400 uppercase mt-3 tracking-widest">TAP PREVIEW TO ENLARGE • DOWNLOAD SAVES ALL IMAGES</p>
+                <p class="text-[9px] font-bold text-gray-400 uppercase mt-3 tracking-widest text-center">Photos will save to your gallery automatically when you download the PNG report</p>
 
                 <div id="photo-gallery" class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 w-full"></div>
             </div>
@@ -258,17 +260,24 @@
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Final Audit Score</p>
                 <div id="final-score-footer" class="text-4xl font-black">0 / 18</div>
             </div>
+            
             <div class="flex flex-row flex-wrap gap-2 justify-center w-full sm:w-auto">
-                <button id="reset-button" class="px-5 py-3 text-xs bg-red-600 hover:bg-red-700 text-white font-black uppercase rounded-sm transition">New Audit</button>
-                <button id="copy-report-button" class="px-5 py-3 text-xs bg-white text-black font-black uppercase rounded-sm transition">Copy Text</button>
-                <button id="download-graphic-button" class="px-5 py-3 text-xs bg-green-500 text-white font-black uppercase rounded-sm transition">Download PNG</button>
+                <button id="reset-button" class="px-5 py-3 text-xs bg-red-600 hover:bg-red-700 text-white font-black uppercase rounded-sm transition">
+                    New Audit
+                </button>
+                <button id="copy-report-button" class="px-5 py-3 text-xs bg-white text-black font-black uppercase rounded-sm transition">
+                    Copy Text
+                </button>
+                <button id="download-graphic-button" class="px-5 py-3 text-xs bg-green-500 text-white font-black uppercase rounded-sm transition">
+                    Download PNG
+                </button>
             </div>
         </footer>
     </div>
 
     <script>
         const AUDIT_STORAGE_KEY = 'coffeeAuditDataV3'; 
-        let capturedPhotos = []; // Store actual dataURLs
+        let capturedPhotos = [];
 
         const sections = [
             { title: "Flush", questions: ["Was button 3 used for flushing at the start?"] },
@@ -313,7 +322,7 @@
                 const checked = document.querySelector(`input[name="q${i}"]:checked`);
                 if (checked) {
                     hasAnyResponse = true;
-                    if (checked.value === 'yes') { totalPoints++; applicableCount++; }
+                    if (checked.value === 'yes') { totalPoints++; applicableCount++; } 
                     else if (checked.value === 'no') { applicableCount++; }
                 } else { applicableCount++; }
             }
@@ -326,8 +335,9 @@
         function saveLocalData() {
             const data = {};
             document.querySelectorAll('[name]').forEach(input => {
-                if (input.type === 'radio') { if (input.checked) data[input.name] = input.value; }
-                else { data[input.name] = input.value; }
+                if (input.type === 'radio') {
+                    if (input.checked) data[input.name] = input.value;
+                } else { data[input.name] = input.value; }
             });
             localStorage.setItem(AUDIT_STORAGE_KEY, JSON.stringify(data));
         }
@@ -372,22 +382,23 @@
             });
         }
 
-        // Photo Logic
-        document.getElementById('takePhotoButton').onclick = () => document.getElementById('cameraInput').click();
+        document.getElementById('takePhotoButton').addEventListener('click', () => {
+            document.getElementById('cameraInput').click();
+        });
 
-        document.getElementById('cameraInput').onchange = (e) => {
+        document.getElementById('cameraInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = (event) => {
+            reader.onload = function(event) {
                 const dataUrl = event.target.result;
-                const photoId = Date.now();
-                capturedPhotos.push({ id: photoId, url: dataUrl });
+                const photoId = 'photo_' + Date.now();
+                capturedPhotos.push({ id: photoId, data: dataUrl });
                 renderGallery();
+                e.target.value = '';
             };
             reader.readAsDataURL(file);
-            e.target.value = '';
-        };
+        });
 
         function renderGallery() {
             const gallery = document.getElementById('photo-gallery');
@@ -396,18 +407,23 @@
                 const container = document.createElement('div');
                 container.className = 'flex flex-col gap-2';
                 container.innerHTML = `
-                    <div class="photo-preview-box cursor-pointer" onclick="openPreview('${photo.url}')">
-                        <img src="${photo.url}">
+                    <div class="photo-preview">
+                        <img src="${photo.data}" alt="Audit Photo">
                     </div>
-                    <button onclick="removePhoto(${photo.id})" class="w-full bg-gray-200 text-black text-[10px] font-black uppercase py-2 rounded-sm">Remove</button>
+                    <div class="flex flex-col gap-1">
+                        <button onclick="openPreview('${photo.data}')" class="w-full bg-black text-white text-[10px] font-black uppercase py-2 rounded-sm">Preview</button>
+                        <button onclick="removePhoto('${photo.id}')" class="w-full bg-gray-200 text-black text-[10px] font-black uppercase py-2 rounded-sm">Remove</button>
+                    </div>
                 `;
                 gallery.appendChild(container);
             });
         }
 
-        function openPreview(url) {
-            document.getElementById('modal-img').src = url;
-            document.getElementById('img-modal').style.display = 'flex';
+        function openPreview(dataUrl) {
+            const modal = document.getElementById('image-modal');
+            const img = document.getElementById('modal-img');
+            img.src = dataUrl;
+            modal.style.display = 'flex';
         }
 
         function removePhoto(id) {
@@ -415,91 +431,91 @@
             renderGallery();
         }
 
-        function downloadAllData() {
-            const baristaVal = document.getElementById('barista_name').value.trim() || "Audit";
-            
-            // 1. Download Graphic
+        function downloadData(dataUrl, fileName) {
+            const link = document.createElement('a');
+            link.download = fileName;
+            link.href = dataUrl;
+            link.click();
+        }
+
+        document.getElementById('download-graphic-button').addEventListener('click', () => {
             const stats = calculateScore();
+            const baristaVal = document.getElementById('barista_name').value.trim() || "Blank_Audit";
+            
+            // Set up values for share-card
             document.getElementById('card-maestro').innerHTML = document.getElementById('audit_by').value.trim() || '<span class="blank-line"></span>';
             document.getElementById('card-barista').innerHTML = baristaVal || '<span class="blank-line"></span>';
             document.getElementById('card-store').innerHTML = document.getElementById('store_number').value.trim() || '<span class="blank-line"></span>';
             document.getElementById('card-drink').innerHTML = document.getElementById('drink_made').value.trim() || '<span class="blank-line"></span>';
-            const feedback = document.getElementById('overall_feedback').value.trim();
-            document.getElementById('card-overall-feedback').textContent = feedback || "No feedback provided.";
+            document.getElementById('card-overall-feedback').textContent = document.getElementById('overall_feedback').value.trim() || "";
             
-            document.getElementById('card-total-score').textContent = stats.totalPoints;
-            document.getElementById('card-total-possible').textContent = stats.applicableCount;
+            document.getElementById('card-total-score').textContent = stats.hasAnyResponse ? stats.totalPoints : "";
+            document.getElementById('card-total-possible').textContent = stats.hasAnyResponse ? stats.applicableCount : "";
+
             generateCardTable();
 
+            // Download Report PNG
             setTimeout(() => {
                 html2canvas(document.getElementById('share-card'), { scale: 2, useCORS: true }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = `Report_${baristaVal}.png`;
-                    link.href = canvas.toDataURL();
-                    link.click();
-                });
-                
-                // 2. Download Photos
-                capturedPhotos.forEach((photo, index) => {
-                    setTimeout(() => {
-                        const pLink = document.createElement('a');
-                        pLink.download = `Photo_${index + 1}_${baristaVal}.jpg`;
-                        pLink.href = photo.url;
-                        pLink.click();
-                    }, (index + 1) * 300); // Slight delay to handle browser simultaneous download limits
+                    downloadData(canvas.toDataURL(), `Audit_${baristaVal}.png`);
+                    
+                    // Automatically trigger download for all captured photos too
+                    capturedPhotos.forEach((photo, index) => {
+                        setTimeout(() => {
+                            downloadData(photo.data, `Audit_Photo_${baristaVal}_${index + 1}.jpg`);
+                        }, (index + 1) * 300); // Small stagger to avoid browser blocking
+                    });
                 });
             }, 50);
-        }
+        });
 
-        document.getElementById('download-graphic-button').onclick = downloadAllData;
-
-        document.getElementById('copy-report-button').onclick = () => {
+        document.getElementById('copy-report-button').addEventListener('click', () => {
             const stats = calculateScore();
             const rawDate = document.getElementById('date_of_visit').value;
-            const dateStr = rawDate ? new Date(rawDate).toLocaleDateString('en-GB') : "[DD/MM/YY]";
-            const storeStr = document.getElementById('store_number').value || "";
-            const maestroStr = document.getElementById('audit_by').value || "";
-            const baristaStr = document.getElementById('barista_name').value || "";
-            const drinkStr = document.getElementById('drink_made').value || "";
-            const feedbackStr = document.getElementById('overall_feedback').value || "";
-
-            let text = `COFFEE AUDIT\nDate: ${dateStr}\nStore: ${storeStr}\nMaestro: ${maestroStr}\nBarista: ${baristaStr}\nDrink: ${drinkStr}\nScore: ${stats.totalPoints} / ${stats.applicableCount}\n\nFeedback:\n${feedbackStr}`;
+            let dateStr = rawDate ? new Date(rawDate).toLocaleDateString('en-GB') : "[DD/MM/YY]";
+            let text = `COFFEE AUDIT\nDate: ${dateStr}\nStore: ${document.getElementById('store_number').value}\nMaestro: ${document.getElementById('audit_by').value}\nBarista: ${document.getElementById('barista_name').value}\nDrink: ${document.getElementById('drink_made').value}\nScore: ${stats.totalPoints} / ${stats.applicableCount}\n\nComments:\n${document.getElementById('overall_feedback').value}`;
             const el = document.createElement('textarea'); el.value = text; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
             const btn = document.getElementById('copy-report-button'); btn.textContent = 'COPIED!'; setTimeout(() => btn.textContent = 'COPY TEXT', 2000);
-        };
+        });
 
         function showConfirmation(title, message, onConfirm) {
-            const modal = document.createElement('div');
-            modal.className = "fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[9999]";
-            modal.innerHTML = `
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = "fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[9999]";
+            modalOverlay.innerHTML = `
                 <div class="bg-white p-6 rounded-lg max-w-sm w-full border-2 border-black">
                     <h3 class="font-black text-xl mb-4 uppercase tracking-tighter">${title}</h3>
                     <p class="text-sm text-gray-600 mb-6">${message}</p>
                     <div class="flex gap-2">
-                        <button id="modal-confirm" class="flex-1 bg-red-600 text-white font-black py-2 rounded-sm uppercase text-xs">Yes</button>
+                        <button id="modal-confirm" class="flex-1 bg-red-600 text-white font-black py-2 rounded-sm uppercase text-xs">Yes, Clear</button>
                         <button id="modal-cancel" class="flex-1 bg-gray-200 text-black font-black py-2 rounded-sm uppercase text-xs">Cancel</button>
                     </div>
-                </div>`;
-            document.body.appendChild(modal);
-            document.getElementById('modal-confirm').onclick = () => { onConfirm(); modal.remove(); };
-            document.getElementById('modal-cancel').onclick = () => modal.remove();
+                </div>
+            `;
+            document.body.appendChild(modalOverlay);
+            document.getElementById('modal-confirm').onclick = () => { onConfirm(); modalOverlay.remove(); };
+            document.getElementById('modal-cancel').onclick = () => modalOverlay.remove();
         }
 
-        document.getElementById('hard-reset-button').onclick = () => showConfirmation("Reset All?", "Clear every field and setting.", () => { localStorage.removeItem(AUDIT_STORAGE_KEY); location.reload(); });
-        document.getElementById('reset-button').onclick = () => showConfirmation("New Audit?", "Clear scores and barista info.", () => {
-            document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-            document.getElementById('barista_name').value = '';
-            document.getElementById('drink_made').value = '';
-            document.getElementById('overall_feedback').value = '';
-            capturedPhotos = [];
-            renderGallery();
-            calculateScore();
-            saveLocalData();
-            document.getElementById('audit-top').scrollIntoView({ behavior: 'smooth' });
+        document.getElementById('hard-reset-button').addEventListener('click', () => {
+            showConfirmation("Reset All Data?", "Clear entire audit including Store info?", () => { localStorage.removeItem(AUDIT_STORAGE_KEY); location.reload(); });
+        });
+
+        document.getElementById('reset-button').addEventListener('click', () => {
+            showConfirmation("New Audit?", "Clear scores and barista info, but keep Store/Maestro?", () => {
+                document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+                document.getElementById('barista_name').value = '';
+                document.getElementById('drink_made').value = '';
+                document.getElementById('overall_feedback').value = '';
+                capturedPhotos = [];
+                renderGallery();
+                calculateScore();
+                saveLocalData();
+                document.getElementById('audit-top').scrollIntoView({ behavior: 'smooth' });
+            });
         });
 
         buildMainTable();
-        document.querySelectorAll('input, textarea').forEach(input => input.onchange = () => { calculateScore(); saveLocalData(); });
+        document.querySelectorAll('input, textarea').forEach(input => input.addEventListener('change', () => { calculateScore(); saveLocalData(); }));
         window.onload = loadLocalData;
     </script>
 </body>
