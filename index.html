@@ -2,51 +2,74 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Coffee Standards & Quality Audit</title>
     
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#000000">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="CoffeeAudit">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/7357/7357717.png">
     
-    <!-- Manifest Data URI -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNvZmZlZSBRdWFsaXR5IEF1ZGl0IiwKICAic2hvcnRfbmFtZSI6ICJDb2ZmZWVBdWRpdCIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZmZmZmZmIiwKICAidGhlbWVfY29sb3IiOiAiIzAwMDAwMCIsCiAgImljb25zIjogWwogICAgewogICAgICAic3JjIjogImh0dHBzOi8vY2RuLWljb25zLXBuZy5mbGF0aWNvbi5jb20vNTEyLzczNTcvNzM1NzcxNy5wbmciLAogICAgICAic2l6ZXMiIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciCiAgICB9CiAgXQp9">
+    <!-- Icons -->
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/7357/7357717.png">
+    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/7357/7357717.png">
+    
+    <!-- Manifest Data URI (Updated for full PWA Compliance) -->
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkNvZmZlZSBRdWFsaXR5IEF1ZGl0IiwKICAic2hvcnRfbmFtZSI6ICJDb2ZmZWVBdWRpdCIsCiAgImRlc2NyaXB0aW9uIjogIkRpZ2l0YWwgQ29mZmVlIFF1YWxpdHkgU2NvcmVjYXJkIiwKICAic3RhcnRfdXJsIjogIi4vIiwKICAic2NvcGUiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgImJhY2tncm91bmRfY29sb3IiOiAiI2ZmZmZmZiIsCiAgInRoZW1lX2NvbG9yIjogIiMwMDAwMDAiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi83MzU3LzczNTc3MTcucG5nIiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9wbmciLAogICAgICAicHVycG9zZSI6ICJhbnkgbWFza2FibGUiCiAgICB9CiAgXQp9">
 
-    <!-- Service Worker Registration (Blob-based for Single-File Apps) -->
+    <!-- Service Worker Registration -->
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 const swCode = `
-                    const CACHE_NAME = 'coffee-audit-v1';
+                    const CACHE_NAME = 'coffee-audit-v2';
                     const ASSETS = [
                         './',
-                        'index.html',
+                        './index.html',
                         'https://cdn.tailwindcss.com',
                         'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'
                     ];
 
                     self.addEventListener('install', (event) => {
+                        self.skipWaiting();
                         event.waitUntil(
                             caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
                         );
                     });
 
+                    self.addEventListener('activate', (event) => {
+                        event.waitUntil(self.clients.claim());
+                    });
+
                     self.addEventListener('fetch', (event) => {
                         event.respondWith(
                             caches.match(event.request).then((response) => {
-                                return response || fetch(event.request);
+                                return response || fetch(event.request).catch(() => {
+                                    if (event.request.mode === 'navigate') {
+                                        return caches.match('./index.html');
+                                    }
+                                });
                             })
                         );
                     });
                 `;
                 const blob = new Blob([swCode], { type: 'application/javascript' });
                 const swUrl = URL.createObjectURL(blob);
-                navigator.serviceWorker.register(swUrl).catch(err => console.log('SW error:', err));
+                navigator.serviceWorker.register(swUrl, { scope: './' })
+                    .then(reg => console.log('ServiceWorker registered with scope: ', reg.scope))
+                    .catch(err => console.log('ServiceWorker registration failed: ', err));
             });
         }
+
+        // PWA Install Prompt Handler
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('PWA Install available');
+        });
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -57,6 +80,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
             scroll-behavior: smooth;
+            -webkit-tap-highlight-color: transparent;
         }
         
         .main-card {
@@ -95,8 +119,8 @@
             width: 60px;
         }
         .radio-cell input[type="radio"] {
-            width: 18px;
-            height: 18px;
+            width: 22px;
+            height: 22px;
             cursor: pointer;
             accent-color: #000;
         }
@@ -111,7 +135,6 @@
             color: black;
         }
 
-        /* High-Contrast Labels for PNG */
         .card-label {
             font-size: 10px;
             font-weight: 900;
@@ -141,17 +164,24 @@
             height: 100%;
             object-fit: cover;
         }
+
+        /* Safe area insets for notched phones */
+        @supports(padding: max(0px)) {
+            body {
+                padding-left: max(1rem, env(safe-area-inset-left));
+                padding-right: max(1rem, env(safe-area-inset-right));
+                padding-bottom: max(1rem, env(safe-area-inset-bottom));
+            }
+        }
     </style>
 </head>
-<body class="p-4 sm:p-8">
+<body class="p-4 sm:p-8 pb-20">
 
-    <!-- Share Graphic Template (Optimized for PNG/Print) -->
+    <!-- Share Graphic Template -->
     <div id="share-card" class="flex flex-col border-[3px] border-black">
         <div class="bg-black text-white p-6">
             <h2 class="text-3xl font-black tracking-tighter uppercase">Maestro Coffee Check</h2>
         </div>
-
-        <!-- Info Grid -->
         <div class="grid grid-cols-1 border-b-2 border-black">
             <div class="p-4">
                 <p class="card-label">Maestro Name</p>
@@ -172,8 +202,6 @@
                 <p id="card-drink" class="text-xl font-black uppercase"></p>
             </div>
         </div>
-
-        <!-- Table Content -->
         <div class="p-0">
             <table class="audit-table border-none">
                 <thead>
@@ -183,9 +211,7 @@
                         <th class="radio-cell border-r-0">No</th>
                     </tr>
                 </thead>
-                <tbody id="card-table-body">
-                    <!-- Populated via JS -->
-                </tbody>
+                <tbody id="card-table-body"></tbody>
                 <tfoot>
                     <tr>
                         <td class="text-right font-black uppercase border-l-0">Total Score</td>
@@ -195,8 +221,6 @@
                 </tfoot>
             </table>
         </div>
-
-        <!-- Feedback -->
         <div class="p-6 bg-gray-50 border-t-2 border-black">
             <p class="text-xs font-black uppercase mb-2">Overall Comments & Feedback</p>
             <p id="card-overall-feedback" class="text-sm italic text-black font-medium whitespace-pre-wrap min-h-[60px]"></p>
@@ -204,7 +228,7 @@
     </div>
 
     <!-- Main UI -->
-    <div id="audit-top" class="max-w-4xl mx-auto main-card overflow-hidden">
+    <div id="audit-top" class="max-w-4xl mx-auto main-card overflow-hidden mb-10">
         
         <header class="bg-white border-b border-gray-100 p-6 sm:p-8">
             <div class="flex justify-between items-start mb-6">
@@ -257,12 +281,9 @@
                         <th class="radio-cell">N/A</th>
                     </tr>
                 </thead>
-                <tbody id="main-table-body">
-                    <!-- Sections defined in JS -->
-                </tbody>
+                <tbody id="main-table-body"></tbody>
             </table>
 
-            <!-- Photo Capture Section -->
             <div class="px-6 py-8 border-t border-gray-100 bg-gray-50/50 flex flex-col items-center">
                 <input type="file" id="cameraInput" accept="image/*" capture="camera" class="hidden">
                 <button id="takePhotoButton" class="flex items-center gap-3 px-8 py-4 bg-black text-white rounded-full font-black uppercase text-sm hover:scale-105 active:scale-95 transition-all shadow-lg">
@@ -270,11 +291,7 @@
                     Take Audit Photo
                 </button>
                 <p class="text-[9px] font-bold text-gray-400 uppercase mt-3 tracking-widest">TAP PREVIEW TO SAVE TO DEVICE GALLERY</p>
-
-                <!-- New Photo Gallery -->
-                <div id="photo-gallery" class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 w-full">
-                    <!-- Images will appear here -->
-                </div>
+                <div id="photo-gallery" class="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8 w-full"></div>
             </div>
 
             <div class="p-6 border-t border-gray-200">
@@ -290,15 +307,9 @@
             </div>
             
             <div class="flex flex-row flex-wrap gap-2 justify-center w-full sm:w-auto">
-                <button id="reset-button" class="px-5 py-3 text-xs bg-red-600 hover:bg-red-700 text-white font-black uppercase rounded-sm transition">
-                    New Audit
-                </button>
-                <button id="copy-report-button" class="px-5 py-3 text-xs bg-white text-black font-black uppercase rounded-sm transition">
-                    Copy Text
-                </button>
-                <button id="download-graphic-button" class="px-5 py-3 text-xs bg-green-500 text-white font-black uppercase rounded-sm transition">
-                    Download PNG
-                </button>
+                <button id="reset-button" class="px-5 py-3 text-xs bg-red-600 hover:bg-red-700 text-white font-black uppercase rounded-sm transition">New Audit</button>
+                <button id="copy-report-button" class="px-5 py-3 text-xs bg-white text-black font-black uppercase rounded-sm transition">Copy Text</button>
+                <button id="download-graphic-button" class="px-5 py-3 text-xs bg-green-500 text-white font-black uppercase rounded-sm transition">Download PNG</button>
             </div>
         </footer>
     </div>
@@ -321,13 +332,11 @@
             const tbody = document.getElementById('main-table-body');
             tbody.innerHTML = '';
             qGlobalCount = 1;
-
             sections.forEach(section => {
                 const headRow = document.createElement('tr');
                 headRow.className = "section-header";
                 headRow.innerHTML = `<td colspan="4">${section.title}</td>`;
                 tbody.appendChild(headRow);
-
                 section.questions.forEach(q => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -347,7 +356,6 @@
             let applicableCount = 0;
             const totalQuestions = qGlobalCount - 1;
             let hasAnyResponse = false;
-            
             for(let i=1; i<=totalQuestions; i++) {
                 const checked = document.querySelector(`input[name="q${i}"]:checked`);
                 if (checked) {
@@ -362,11 +370,9 @@
                     applicableCount++;
                 }
             }
-
             document.getElementById('final-score-footer').textContent = `${totalPoints} / ${applicableCount}`;
             document.getElementById('save-status').textContent = 'SAVED';
             document.getElementById('save-status').className = 'text-xs font-bold text-blue-600 bg-blue-50 px-3 py-1 rounded-full';
-
             return { totalPoints, applicableCount, hasAnyResponse };
         }
 
@@ -405,13 +411,11 @@
             const body = document.getElementById('card-table-body');
             body.innerHTML = '';
             let qCounter = 1;
-            
             sections.forEach(section => {
                 const headRow = document.createElement('tr');
                 headRow.className = "section-header";
                 headRow.innerHTML = `<td colspan="3" class="border-x-0 font-black">${section.title}</td>`;
                 body.appendChild(headRow);
-
                 section.questions.forEach(q => {
                     const checked = document.querySelector(`input[name="q${qCounter}"]:checked`)?.value || '';
                     const tr = document.createElement('tr');
@@ -426,7 +430,6 @@
             });
         }
 
-        // Photo Capture Logic
         document.getElementById('takePhotoButton').addEventListener('click', () => {
             document.getElementById('cameraInput').click();
         });
@@ -434,32 +437,23 @@
         document.getElementById('cameraInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(event) {
                 const gallery = document.getElementById('photo-gallery');
                 const photoId = 'photo_' + Date.now();
-                
                 const container = document.createElement('div');
                 container.className = 'flex flex-col gap-2';
                 container.id = photoId;
-                
                 container.innerHTML = `
                     <div class="photo-preview">
                         <img src="${event.target.result}" alt="Audit Photo">
                     </div>
                     <div class="flex flex-col gap-1">
-                        <button onclick="downloadPhoto('${event.target.result}', '${photoId}')" class="w-full bg-blue-600 text-white text-[10px] font-black uppercase py-2 rounded-sm">
-                            Save to Gallery
-                        </button>
-                        <button onclick="removePhoto('${photoId}')" class="w-full bg-gray-200 text-black text-[10px] font-black uppercase py-2 rounded-sm">
-                            Remove
-                        </button>
+                        <button onclick="downloadPhoto('${event.target.result}', '${photoId}')" class="w-full bg-blue-600 text-white text-[10px] font-black uppercase py-2 rounded-sm">Save to Gallery</button>
+                        <button onclick="removePhoto('${photoId}')" class="w-full bg-gray-200 text-black text-[10px] font-black uppercase py-2 rounded-sm">Remove</button>
                     </div>
                 `;
-                
                 gallery.appendChild(container);
-                // Reset input to allow taking same photo again if needed
                 e.target.value = '';
             };
             reader.readAsDataURL(file);
@@ -479,7 +473,6 @@
 
         document.getElementById('download-graphic-button').addEventListener('click', () => {
             const stats = calculateScore();
-            
             const maestroVal = document.getElementById('audit_by').value.trim();
             const baristaVal = document.getElementById('barista_name').value.trim();
             const storeVal = document.getElementById('store_number').value.trim();
@@ -510,39 +503,27 @@
             setTimeout(() => {
                 html2canvas(document.getElementById('share-card'), { scale: 2, useCORS: true }).then(canvas => {
                     const link = document.createElement('a');
-                    const fileName = baristaVal || "Blank_Audit_Form";
+                    const fileName = (baristaVal || "Blank_Audit_Form").replace(/\s+/g, '_');
                     link.download = `Audit_${fileName}.png`;
                     link.href = canvas.toDataURL();
                     link.click();
                 });
-            }, 50);
+            }, 100);
         });
 
         document.getElementById('copy-report-button').addEventListener('click', () => {
             const stats = calculateScore();
             const rawDate = document.getElementById('date_of_visit').value;
-            let dateStr = "";
-            if (rawDate) {
-                const d = new Date(rawDate);
-                dateStr = d.toLocaleDateString('en-GB'); 
-            } else {
-                dateStr = "[DD/MM/YY]";
-            }
+            let dateStr = rawDate ? new Date(rawDate).toLocaleDateString('en-GB') : "[DD/MM/YY]";
             
-            const storeStr = document.getElementById('store_number').value || "";
-            const maestroStr = document.getElementById('audit_by').value || "";
-            const baristaStr = document.getElementById('barista_name').value || "";
-            const drinkStr = document.getElementById('drink_made').value || "";
-            const feedbackStr = document.getElementById('overall_feedback').value || "";
-
             let text = `COFFEE AUDIT\n`;
             text += `Date: ${dateStr}\n`;
-            text += `Store: ${storeStr}\n`;
-            text += `Maestro: ${maestroStr}\n`;
-            text += `Barista: ${baristaStr}\n`;
-            text += `Drink: ${drinkStr}\n`;
+            text += `Store: ${document.getElementById('store_number').value}\n`;
+            text += `Maestro: ${document.getElementById('audit_by').value}\n`;
+            text += `Barista: ${document.getElementById('barista_name').value}\n`;
+            text += `Drink: ${document.getElementById('drink_made').value}\n`;
             text += `Score: ${stats.totalPoints} / ${stats.applicableCount}\n\n`;
-            text += `Comments & Feedback:\n${feedbackStr}`;
+            text += `Comments & Feedback:\n${document.getElementById('overall_feedback').value}`;
 
             const el = document.createElement('textarea');
             el.value = text;
@@ -570,42 +551,28 @@
                 </div>
             `;
             document.body.appendChild(modalOverlay);
-            
-            document.getElementById('modal-confirm').onclick = () => {
-                onConfirm();
-                modalOverlay.remove();
-            };
+            document.getElementById('modal-confirm').onclick = () => { onConfirm(); modalOverlay.remove(); };
             document.getElementById('modal-cancel').onclick = () => modalOverlay.remove();
         }
 
         document.getElementById('hard-reset-button').addEventListener('click', () => {
-            showConfirmation(
-                "Reset All Data?", 
-                "This will clear the entire audit including Store and Maestro information.", 
-                () => {
-                    localStorage.removeItem(AUDIT_STORAGE_KEY);
-                    location.reload();
-                }
-            );
+            showConfirmation("Reset All Data?", "Clear entire audit including Store and Maestro info?", () => {
+                localStorage.removeItem(AUDIT_STORAGE_KEY);
+                location.reload();
+            });
         });
 
         document.getElementById('reset-button').addEventListener('click', () => {
-            showConfirmation(
-                "New Audit?", 
-                "This will clear current scores, barista name, and feedback. Store and Maestro details will be kept.", 
-                () => {
-                    document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
-                    document.getElementById('barista_name').value = '';
-                    document.getElementById('drink_made').value = '';
-                    document.getElementById('overall_feedback').value = '';
-                    document.getElementById('photo-gallery').innerHTML = '';
-                    
-                    calculateScore();
-                    saveLocalData();
-                    
-                    document.getElementById('audit-top').scrollIntoView({ behavior: 'smooth' });
-                }
-            );
+            showConfirmation("New Audit?", "Clear current scores and barista info? Store/Maestro details will be kept.", () => {
+                document.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+                document.getElementById('barista_name').value = '';
+                document.getElementById('drink_made').value = '';
+                document.getElementById('overall_feedback').value = '';
+                document.getElementById('photo-gallery').innerHTML = '';
+                calculateScore();
+                saveLocalData();
+                document.getElementById('audit-top').scrollIntoView({ behavior: 'smooth' });
+            });
         });
 
         buildMainTable();
